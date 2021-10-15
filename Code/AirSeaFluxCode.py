@@ -69,7 +69,6 @@ class S80:
 
         # Rb eq. 11 Grachev & Fairall 1997
         Rb = self.g*10*(self.dtv)/(np.where(self.T < 200, np.copy(self.T)+CtoK, np.copy(self.T)) * np.power(self.wind, 2))
-        #Rb = self.g*10*(self.dtv)/(np.copy(self.T) * np.power(self.wind, 2))
         self.monob = 1/Rb  # eq. 12 Grachev & Fairall 1997
 
         # ------------
@@ -93,18 +92,12 @@ class S80:
         self.u10n = self.wind*np.log(10/1e-4)/np.log(self.hin[0]/1e-4)
         self.usr = 0.035*self.u10n
         self.cd10n = cdn_calc(self.u10n, self.usr, self.Ta, self.lat, self.meth)
-        self.tsr = np.zeros(self.arr_shp)*self.msk
-        self.tsrv = np.copy(self.tsr)
-        self.qsr = np.copy(self.tsr)
-        self.psim = np.copy(self.tsr)
-        self.psit = np.copy(self.tsr)
-        self.psiq = np.copy(self.tsr)
-
         self.cd = cd_calc(self.cd10n, self.h_in[0], self.ref_ht, self.psim)
         self.usr = np.sqrt(self.cd*np.power(self.wind, 2))
+
         self.zo = np.full(self.arr_shp,1e-4)*self.msk
-        self.zot = np.full(self.arr_shp,1e-4)*self.msk
-        self.zoq = np.full(self.arr_shp,1e-4)*self.msk
+        self.zot, self.zoq = np.copy(self.zo), np.copy(self.zo)
+
         self.ct10n = np.power(kappa, 2)/(np.log(self.h_in[0]/self.zo)*np.log(self.h_in[1]/self.zot))
         self.cq10n = np.power(kappa, 2)/(np.log(self.h_in[0]/self.zo)*np.log(self.h_in[2]/self.zoq))
         
@@ -113,11 +106,6 @@ class S80:
     
         self.tsr = (self.dt-self.dter*self.cskin-self.dtwl*self.wl)*kappa/(np.log(self.h_in[1]/self.zot) - psit_calc(self.h_in[1]/self.monob, self.meth))
         self.qsr = (self.dq-self.dqer*self.cskin)*kappa/(np.log(self.h_in[2]/self.zoq) - psit_calc(self.h_in[2]/self.monob, self.meth))
-
-        self.tau = np.full(self.arr_shp,0.05)*self.msk
-        self.sensible = np.full(self.arr_shp,-5)*self.msk
-        self.latent = np.full(self.arr_shp,-65)*self.msk
-
 
     def _zo_calc(self, ref_ht, cd10n):
         zo = ref_ht/np.exp(kappa/np.sqrt(cd10n))
@@ -129,12 +117,30 @@ class S80:
         tol = ['all', 0.01, 0.01, 1e-05, 1e-3, 0.1, 0.1] if tol is None else tol
         assert tol[0] in ['flux', 'ref', 'all'], "unknown tolerance input"
 
-        self.itera = np.full(self.arr_shp,-1)*self.msk
         ind = np.where(self.spd > 0)
         it = 0
 
+        # Setup empty arrays
+        self.itera = np.full(self.arr_shp,-1)*self.msk
+        
+        self.tsrv = np.zeros(self.arr_shp)*self.msk
+        self.psim, self.psit, self.psiq = np.copy(self.tsrv), np.copy(self.tsrv), np.copy(self.tsrv)
+
+        self.tau = np.full(self.arr_shp,0.05)*self.msk
+        self.sensible = np.full(self.arr_shp,-5)*self.msk
+        self.latent = np.full(self.arr_shp,-65)*self.msk
+
         # Generate the first guess values
         self._first_guess()
+
+        # Decide which variables to use in tolerances based on tolerance specification
+        old_vars = {"flux":["tau","sensible","latent"], "ref":["u10n","t10n","q10n"]}
+        old_vars["all"] = old_vars["ref"] + old_vars["flux"]
+        old_vars = old_vars[tol[0]]
+
+        new_vars = {"flux":["tau","sensible","latent"], "ref":["utmp","t10n","q10n"]}
+        new_vars["all"] = new_vars["ref"] + new_vars["flux"]
+        new_vars = new_vars[tol[0]]
 
         #  iteration loop
         ii = True
@@ -142,21 +148,17 @@ class S80:
             it += 1
             if it > n: break
 
-            if (tol[0] == 'flux'):
-                old = np.array([np.copy(self.tau), np.copy(self.sensible), np.copy(self.latent)])
-            elif (tol[0] == 'ref'):
-                old = np.array([np.copy(self.u10n), np.copy(self.t10n), np.copy(self.q10n)])
-            elif (tol[0] == 'all'):
-                old = np.array([np.copy(self.u10n), np.copy(self.t10n), np.copy(self.q10n),
-                                np.copy(self.tau), np.copy(self.sensible), np.copy(self.latent)])
+            # Set the old variables (for comparison against "new")
+            old = np.array([np.copy(getattr(self,i)) for i in old_vars])
+
+            # Calculate cdn
             self.cd10n[ind] = cdn_calc(self.u10n[ind], self.usr[ind], self.Ta[ind], self.lat[ind], self.meth)
+            
             if (np.all(np.isnan(self.cd10n))):
                 break
                 logging.info('break %s at iteration %s cd10n<0', meth, it)
                 
             self.zo[ind] = self.ref_ht/np.exp(kappa/np.sqrt(self.cd10n[ind]))
-            #self.zo[ind] = self._zo_calc(self.ref_ht, self.cd10n[ind])
-
             self.psim[ind] = psim_calc(self.h_in[0, ind]/self.monob[ind], self.meth)
             self.cd[ind] = cd_calc(self.cd10n[ind], self.h_in[0, ind], self.ref_ht, self.psim[ind])
 
@@ -225,14 +227,9 @@ class S80:
             self.sensible = self.rho*self.cp*self.usr*self.tsr
             self.latent = self.rho*self.lv*self.usr*self.qsr
 
-            if (tol[0] == 'flux'):
-                new = np.array([np.copy(self.tau), np.copy(self.sensible), np.copy(self.latent)])
-            elif (tol[0] == 'ref'):
-                new = np.array([np.copy(self.utmp), np.copy(self.t10n), np.copy(self.q10n)])
-            elif (tol[0] == 'all'):
-                new = np.array([np.copy(self.utmp), np.copy(self.t10n), np.copy(self.q10n),
-                                np.copy(self.tau), np.copy(self.sensible), np.copy(self.latent)])
-                
+            # Set the new variables (for comparison against "old")
+            new = np.array([np.copy(getattr(self,i)) for i in new_vars])
+
             if (it > 2):  # force at least two iterations
                 d = np.abs(new-old)
                 if (tol[0] == 'flux'):
@@ -243,12 +240,12 @@ class S80:
                     ind = np.where((d[0, :] > tol[1])+(d[1, :] > tol[2]) + (d[2, :] > tol[3])+(d[3, :] > tol[4]) +
                                    (d[4, :] > tol[5])+(d[5, :] > tol[6]))
 
+            self.ind = np.copy(ind)
             ii = False if (ind[0].size == 0) else True
             # End of iteration loop
 
         self.itera[ind] = -1
         self.itera = np.where(self.itera > n, -1, self.itera)
-        self.ind = ind
         logging.info('method %s | # of iterations:%s', self.meth, it)
         logging.info('method %s | # of points that did not converge :%s \n', self.meth, self.ind[0].size)
 
@@ -319,6 +316,9 @@ class S80:
     def get_output(self,out=0):
 
         assert out in [0,1], "out must be either 0 or 1"
+
+        self._get_humidity() # Get the Relative humidity
+        self._flag(out=out)  # Get flags
         
         # calculate output parameters
         rho = (0.34838*self.P)/(self.tv10n)
@@ -341,27 +341,28 @@ class S80:
         self.ct, self.cq = ctcq_calc(self.cdn, self.cd, self.ctn, self.cqn, self.h_out, self.h_out, self.psit, self.psiq)
         self.uref = (self.spd-self.usr/kappa*(np.log(self.h_in[0]/self.h_out[0])-self.psim + psim_calc(self.h_out[0]/self.monob, self.meth)))
         tref = (self.Ta-self.tsr/kappa*(np.log(self.h_in[1]/self.h_out[1])-self.psit + psit_calc(self.h_out[0]/self.monob, self.meth)))
-        # Changed tref to use input temperature (T)
-        #self.tref = (self.T-self.tsr/kappa*(np.log(self.h_in[1]/self.h_out[1])-self.psit + psit_calc(self.h_out[0]/self.monob, self.meth)))
         self.tref = tref-(CtoK+self.tlapse*self.h_out[1])
         self.qref = (self.qair-self.qsr/kappa*(np.log(self.h_in[2]/self.h_out[2]) - self.psit+psit_calc(self.h_out[2]/self.monob, self.meth)))
 
         if (self.wl == 0): self.dtwl = np.zeros(self.T.shape)*self.msk  # reset to zero if not used
-        
-        # Get the Relative humidity
-        self._get_humidity()
 
         # Do not calculate lhf if a measure of humidity is not input
         if (self.hum[0] == 'no'):
             self.latent = np.ones(self.SST.shape)*np.nan
-            self.qsr = np.ones(self.SST.shape)*np.nan
-            self.q10n = np.ones(self.SST.shape)*np.nan
-            self.qref = np.ones(self.SST.shape)*np.nan
-            self.qair = np.ones(self.SST.shape)*np.nan
-            self.rh =  np.ones(self.SST.shape)*np.nan
+            self.qsr = np.copy(self.latent)
+            self.q10n = np.copy(self.latent)
+            self.qref = np.copy(self.latent)
+            self.qair = np.copy(self.latent)
+            self.rh =  np.copy(self.latent)
 
+        # Set the final wind speed values
         self.wind_spd = np.sqrt(np.power(self.wind, 2)-np.power(self.spd, 2))
 
+        # Get class specific flags
+        try:
+            self._class_flag()
+        except AttributeError:
+            pass
 
         # Combine all output variables into a pandas array
         res_vars = ("tau","sensible","latent","monob","cd","cdn","ct","ctn","cq","cqn","tsrv","tsr","qsr","usr","psim","psit",
@@ -374,22 +375,12 @@ class S80:
         if (out == 0):
             res[:, self.ind] = np.nan
             # set missing values where data have non acceptable values
-            if (self.hum[0] != 'no'):
-                res = np.asarray([np.where(self.q10n < 0, np.nan, res[i][:]) for i in range(41)]) # FIXME: why 41?
-                res = np.asarray([np.where(self.u10n < 0, np.nan, res[i][:]) for i in range(41)])
+            if (self.hum[0] != 'no'): res = np.asarray([np.where(self.q10n < 0, np.nan, res[i][:]) for i in range(len(res_vars))]) # FIXME: why 41?
+            res = np.asarray([np.where(self.u10n < 0, np.nan, res[i][:]) for i in range(len(res_vars))])
         else:
             warnings.warn("Warning: the output will contain values for points that have not converged and negative values (if any) for u10n/q10n")
 
         resAll = pd.DataFrame(data=res.T, index=range(self.nlen), columns=res_vars)
-
-        # Get flags
-        self._flag(out=out)
-
-        # Get class specific flags
-        try:
-            self._class_flag()
-        except AttributeError:
-            pass
     
         resAll["flag"] = self.flag
 
@@ -403,7 +394,6 @@ class S80:
         self.arr_shp = spd.shape
         self.nlen = len(spd)
         self.spd = spd
-        #self.T = np.where(T < 200, np.copy(T)+CtoK, np.copy(T))
         self.T = T
         self.hum = ['no', np.full(SST.shape,80)] if hum is None else hum
         self.SST = np.where(SST < 200, np.copy(SST)+CtoK, np.copy(SST))
@@ -443,7 +433,7 @@ class S88(S80):
 
     def __init__(self):
         self.meth = "S88"
-
+        
 class YT96(S80):
 
     def _class_flag(self):
@@ -537,7 +527,7 @@ class Beljaars(C30):
     def __init__(self):
         self.meth = "Beljaars"
         self.default_gust = [1,1,1000]
-
+        
 def AirSeaFluxCode(spd, T, SST, lat=None, hum=None, P=None, hin=18, hout=10,
                    Rl=None, Rs=None, cskin=None, skin="C35", wl=0, gust=None,
                    meth="S88", qmeth="Buck2", tol=None, n=10, out=0, L=None):
@@ -671,12 +661,12 @@ def AirSeaFluxCode(spd, T, SST, lat=None, hum=None, P=None, hin=18, hout=10,
     logging.captureWarnings(True)
 
     iclass = globals()[meth]()
-    iclass.add_gust(gust)
+    iclass.add_gust(0)
     iclass.add_variables(spd, T, SST, lat=lat, hum=hum, P=P, L=L)
     iclass.get_heights(hin, hout)
     iclass.get_specHumidity(qmeth=qmeth)
     iclass.set_coolskin_warmlayer(wl=wl, cskin=cskin,skin=skin,Rl=Rl,Rs=Rs)
-    iclass.iterate(n=n,tol=tol)
-    resAll = iclass.get_output(out=out)
+    iclass.iterate(tol=tol)
+    resAll = iclass.get_output()
 
     return resAll
