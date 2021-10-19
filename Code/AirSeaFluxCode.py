@@ -114,8 +114,18 @@ class S80:
     def iterate(self,n=10, tol=None):
         
         n = 5 if n < 5 else n
+
+        # Decide which variables to use in tolerances based on tolerance specification
         tol = ['all', 0.01, 0.01, 1e-05, 1e-3, 0.1, 0.1] if tol is None else tol
         assert tol[0] in ['flux', 'ref', 'all'], "unknown tolerance input"
+
+        old_vars = {"flux":["tau","sensible","latent"], "ref":["u10n","t10n","q10n"]}
+        old_vars["all"] = old_vars["ref"] + old_vars["flux"]
+        old_vars = old_vars[tol[0]]
+
+        new_vars = {"flux":["tau","sensible","latent"], "ref":["utmp","t10n","q10n"]}
+        new_vars["all"] = new_vars["ref"] + new_vars["flux"]
+        new_vars = new_vars[tol[0]]
 
         ind = np.where(self.spd > 0)
         it = 0
@@ -132,15 +142,6 @@ class S80:
 
         # Generate the first guess values
         self._first_guess()
-
-        # Decide which variables to use in tolerances based on tolerance specification
-        old_vars = {"flux":["tau","sensible","latent"], "ref":["u10n","t10n","q10n"]}
-        old_vars["all"] = old_vars["ref"] + old_vars["flux"]
-        old_vars = old_vars[tol[0]]
-
-        new_vars = {"flux":["tau","sensible","latent"], "ref":["utmp","t10n","q10n"]}
-        new_vars["all"] = new_vars["ref"] + new_vars["flux"]
-        new_vars = new_vars[tol[0]]
 
         #  iteration loop
         ii = True
@@ -661,12 +662,12 @@ def AirSeaFluxCode(spd, T, SST, lat=None, hum=None, P=None, hin=18, hout=10,
     logging.captureWarnings(True)
 
     iclass = globals()[meth]()
-    iclass.add_gust(0)
+    iclass.add_gust(gust=gust)
     iclass.add_variables(spd, T, SST, lat=lat, hum=hum, P=P, L=L)
     iclass.get_heights(hin, hout)
     iclass.get_specHumidity(qmeth=qmeth)
     iclass.set_coolskin_warmlayer(wl=wl, cskin=cskin,skin=skin,Rl=Rl,Rs=Rs)
     iclass.iterate(tol=tol)
-    resAll = iclass.get_output()
+    resAll = iclass.get_output(out=out)
 
     return resAll
