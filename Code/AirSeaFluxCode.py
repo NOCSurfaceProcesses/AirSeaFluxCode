@@ -173,12 +173,12 @@ class S80:
             self.ct[ind], self.cq[ind] = ctcq_calc(self.cd10n[ind], self.cd[ind], self.ct10n[ind],self.cq10n[ind], self.h_in[:, ind],
                                          [self.ref_ht, self.ref_ht, self.ref_ht], self.psit[ind], self.psiq[ind])
 
-            if (self.meth == "NCAR"):
-                self.cd = np.maximum(np.copy(self.cd), 1e-4)
-                self.ct = np.maximum(np.copy(self.ct), 1e-4)
-                self.cq = np.maximum(np.copy(self.cq), 1e-4)
-                self.zo = np.minimum(np.copy(self.zo), 0.0025)
-
+            # Some parameterizations set a minimum on parameters
+            try:
+                self._minimum_params()
+            except AttributeError:
+                pass
+            
             self.usr[ind],self.tsr[ind], self.qsr[ind] = get_strs(self.h_in[:, ind], self.monob[ind],
                                                 self.wind[ind], self.zo[ind], self.zot[ind],
                                                 self.zoq[ind], self.dt[ind], self.dq[ind],
@@ -462,6 +462,12 @@ class LP82(S80):
         self.meth = "LP82"
 
 class NCAR(S80):
+
+    def _minimum_params(self):
+        self.cd = np.maximum(np.copy(self.cd), 1e-4)
+        self.ct = np.maximum(np.copy(self.ct), 1e-4)
+        self.cq = np.maximum(np.copy(self.cq), 1e-4)
+        self.zo = np.minimum(np.copy(self.zo), 0.0025)
 
     def _class_flag(self):
         self.flag = np.where((self.utmp < 0.5) & (self.flag == "n"), "o",
