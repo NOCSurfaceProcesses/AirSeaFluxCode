@@ -185,11 +185,11 @@ class S80:
                                                 self.dter[ind], self.dqer[ind],
                                                 self.dtwl[ind], self.ct[ind], self.cq[ind],
                                                 self.cskin, self.wl, self.meth)
-            
-            self.dter[ind] = np.zeros(self.SST[ind].shape)
-            self.dqer[ind] = np.zeros(self.SST[ind].shape)
-            self.tkt[ind] = np.full(self.T[ind].shape,0.001)
 
+            self.dter[ind] = 0
+            self.dqer[ind] = 0
+            self.tkt[ind] = 0.001
+            
             # Logging output
             log_vars = {"dter":2,"dqer":7,"tkt":2,"Rnl":2,"usr":3,"tsr":4,"qsr":7}
             log_vars = [np.round(np.nanmedian(getattr(self,V)),R) for V,R in log_vars.items()]
