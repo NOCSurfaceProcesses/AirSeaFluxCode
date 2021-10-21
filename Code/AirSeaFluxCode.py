@@ -258,7 +258,7 @@ class S80:
         elif (self.hum[0] == 'Td'):
             Td = self.hum[1]  # dew point temperature (K)
             Td = np.where(Td < 200, np.copy(Td)+CtoK, np.copy(Td))
-            T = np.where(T < 200, np.copy(self.T)+CtoK, np.copy(self.T))
+            T = np.where(self.T < 200, np.copy(self.T)+CtoK, np.copy(self.T))
             #T = np.copy(self.T)
             esd = 611.21*np.exp(17.502*((Td-CtoK)/(Td-32.19)))
             es = 611.21*np.exp(17.502*((T-CtoK)/(T-32.19)))
