@@ -5,7 +5,7 @@ from hum_subs import (get_hum, gamma)
 from util_subs import *
 from flux_subs import *
 
-class S80:
+class S88:
     
     def get_heights(self, hin, hout=10):
         self.hout = hout
@@ -304,15 +304,6 @@ class S80:
                                            (np.char.find(flag.astype(str), 'u') == -1)),
                                           flag+[","]+["i"], flag))
         self.flag = flag
-
-    def _class_flag(self):
-        "A flag specific to this class"
-        self.flag = np.where(((self.utmp < 6) | (self.utmp > 22)) & (self.flag == "n"), "o",
-                        np.where(((self.utmp < 6) | (self.utmp > 22)) &
-                                 ((self.flag != "n") &
-                                  (np.char.find(self.flag.astype(str), 'u') == -1) &
-                                  (np.char.find(self.flag.astype(str), 'q') == -1)),
-                                 self.flag+[","]+["o"], self.flag))
             
     def get_output(self,out=0):
 
@@ -428,14 +419,23 @@ class S80:
         self.gust = gust
 
     def __init__(self):
-        self.meth = "S80"
+        self.meth = "S88"
 
-class S88(S80):
+class S88(S88):
+
+    def _class_flag(self):
+        "A flag specific to this class"
+        self.flag = np.where(((self.utmp < 6) | (self.utmp > 22)) & (self.flag == "n"), "o",
+                             np.where(((self.utmp < 6) | (self.utmp > 22)) &
+                                      ((self.flag != "n") &
+                                       (np.char.find(self.flag.astype(str), 'u') == -1) &
+                                       (np.char.find(self.flag.astype(str), 'q') == -1)),
+                                      self.flag+[","]+["o"], self.flag))
 
     def __init__(self):
-        self.meth = "S88"
+        self.meth = "S80"
         
-class YT96(S80):
+class YT96(S88):
 
     def _class_flag(self):
         self.flag = np.where(((self.utmp < 0) | (self.utmp > 26)) & (self.flag == "n"), "o",
@@ -448,7 +448,7 @@ class YT96(S80):
     def __init__(self):
         self.meth = "YT96"
 
-class LP82(S80):
+class LP82(S88):
 
     def _class_flag(self):
         self.flag = np.where(((self.utmp < 3) | (self.utmp > 25)) & (self.flag == "n"), "o",
@@ -461,7 +461,7 @@ class LP82(S80):
     def __init__(self):
         self.meth = "LP82"
 
-class NCAR(S80):
+class NCAR(S88):
 
     def _minimum_params(self):
         self.cd = np.maximum(np.copy(self.cd), 1e-4)
@@ -486,7 +486,7 @@ class NCAR(S80):
     def __init__(self):
         self.meth = "NCAR"
 
-class UA(S80):
+class UA(S88):
 
     def _class_flag(self):
         self.flag = np.where((self.utmp > 18) & (self.flag == "n"), "o",
@@ -506,7 +506,7 @@ class UA(S80):
         self.meth = "UA"
         self.default_gust = [1,1,1000]
 
-class C30(S80):
+class C30(S88):
     def set_coolskin_warmlayer(self, wl=0, cskin=1, skin="C35", Rl=None, Rs=None):
         self._fix_coolskin_warmlayer(wl, cskin, skin, Rl, Rs)
 
