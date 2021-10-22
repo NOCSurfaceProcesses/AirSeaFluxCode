@@ -44,15 +44,81 @@ class S88:
             and ((np.all(Rs == None) or np.all(np.isnan(Rs))))):
             print("Cool skin/warm layer is switched ON; Radiation input should not be empty")
             raise 
-
+        
         self.wl = wl            
         self.cskin = cskin
+        self.skin = skin
         self.Rs = np.ones(self.spd.shape)*np.nan if Rs is None else Rs
         self.Rl = np.ones(self.spd.shape)*np.nan if Rl is None else Rl
 
     def set_coolskin_warmlayer(self, wl=0, cskin=0, skin="C35", Rl=None, Rs=None):
         wl = 0 if wl is None else wl
         self._fix_coolskin_warmlayer(wl, cskin, skin, Rl, Rs)
+
+    def _update_coolskin_warmlayer(self,ind):
+        if ((self.cskin == 1) and (self.wl == 0)):
+            if (self.skin == "C35"):
+                self.dter[ind], self.dqer[ind], self.tkt[ind] = cs_C35(np.copy(self.SST[ind]),
+                                                                       self.qsea[ind],
+                                                                       self.rho[ind], self.Rs[ind],
+                                                                       self.Rnl[ind],
+                                                                       self.cp[ind], self.lv[ind],
+                                                                       np.copy(self.tkt[ind]),
+                                                                       self.usr[ind], self.tsr[ind],
+                                                                       self.qsr[ind], self.lat[ind])
+            elif (self.skin == "ecmwf"):
+                self.dter[ind] = cs_ecmwf(self.rho[ind], self.Rs[ind], self.Rnl[ind], self.cp[ind],
+                                          self.lv[ind], self.usr[ind], self.tsr[ind], self.qsr[ind],
+                                          np.copy(self.SST[ind]), self.lat[ind])
+                self.dqer[ind] = (self.dter[ind]*0.622*self.lv[ind]*self.qsea[ind] /
+                                  (287.1*np.power(self.SST[ind], 2)))
+            elif (self.skin == "Beljaars"):
+                self.Qs[ind], self.dter[ind] = cs_Beljaars(self.rho[ind], self.Rs[ind], self.Rnl[ind],
+                                                           self.cp[ind], self.lv[ind], self.usr[ind],
+                                                           self.tsr[ind], self.qsr[ind], self.lat[ind],
+                                                           np.copy(self.Qs[ind]))
+                self.dqer = self.dter*0.622*self.lv*self.qsea/(287.1*np.power(self.SST, 2))
+            self.skt = np.copy(self.SST)+self.dter
+        elif ((self.cskin == 1) and (self.wl == 1)):
+            if (self.skin == "C35"):
+                self.dter[ind], self.dqer[ind], self.tkt[ind] = cs_C35(self.SST[ind], self.qsea[ind],
+                                                                       self.rho[ind], self.Rs[ind],
+                                                                       self.Rnl[ind],
+                                                                       self.cp[ind], self.lv[ind],
+                                                                       np.copy(self.tkt[ind]),
+                                                                       self.usr[ind], self.tsr[ind],
+                                                                       self.qsr[ind], self.lat[ind])
+                self.dtwl[ind] = wl_ecmwf(self.rho[ind], self.Rs[ind], self.Rnl[ind], self.cp[ind],
+                                          self.lv[ind], self.usr[ind], self.tsr[ind], self.qsr[ind],
+                                          np.copy(self.SST[ind]), np.copy(self.skt[ind]),
+                                          np.copy(self.dter[ind]), self.lat[ind])
+                self.skt = np.copy(self.SST)+self.dter+self.dtwl
+            elif (self.skin == "ecmwf"):
+                self.dter[ind] = cs_ecmwf(self.rho[ind], self.Rs[ind], self.Rnl[ind], self.cp[ind],
+                                          self.lv[ind], self.usr[ind], self.tsr[ind], self.qsr[ind],
+                                          self.sst[ind], self.lat[ind])
+                self.dtwl[ind] = wl_ecmwf(self.rho[ind], self.Rs[ind], self.Rnl[ind], self.cp[ind],
+                                          self.lv[ind], self.usr[ind], self.tsr[ind], self.qsr[ind],
+                                          np.copy(self.SST[ind]), np.copy(self.skt[ind]),
+                                          np.copy(self.dter[ind]), self.lat[ind])
+                self.skt = np.copy(self.SST)+self.dter+self.dtwl
+                self.dqer[ind] = (self.dter[ind]*0.622*self.lv[ind]*self.qsea[ind] /
+                             (287.1*np.power(self.skt[ind], 2)))
+            elif (self.skin == "Beljaars"):
+                self.Qs[ind], self.dter[ind] = cs_Beljaars(self.rho[ind], self.Rs[ind], self.Rnl[ind],
+                                                           self.cp[ind], self.lv[ind], self.usr[ind],
+                                                           self.tsr[ind], self.qsr[ind], self.lat[ind],
+                                                           np.copy(self.Qs[ind]))
+                self.dtwl[ind] = wl_ecmwf(self.rho[ind], self.Rs[ind], self.Rnl[ind], self.cp[ind],
+                                     self.lv[ind], self.usr[ind], self.tsr[ind], self.qsr[ind],
+                                     np.copy(self.SST[ind]), np.copy(self.skt[ind]),
+                                     np.copy(self.dter[ind]), self.lat[ind])
+                self.skt = np.copy(self.SST)+self.dter+self.dtwl
+                self.dqer = self.dter*0.622*self.lv*self.qsea/(287.1*np.power(self.skt, 2))
+        else:
+            self.dter[ind] = np.zeros(self.SST[ind].shape)
+            self.dqer[ind] = np.zeros(self.SST[ind].shape)
+            self.tkt[ind] = 0.001*np.ones(self.T[ind].shape)
 
     def _first_guess(self):
 
@@ -186,9 +252,9 @@ class S88:
                                                 self.dtwl[ind], self.ct[ind], self.cq[ind],
                                                 self.cskin, self.wl, self.meth)
 
-            self.dter[ind] = 0
-            self.dqer[ind] = 0
-            self.tkt[ind] = 0.001
+
+            # Update CS/WL parameters
+            self._update_coolskin_warmlayer(ind)
             
             # Logging output
             log_vars = {"dter":2,"dqer":7,"tkt":2,"Rnl":2,"usr":3,"tsr":4,"qsr":7}
