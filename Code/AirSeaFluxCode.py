@@ -421,7 +421,7 @@ class S88:
     def __init__(self):
         self.meth = "S88"
 
-class S88(S88):
+class S80(S88):
 
     def _class_flag(self):
         "A flag specific to this class"
