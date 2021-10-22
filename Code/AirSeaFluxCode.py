@@ -209,10 +209,11 @@ class S88:
             self.psit[ind] = psit_calc(self.h_in[1, ind]/self.monob[ind], self.meth)
             self.psiq[ind] = psit_calc(self.h_in[2, ind]/self.monob[ind], self.meth)
 
+            # gust[0] is asserted to be either 0 or 1
             if (self.gust[0] == 1):
                 self.wind[ind] = np.sqrt(np.power(np.copy(self.spd[ind]), 2) + np.power(get_gust(self.gust[1], self.Ta[ind], self.usr[ind],
                                                                                                  self.tsrv[ind], self.gust[2], self.lat[ind]), 2))
-            elif (self.gust[0] == 0):
+            else:
                 self.wind[ind] = np.copy(self.spd[ind])
 
                 
@@ -400,9 +401,10 @@ class S88:
         self.dtwl = np.full(T.shape,0.3)*self.msk
 
         # Set the wind array
+        # gust[0] is asserted to be either 0 or 1
         if (self.gust[0] == 1):
             self.wind = np.sqrt(np.power(np.copy(self.spd), 2)+np.power(0.5, 2))
-        elif (self.gust[0] == 0):
+        else:
             self.wind = np.copy(spd)
         
     def add_gust(self,gust=None):
@@ -416,6 +418,7 @@ class S88:
             gust = [0, 0, 0]
             
         assert np.size(gust) == 3, "gust input must be a 3x1 array"
+        assert gust[0] in [0,1], "gust at position 0 must be 0 or 1"
         self.gust = gust
 
     def __init__(self):
