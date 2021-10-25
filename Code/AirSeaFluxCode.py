@@ -495,48 +495,39 @@ class S88:
         assert gust[0] in [0,1], "gust at position 0 must be 0 or 1"
         self.gust = gust
 
-    def __init__(self):
-        self.meth = "S88"
-
-class S80(S88):
-
     def _class_flag(self):
-        "A flag specific to this class"
-        self.flag = np.where(((self.utmp < 6) | (self.utmp > 22)) & (self.flag == "n"), "o",
-                             np.where(((self.utmp < 6) | (self.utmp > 22)) &
+        "A flag specific to this class - only used for certain classes where utmp_lo and utmp_hi are defined"
+        self.flag = np.where(((self.utmp < self.utmp_lo) | (self.utmp > self.utmp_hi)) & (self.flag == "n"), "o",
+                             np.where(((self.utmp < self.utmp_lo) | (self.utmp > self.utmp_hi)) &
                                       ((self.flag != "n") &
                                        (np.char.find(self.flag.astype(str), 'u') == -1) &
                                        (np.char.find(self.flag.astype(str), 'q') == -1)),
                                       self.flag+[","]+["o"], self.flag))
 
     def __init__(self):
+        self.meth = "S88"
+
+class S80(S88):
+
+    def __init__(self):
         self.meth = "S80"
+        self.utmp_lo = 6
+        self.utmp_hi = 22
         
 class YT96(S88):
 
-    def _class_flag(self):
-        self.flag = np.where(((self.utmp < 0) | (self.utmp > 26)) & (self.flag == "n"), "o",
-                        np.where(((self.utmp < 3) | (self.utmp > 26)) &
-                                 ((self.flag != "n") &
-                                  (np.char.find(self.flag.astype(str), 'u') == -1) &
-                                  (np.char.find(self.flag.astype(str), 'q') == -1)),
-                                 self.flag+[","]+["o"], self.flag))
-    
     def __init__(self):
         self.meth = "YT96"
+        self.utmp_lo = 0
+        self.utmp_hi = 26
 
 class LP82(S88):
-
-    def _class_flag(self):
-        self.flag = np.where(((self.utmp < 3) | (self.utmp > 25)) & (self.flag == "n"), "o",
-                        np.where(((self.utmp < 3) | (self.utmp > 25)) &
-                                 ((self.flag != "n") &
-                                  (np.char.find(self.flag.astype(str), 'u') == -1) &
-                                  (np.char.find(self.flag.astype(str), 'q') == -1)),
-                                 self.flag+[","]+["o"], self.flag))
     
     def __init__(self):
         self.meth = "LP82"
+        self.utmp_lo = 3
+        self.utmp_hi = 25
+
 
 class NCAR(S88):
 
@@ -546,14 +537,6 @@ class NCAR(S88):
         self.cq = np.maximum(np.copy(self.cq), 1e-4)
         self.zo = np.minimum(np.copy(self.zo), 0.0025)
 
-    def _class_flag(self):
-        self.flag = np.where((self.utmp < 0.5) & (self.flag == "n"), "o",
-                        np.where((self.utmp < 0.5) &
-                                 ((self.flag != "n") &
-                                  (np.char.find(self.flag.astype(str), 'u') == -1) &
-                                  (np.char.find(self.flag.astype(str), 'q') == -1)),
-                                 self.flag+[","]+["o"], self.flag))
-
     def _zo_calc(self, ref_ht, cd10n):
         "Special z0 calculation for NCAR"
         zo = ref_ht/np.exp(kappa/np.sqrt(cd10n))
@@ -562,16 +545,11 @@ class NCAR(S88):
     
     def __init__(self):
         self.meth = "NCAR"
+        self.utmp_lo = 0.5
+        self.utmp_hi = 999
+
 
 class UA(S88):
-
-    def _class_flag(self):
-        self.flag = np.where((self.utmp > 18) & (self.flag == "n"), "o",
-                        np.where((self.utmp > 18) &
-                                 ((self.flag != "n") &
-                                  (np.char.find(self.flag.astype(str), 'u') == -1) &
-                                  (np.char.find(self.flag.astype(str), 'q') == -1)),
-                                 self.flag+[","]+["o"], self.flag))
     
     def _adjust_gust(self):
         # gustiness adjustment
@@ -582,6 +560,9 @@ class UA(S88):
     def __init__(self):
         self.meth = "UA"
         self.default_gust = [1,1,1000]
+        self.utmp_lo = 18
+        self.utmp_hi = 999
+
 
 class C30(S88):
     def set_coolskin_warmlayer(self, wl=0, cskin=1, skin="C35", Rl=None, Rs=None):
@@ -750,7 +731,7 @@ def AirSeaFluxCode(spd, T, SST, lat=None, hum=None, P=None, hin=18, hout=10,
     iclass.get_heights(hin, hout)
     iclass.get_specHumidity(qmeth=qmeth)
     iclass.set_coolskin_warmlayer(wl=wl, cskin=cskin,skin=skin,Rl=Rl,Rs=Rs)
-    iclass.iterate(tol=tol)
+    iclass.iterate(tol=tol,n=n)
     resAll = iclass.get_output(out=out)
 
     return resAll
