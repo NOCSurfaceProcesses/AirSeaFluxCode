@@ -337,10 +337,18 @@ class S88:
         flag = np.full(self.arr_shp, "n",dtype="object")
 
         if (self.hum[0] == 'no'):
-            self.flag = np.where(np.isnan(self.spd+self.T+self.SST+self.P), "m", flag)
+            if (self.cskin == 1):
+                flag = np.where(np.isnan(self.spd+self.T+self.SST+self.P+self.Rs+self.Rl), "m", flag)
+            else:
+                flag = np.where(np.isnan(self.spd+self.T+self.SST+self.P), "m", flag)
         else:
-            flag = np.where(np.isnan(self.spd+self.T+self.SST+self.hum[1]+self.P), "m", flag)
+            if (self.cskin == 1):
+                flag = np.where(np.isnan(self.spd+self.T+self.SST+self.hum[1]+self.P+self.Rs+self.Rl), "m", flag)
+            else:
+                flag = np.where(np.isnan(self.spd+self.T+self.SST+self.hum[1]+self.P), "m", flag)
+
             flag = np.where(self.rh > 100, "r", flag)
+        
 
         flag = np.where((self.u10n < 0) & (flag == "n"), "u",
                              np.where((self.u10n < 0) &
