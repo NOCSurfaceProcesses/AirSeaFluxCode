@@ -1,3 +1,4 @@
+import warnings
 import numpy as np
 import pandas as pd
 import logging
@@ -178,8 +179,10 @@ class S88:
         return zo
     
     def iterate(self,n=10, tol=None):
-        
-        n = 5 if n < 5 else n
+
+        if n < 5:
+            warnings.warn("Iteration number <5 - resetting to 5.")
+            n = 5
 
         # Decide which variables to use in tolerances based on tolerance specification
         tol = ['all', 0.01, 0.01, 1e-05, 1e-3, 0.1, 0.1] if tol is None else tol
@@ -350,13 +353,19 @@ class S88:
             flag = np.where(self.rh > 100, "r", flag)
         
 
-        flag = np.where((self.u10n < 0) & (flag == "n"), "u",
+        # u10n flag
+        flag = np.where(((self.u10n < 0)  | (self.u10n > 999)) & (flag == "n"), "u",
                              np.where((self.u10n < 0) &
                                       (np.char.find(flag.astype(str), 'u') == -1),
                                       flag+[","]+["u"], flag))
-        
-        flag = np.where((self.q10n < 0) & (flag == "n"), "q",
+        # q10n flag
+        flag = np.where(((self.q10n < 0) | (self.q10n > 999)) & (flag == "n"), "q",
                              np.where((self.q10n < 0) & (flag != "n"), flag+[","]+["q"],
+                                      flag))
+
+        # t10n flag (not currently used)
+        flag = np.where((self.t10n < -999) & (flag == "n"), "t",
+                             np.where((self.t10n < 0) & (flag != "n"), flag+[","]+["t"],
                                       flag))
         
         flag = np.where(((self.Rb < -0.5) | (self.Rb > 0.2) | ((self.hin[0]/self.monob) > 1000)) &
