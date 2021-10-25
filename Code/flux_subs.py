@@ -4,7 +4,7 @@ from util_subs import (CtoK, kappa, gc, visc_air)
 # ---------------------------------------------------------------------
 
 
-def cdn_calc(u10n, usr, Ta, lat, meth="S80"):
+def cdn_calc(u10n, usr, Ta, lat, meth):
     """
     Calculates neutral drag coefficient
 
@@ -45,12 +45,13 @@ def cdn_calc(u10n, usr, Ta, lat, meth="S80"):
         cdn = np.where(u10n > 33, 2.34e-3, np.copy(cdn))
         cdn = np.maximum(np.copy(cdn), 0.1e-3)
     else:
-        print("unknown method cdn: "+meth)
+        raise ValueError("unknown method cdn: "+meth)
+    
     return cdn
 # ---------------------------------------------------------------------
 
 
-def cdn_from_roughness(u10n, usr, Ta, lat, meth="S88"):
+def cdn_from_roughness(u10n, usr, Ta, lat, meth):
     """
     Calculates neutral drag coefficient from roughness length
 
@@ -96,7 +97,8 @@ def cdn_from_roughness(u10n, usr, Ta, lat, meth="S88"):
             # eq. (3.26) p.38 over sea IFS Documentation cy46r1
             zo = 0.018*np.power(usr, 2)/g+0.11*visc_air(Ta)/usr
         else:
-            print("unknown method for cdn_from_roughness "+meth)
+            raise ValueError("unknown method for cdn_from_roughness "+meth)
+            
         cdn = np.power(kappa/np.log(10/zo), 2)
     return cdn
 # ---------------------------------------------------------------------
@@ -126,7 +128,7 @@ def cd_calc(cdn, hin, hout, psim):
 # ---------------------------------------------------------------------
 
 
-def ctcqn_calc(zol, cdn, usr, zo, Ta, meth="S80"):
+def ctcqn_calc(zol, cdn, usr, zo, Ta, meth):
     """
     Calculates neutral heat and moisture exchange coefficients
 
@@ -187,7 +189,8 @@ def ctcqn_calc(zol, cdn, usr, zo, Ta, meth="S80"):
         cqn = np.power(kappa, 2)/np.log(10/zo)/np.log(10/zoq)
         ctn = np.power(kappa, 2)/np.log(10/zo)/np.log(10/zot)
     else:
-        print("unknown method ctcqn: "+meth)
+        raise ValueError("unknown method ctcqn: "+meth)
+        
     return ctn, cqn
 # ---------------------------------------------------------------------
 
@@ -224,13 +227,15 @@ def ctcq_calc(cdn, cd, ctn, cqn, hin, hout, psit, psiq):
     """
     ct = (ctn*np.sqrt(cd/cdn) /
           (1+ctn*((np.log(hin[1]/hout[1])-psit)/(kappa*np.sqrt(cdn)))))
+
     cq = (cqn*np.sqrt(cd/cdn) /
           (1+cqn*((np.log(hin[2]/hout[2])-psiq)/(kappa*np.sqrt(cdn)))))
+
     return ct, cq
 # ---------------------------------------------------------------------
 
 
-def get_stabco(meth="S80"):
+def get_stabco(meth):
     """
     Gives the coefficients \\alpha, \\beta, \\gamma for stability functions
 
@@ -252,7 +257,8 @@ def get_stabco(meth="S80"):
     elif (meth == "YT96"):
         alpha, beta, gamma = 20, 0.25, 5
     else:
-        print("unknown method stabco: "+meth)
+        raise ValueError("unknown method stabco: "+meth)
+    
     coeffs = np.zeros(3)
     coeffs[0] = alpha
     coeffs[1] = beta
@@ -261,7 +267,7 @@ def get_stabco(meth="S80"):
 # ---------------------------------------------------------------------
 
 
-def psim_calc(zol, meth="S80"):
+def psim_calc(zol, meth):
     """
     Calculates momentum stability function
 
@@ -288,7 +294,7 @@ def psim_calc(zol, meth="S80"):
 # ---------------------------------------------------------------------
 
 
-def psit_calc(zol, meth="S80"):
+def psit_calc(zol, meth):
     """
     Calculates heat stability function
 
