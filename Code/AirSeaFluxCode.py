@@ -39,14 +39,16 @@ class S88:
 
     def _get_potentialT(self):
         self.cp = 1004.67*(1+0.00084*self.qsea)
-        self.th = np.where(self.T < 200, (np.copy(self.T)+CtoK) *
-                  np.power(1000/self.P, 287.1/self.cp),
-                  np.copy(self.T)*np.power(1000/self.P, 287.1/self.cp))  # potential T
+        # self.th = np.where(self.T < 200, (np.copy(self.T)+CtoK) *
+        #           np.power(1000/self.P, 287.1/self.cp),
+        #           np.copy(self.T)*np.power(1000/self.P, 287.1/self.cp))  # potential T
+        self.th = np.copy(self.T)*np.power(1000/self.P, 287.1/self.cp)
 
     def _get_lapse(self):
         self.tlapse = gamma("dry", self.SST, self.T, self.qair/1000, self.cp)
-        self.Ta = np.where(self.T < 200, np.copy(self.T)+CtoK+self.tlapse*self.h_in[1],
-                      np.copy(self.T)+self.tlapse*self.h_in[1])  # convert to Kelvin if needed
+        # self.Ta = np.where(self.T < 200, np.copy(self.T)+CtoK+self.tlapse*self.h_in[1],
+        #               np.copy(self.T)+self.tlapse*self.h_in[1])  # convert to Kelvin if needed
+        self.Ta = np.copy(self.T)+self.tlapse*self.h_in[1]
         self.dt = self.Ta - self.SST
 
     def _fix_coolskin_warmlayer(self, wl, cskin, skin, Rl, Rs):
@@ -151,7 +153,8 @@ class S88:
         self._wind_firstguess()
 
         # Rb eq. 11 Grachev & Fairall 1997
-        Rb = self.grav*10*(self.dtv)/(np.where(self.T < 200, np.copy(self.T)+CtoK, np.copy(self.T)) * np.power(self.wind, 2))
+        #Rb = self.grav*10*(self.dtv)/(np.where(self.T < 200, np.copy(self.T)+CtoK, np.copy(self.T)) * np.power(self.wind, 2))
+        Rb = self.grav*10*(self.dtv)/(np.copy(self.T) * np.power(self.wind, 2))
         self.monob = 1/Rb  # eq. 12 Grachev & Fairall 1997
 
         # ------------
@@ -334,8 +337,8 @@ class S88:
         elif (self.hum[0] == 'Td'):
             Td = self.hum[1]  # dew point temperature (K)
             Td = np.where(Td < 200, np.copy(Td)+CtoK, np.copy(Td))
-            T = np.where(self.T < 200, np.copy(self.T)+CtoK, np.copy(self.T))
-            #T = np.copy(self.T)
+            #T = np.where(self.T < 200, np.copy(self.T)+CtoK, np.copy(self.T))
+            T = np.copy(self.T)
             esd = 611.21*np.exp(17.502*((Td-CtoK)/(Td-32.19)))
             es = 611.21*np.exp(17.502*((T-CtoK)/(T-32.19)))
             self.rh = 100*esd/es
@@ -476,7 +479,8 @@ class S88:
         self.arr_shp = spd.shape
         self.nlen = len(spd)
         self.spd = spd
-        self.T = T
+        #self.T = T
+        self.T = np.where(T < 200, np.copy(T)+CtoK, np.copy(T))
         self.hum = ['no', np.full(SST.shape,80)] if hum is None else hum
         self.SST = np.where(SST < 200, np.copy(SST)+CtoK, np.copy(SST))
         self.lat = np.full(self.arr_shp,45) if lat is None else lat

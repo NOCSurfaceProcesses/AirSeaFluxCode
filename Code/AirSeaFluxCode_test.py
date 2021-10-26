@@ -622,4 +622,10 @@ print(res)
 
 
 for i in res1.columns:
-    print(res1[i].equals(res[i]))
+    try:
+        a=res1[i].round(4)
+        b=res[i].round(4)
+        print(a.equals(b))
+    except:
+        print(res1[i].equals(res[i]))
+        

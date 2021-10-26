@@ -54,7 +54,8 @@ def VaporPressure(temp, P, phase, meth):
     if (np.nanmin(temp) > 200):  # if Ta in Kelvin convert to Celsius
         temp = temp-273.16
     T = np.copy(temp)+273.16    #  Most formulas use T in [K]
-                                #  Formulas using [C] use the variable temp
+    
+    #  Formulas using [C] use the variable temp
     #  Calculate saturation pressure over liquid water
     if (phase == 'liquid'):
         if (meth == 'HylandWexler' or meth == ''):
