@@ -20,7 +20,7 @@ class S88:
             self.wind[ind] = np.sqrt(np.power(np.copy(self.spd[ind]), 2) +
                                 np.power(get_gust(self.gust[1], self.Ta[ind], self.usr[ind],
                                                   self.tsrv[ind], self.gust[2],
-                                                  self.lat[ind]), 2))
+                                                  self.g[ind]), 2))
     def get_heights(self, hin, hout=10):
         self.hout = hout
         self.hin = hin
@@ -169,7 +169,7 @@ class S88:
 
         self.u10n = self.wind*np.log(10/1e-4)/np.log(self.hin[0]/1e-4)
         self.usr = 0.035*self.u10n
-        self.cd10n = cdn_calc(self.u10n, self.usr, self.Ta, self.lat, self.meth)
+        self.cd10n = cdn_calc(self.u10n, self.usr, self.Ta, self.g, self.meth)
         self.cd = cd_calc(self.cd10n, self.h_in[0], self.ref_ht, self.psim)
         self.usr = np.sqrt(self.cd*np.power(self.wind, 2))
 
@@ -233,7 +233,7 @@ class S88:
             old = np.array([np.copy(getattr(self,i)) for i in old_vars])
 
             # Calculate cdn
-            self.cd10n[ind] = cdn_calc(self.u10n[ind], self.usr[ind], self.Ta[ind], self.lat[ind], self.meth)
+            self.cd10n[ind] = cdn_calc(self.u10n[ind], self.usr[ind], self.Ta[ind], self.g[ind], self.meth)
             
             if (np.all(np.isnan(self.cd10n))):
                 break
@@ -281,20 +281,13 @@ class S88:
             self.q10n[ind] = (self.qair[ind] - self.qsr[ind]/kappa*(np.log(self.h_in[2, ind]/self.ref_ht)-self.psiq[ind]))
             self.tv10n[ind] = self.t10n[ind]*(1+0.6077*self.q10n[ind])
 
-            self.tsrv[ind], self.monob[ind], self.Rb[ind] = get_L(self.L, self.lat[ind], self.usr[ind], self.tsr[ind], self.qsr[ind], self.h_in[:, ind], self.Ta[ind],
+            self.tsrv[ind], self.monob[ind], self.Rb[ind] = get_L(self.L, self.g[ind], self.usr[ind], self.tsr[ind], self.qsr[ind], self.h_in[:, ind], self.Ta[ind],
                                                    (self.SST[ind]+self.dter[ind]*self.cskin + self.dtwl[ind]*self.wl), self.qair[ind], self.qsea[ind], self.wind[ind],
                                                    np.copy(self.monob[ind]), self.zo[ind], self.zot[ind], self.psim[ind], self.meth)
 
             self.psim[ind] = psim_calc(self.h_in[0, ind]/self.monob[ind], self.meth)
             self.psit[ind] = psit_calc(self.h_in[1, ind]/self.monob[ind], self.meth)
             self.psiq[ind] = psit_calc(self.h_in[2, ind]/self.monob[ind], self.meth)
-
-            # gust[0] is asserted to be either 0 or 1
-            # if (self.gust[0] == 1):
-            #     self.wind[ind] = np.sqrt(np.power(np.copy(self.spd[ind]), 2) + np.power(get_gust(self.gust[1], self.Ta[ind], self.usr[ind],
-            #                                                                                      self.tsrv[ind], self.gust[2], self.lat[ind]), 2))
-            # else:
-            #     self.wind[ind] = np.copy(self.spd[ind])
 
             # Update the wind values
             self._wind_iterate(ind)
@@ -580,7 +573,7 @@ class UA(S88):
                                       np.sqrt(np.power(np.copy(self.spd[ind]), 2) +
                                          np.power(get_gust(self.gust[1], self.tv[ind],
                                                            self.usr[ind], self.tsrv[ind],
-                                                           self.gust[2], self.lat[ind]),
+                                                           self.gust[2], self.g[ind]),
                                                   2)))  # Zeng et al. 1998 (20)
     def __init__(self):
         self.meth = "UA"

@@ -1,9 +1,9 @@
 import numpy as np
-from util_subs import (kappa, gc, visc_air)
+from util_subs import (kappa, visc_air)
 
 # ---------------------------------------------------------------------
 
-def cdn_calc(u10n, usr, Ta, lat, meth):
+def cdn_calc(u10n, usr, Ta, g, meth):
     """
     Calculates neutral drag coefficient
 
@@ -15,8 +15,8 @@ def cdn_calc(u10n, usr, Ta, lat, meth):
         friction velocity      [m/s]
     Ta   : float
         air temperature        [K]
-    lat : float
-        latitude               [degE]
+    g : float
+        gravity               [m/s^2]
     meth : str
 
     Returns
@@ -31,7 +31,7 @@ def cdn_calc(u10n, usr, Ta, lat, meth):
         cdn = np.where(u10n < 11, 1.2*0.001, (0.49+0.065*u10n)*0.001)
     elif (meth == "S88" or meth == "UA" or meth == "ecmwf" or meth == "C30" or
           meth == "C35" or meth == "Beljaars"): #  or meth == "C40"
-        cdn = cdn_from_roughness(u10n, usr, Ta, lat, meth)
+        cdn = cdn_from_roughness(u10n, usr, Ta, g, meth)
     elif (meth == "YT96"):
         # convert usr in eq. 21 to cdn to expand for low wind speeds
         cdn = np.power((0.10038+u10n*2.17e-3+np.power(u10n, 2)*2.78e-3 -
@@ -50,7 +50,7 @@ def cdn_calc(u10n, usr, Ta, lat, meth):
 # ---------------------------------------------------------------------
 
 
-def cdn_from_roughness(u10n, usr, Ta, lat, meth):
+def cdn_from_roughness(u10n, usr, Ta, g, meth):
     """
     Calculates neutral drag coefficient from roughness length
 
@@ -62,15 +62,14 @@ def cdn_from_roughness(u10n, usr, Ta, lat, meth):
         friction velocity      [m/s]
     Ta   : float
         air temperature        [K]
-    lat : float                [degE]
-        latitude
+    g : float                [m/s]
+        gravity
     meth : str
 
     Returns
     -------
     cdn : float
     """
-    g = gc(lat, None)
     cdn = (0.61+0.063*u10n)*0.001
     zo, zc, zs = np.zeros(Ta.shape), np.zeros(Ta.shape), np.zeros(Ta.shape)
     for it in range(5):
@@ -550,7 +549,7 @@ def psim_stab(zol, meth):
 # ---------------------------------------------------------------------
 
 
-def get_gust(beta, Ta, usr, tsrv, zi, lat):
+def get_gust(beta, Ta, usr, tsrv, zi, g):
     """
     Computes gustiness
 
@@ -566,8 +565,8 @@ def get_gust(beta, Ta, usr, tsrv, zi, lat):
         star virtual temperature of air [K]
     zi : int
         scale height of the boundary layer depth [m]
-    lat : float
-        latitude
+    g : float
+        gravity
 
     Returns
     -------
@@ -575,7 +574,6 @@ def get_gust(beta, Ta, usr, tsrv, zi, lat):
     """
     if (np.nanmax(Ta) < 200):  # convert to K if in Celsius
         Ta = Ta+273.16
-    g = gc(lat, None)
     Bf = (-g/Ta)*usr*tsrv
     ug = np.ones(np.shape(Ta))*0.2
     ug = np.where(Bf > 0, beta*np.power(Bf*zi, 1/3), 0.2)
@@ -583,7 +581,7 @@ def get_gust(beta, Ta, usr, tsrv, zi, lat):
 # ---------------------------------------------------------------------
 
 
-def get_L(L, lat, usr, tsr, qsr, hin, Ta, sst, qair, qsea, wind, monob, zo,
+def get_L(L, g, usr, tsr, qsr, hin, Ta, sst, qair, qsea, wind, monob, zo,
           zot, psim, meth):
     """
     calculates Monin-Obukhov length and virtual star temperature
@@ -595,8 +593,8 @@ def get_L(L, lat, usr, tsr, qsr, hin, Ta, sst, qair, qsea, wind, monob, zo,
         "tsrv"  : default for S80, S88, LP82, YT96, UA, C30, C35 and NCAR
         "Rb" : following ecmwf (IFS Documentation cy46r1), default for ecmwf
                and Beljaars
-    lat : float
-        latitude
+    g : float
+        gravity
     usr : float
         friction wind speed (m/s)
     tsr : float
@@ -637,7 +635,6 @@ def get_L(L, lat, usr, tsr, qsr, hin, Ta, sst, qair, qsea, wind, monob, zo,
        Richardson number
 
     """
-    g = gc(lat)
     Rb = np.empty(sst.shape)
     # as in aerobulk One_on_L in mod_phymbl.f90
     tsrv = tsr*(1+0.6077*qair)+0.6077*Ta*qsr

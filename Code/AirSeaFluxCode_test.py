@@ -11,6 +11,8 @@ import logging
 from get_init import get_init
 from hum_subs import (get_hum, gamma)
 from util_subs import *
+import flux_subs
+importlib.reload(flux_subs)
 from flux_subs import *
 
 def AirSeaFluxCode_OLD(spd, T, SST, lat=None, hum=None, P=None, hin=18, hout=10,
@@ -611,8 +613,8 @@ Rs = np.asarray(inDt["Rs"])
 del hu, ht, inDt
 
 # run AirSeaFluxCode
-res = AirSeaFluxCode_OLD(spd, t, sst, lat=lat, hin=hin, P=p, cskin=0,n=10,hum=None,
-                         tol=['all', 0.01, 0.01, 1e-05, 1e-3, 0.1, 0.1], L="Rb",meth="UA", Rs=Rs,Rl=Rs,gust=None)
+# res = AirSeaFluxCode_OLD(spd, t, sst, lat=lat, hin=hin, P=p, cskin=0,n=10,hum=None,
+#                          tol=['all', 0.01, 0.01, 1e-05, 1e-3, 0.1, 0.1], L="Rb",meth="UA", Rs=Rs,Rl=Rs,gust=None)
 res1 = AirSeaFluxCode(spd, t, sst, lat=lat, hin=hin, P=p, cskin=0,n=10,hum=None,
                       tol=['all', 0.01, 0.01, 1e-05, 1e-3, 0.1, 0.1], L="Rb",meth="UA", Rs=Rs,Rl=Rs,gust=None)
 print(res1)
