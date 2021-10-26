@@ -20,7 +20,7 @@ class S88:
             self.wind[ind] = np.sqrt(np.power(np.copy(self.spd[ind]), 2) +
                                 np.power(get_gust(self.gust[1], self.Ta[ind], self.usr[ind],
                                                   self.tsrv[ind], self.gust[2],
-                                                  self.g[ind]), 2))
+                                                  self.grav[ind]), 2))
     def get_heights(self, hin, hout=10):
         self.hout = hout
         self.hin = hin
@@ -151,7 +151,7 @@ class S88:
         self._wind_firstguess()
 
         # Rb eq. 11 Grachev & Fairall 1997
-        Rb = self.g*10*(self.dtv)/(np.where(self.T < 200, np.copy(self.T)+CtoK, np.copy(self.T)) * np.power(self.wind, 2))
+        Rb = self.grav*10*(self.dtv)/(np.where(self.T < 200, np.copy(self.T)+CtoK, np.copy(self.T)) * np.power(self.wind, 2))
         self.monob = 1/Rb  # eq. 12 Grachev & Fairall 1997
 
         # ------------
@@ -169,7 +169,7 @@ class S88:
 
         self.u10n = self.wind*np.log(10/1e-4)/np.log(self.hin[0]/1e-4)
         self.usr = 0.035*self.u10n
-        self.cd10n = cdn_calc(self.u10n, self.usr, self.Ta, self.g, self.meth)
+        self.cd10n = cdn_calc(self.u10n, self.usr, self.Ta, self.grav, self.meth)
         self.cd = cd_calc(self.cd10n, self.h_in[0], self.ref_ht, self.psim)
         self.usr = np.sqrt(self.cd*np.power(self.wind, 2))
 
@@ -189,11 +189,11 @@ class S88:
         zo = ref_ht/np.exp(kappa/np.sqrt(cd10n))
         return zo
     
-    def iterate(self, n=30, tol=None):
+    def iterate(self, niter=30, tol=None):
 
-        if n < 5:
+        if niter < 5:
             warnings.warn("Iteration number <5 - resetting to 5.")
-            n = 5
+            niter = 5
 
         # Decide which variables to use in tolerances based on tolerance specification
         tol = ['all', 0.01, 0.01, 1e-05, 1e-3, 0.1, 0.1] if tol is None else tol
@@ -227,13 +227,13 @@ class S88:
         ii = True
         while ii:
             it += 1
-            if it > n: break
+            if it > niter: break
 
             # Set the old variables (for comparison against "new")
             old = np.array([np.copy(getattr(self,i)) for i in old_vars])
 
             # Calculate cdn
-            self.cd10n[ind] = cdn_calc(self.u10n[ind], self.usr[ind], self.Ta[ind], self.g[ind], self.meth)
+            self.cd10n[ind] = cdn_calc(self.u10n[ind], self.usr[ind], self.Ta[ind], self.grav[ind], self.meth)
             
             if (np.all(np.isnan(self.cd10n))):
                 break
@@ -281,7 +281,7 @@ class S88:
             self.q10n[ind] = (self.qair[ind] - self.qsr[ind]/kappa*(np.log(self.h_in[2, ind]/self.ref_ht)-self.psiq[ind]))
             self.tv10n[ind] = self.t10n[ind]*(1+0.6077*self.q10n[ind])
 
-            self.tsrv[ind], self.monob[ind], self.Rb[ind] = get_L(self.L, self.g[ind], self.usr[ind], self.tsr[ind], self.qsr[ind], self.h_in[:, ind], self.Ta[ind],
+            self.tsrv[ind], self.monob[ind], self.Rb[ind] = get_L(self.L, self.grav[ind], self.usr[ind], self.tsr[ind], self.qsr[ind], self.h_in[:, ind], self.Ta[ind],
                                                    (self.SST[ind]+self.dter[ind]*self.cskin + self.dtwl[ind]*self.wl), self.qair[ind], self.qsea[ind], self.wind[ind],
                                                    np.copy(self.monob[ind]), self.zo[ind], self.zot[ind], self.psim[ind], self.meth)
 
@@ -322,7 +322,7 @@ class S88:
             # End of iteration loop
 
         self.itera[ind] = -1
-        self.itera = np.where(self.itera > n, -1, self.itera)
+        self.itera = np.where(self.itera > niter, -1, self.itera)
         logging.info('method %s | # of iterations:%s', self.meth, it)
         logging.info('method %s | # of points that did not converge :%s \n', self.meth, self.ind[0].size)
 
@@ -480,7 +480,7 @@ class S88:
         self.hum = ['no', np.full(SST.shape,80)] if hum is None else hum
         self.SST = np.where(SST < 200, np.copy(SST)+CtoK, np.copy(SST))
         self.lat = np.full(self.arr_shp,45) if lat is None else lat
-        self.g = gc(self.lat)
+        self.grav = gc(self.lat)
         self.P = np.full(n, 1013) if P is None else P
 
         # mask to preserve missing values when initialising variables
@@ -573,7 +573,7 @@ class UA(S88):
                                       np.sqrt(np.power(np.copy(self.spd[ind]), 2) +
                                          np.power(get_gust(self.gust[1], self.tv[ind],
                                                            self.usr[ind], self.tsrv[ind],
-                                                           self.gust[2], self.g[ind]),
+                                                           self.gust[2], self.grav[ind]),
                                                   2)))  # Zeng et al. 1998 (20)
     def __init__(self):
         self.meth = "UA"
@@ -613,7 +613,7 @@ class Beljaars(C30):
         
 def AirSeaFluxCode(spd, T, SST, lat=None, hum=None, P=None, hin=18, hout=10,
                    Rl=None, Rs=None, cskin=None, skin="C35", wl=0, gust=None,
-                   meth="S88", qmeth="Buck2", tol=None, n=30, out=0, L=None):
+                   meth="S88", qmeth="Buck2", tol=None, niter=30, out=0, L=None):
     """
     Calculates turbulent surface fluxes using different parameterizations
     Calculates height adjusted values for spd, T, q
@@ -674,7 +674,7 @@ def AirSeaFluxCode(spd, T, SST, lat=None, hum=None, P=None, hin=18, hout=10,
            option : 'all' to set tolerance limits for both fluxes and height
                     adjustment lim1-6
            default is tol=['all', 0.01, 0.01, 1e-05, 1e-3, 0.1, 0.1]
-        n : int
+        niter : int
             number of iterations (defautl = 10)
         out : int
             set 0 to set points that have not converged, negative values of
@@ -749,7 +749,7 @@ def AirSeaFluxCode(spd, T, SST, lat=None, hum=None, P=None, hin=18, hout=10,
     iclass.get_heights(hin, hout)
     iclass.get_specHumidity(qmeth=qmeth)
     iclass.set_coolskin_warmlayer(wl=wl, cskin=cskin,skin=skin,Rl=Rl,Rs=Rs)
-    iclass.iterate(tol=tol,n=n)
+    iclass.iterate(tol=tol,niter=niter)
     resAll = iclass.get_output(out=out)
 
     return resAll
