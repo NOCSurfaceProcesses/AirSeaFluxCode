@@ -719,59 +719,31 @@ def get_strs(hin, monob, wind, zo, zot, zoq, dt, dq, dter, dqer, dtwl, ct, cq,
 
     """
     if (meth == "UA"):
-        usr = np.where(hin[0]/monob <= -1.574, kappa*wind / (np.log(-1.574*monob/zo)-psim_calc(-1.574, meth) + psim_calc(zo/monob, meth) + 1.14*(np.power(-hin[0]/monob, 1/3) - np.power(1.574, 1/3))),
-                       np.where(hin[0]/monob < 0, kappa*wind / (np.log(hin[0]/zo) - psim_calc(hin[0]/monob, meth) + psim_calc(zo/monob, meth)), np.where(hin[0]/monob <= 1, kappa*wind / (np.log(hin[0]/zo) +
-                                          5*hin[0]/monob-5*zo/monob), kappa*wind/(np.log(monob/zo)+5 - 5*zo/monob + 5*np.log(hin[0]/monob) + hin[0]/monob-1))))
 
-        usr = np.where(hin[0]/monob <= -1.574, kappa*wind / (np.log(-1.574*monob/zo)-psim_calc(-1.574, meth) + psim_calc(zo/monob, meth) + 1.14*(np.power(-hin[0]/monob, 1/3) - np.power(1.574, 1/3)))
+        hol0 = hin[0]/np.copy(monob)
+        usr = np.where(hol0 <= -1.574, wind*kappa / (np.log(-1.574*monob/zo)-psim_calc(-1.574, meth) + psim_calc(zo/monob, meth) + 1.14*(np.power(-hin[0]/monob, 1/3) - np.power(1.574, 1/3))), np.nan)
+        usr = np.where((hol0 > -1.574) & (hol0 < 0), wind*kappa / (np.log(hin[0]/zo) - psim_calc(hin[0]/monob, meth) + psim_calc(zo/monob, meth)), usr)
+        usr = np.where((hol0 >= 0) & (hol0 <= 1), wind*kappa / (np.log(hin[0]/zo) + 5*hin[0]/monob-5*zo/monob), usr)
+        usr = np.where(hol0 > 1, wind*kappa/(np.log(monob/zo)+5 - 5*zo/monob + 5*np.log(hin[0]/monob) + hin[0]/monob-1), usr)
 
-                       usr = np.where(>= -1.574 hin[0]/monob < 0, kappa*wind / (np.log(hin[0]/zo) - psim_calc(hin[0]/monob, meth) + psim_calc(zo/monob, meth)
+        # Zeng et al. 1998 (7-10)
+        hol1 = hin[1]/np.copy(monob)
+        tsr = np.where(hol1 < -0.465, kappa*(dt-dter*cskin-dtwl*wl) / (np.log((-0.465*monob)/zot) - psit_calc(-0.465, meth)+0.8*(np.power(0.465, -1/3) - np.power(-hin[1]/monob, -1/3))), np.nan)
+        tsr = np.where((hol1 >= -0.465) & (hol1 < 0), kappa*(dt-dter*cskin-dtwl*wl) / (np.log(hin[1]/zot) - psit_calc(hin[1]/monob, meth) + psit_calc(zot/monob, meth)), tsr)
+        tsr = np.where((hol1 >= 0) & (hol1 <= 1), kappa*(dt-dter*cskin-dtwl*wl) / (np.log(hin[1]/zot) + 5*hin[1]/monob-5*zot/monob), tsr)
+        tsr = np.where(hol1 > 1, kappa*(dt-dter*cskin-dtwl*wl) / (np.log(monob/zot)+5 - 5*zot/monob+5*np.log(hin[1]/monob) + hin[1]/monob-1), tsr)
 
-        usr = np.where(hin[0]/monob <= 1, kappa*wind / (np.log(hin[0]/zo) + 5*hin[0]/monob-5*zo/monob)
-        usr = kappa*wind/(np.log(monob/zo)+5 - 5*zo/monob + 5*np.log(hin[0]/monob) + hin[0]/monob-1))))
+        # Zeng et al. 1998 (11-14)
+        hol2 = hin[2]/monob
+        qsr = np.where(hol2 < -0.465, kappa*(dq-dqer*cskin) / (np.log((-0.465*monob)/zoq) - psit_calc(-0.465, meth)+psit_calc(zoq/monob, meth) + 0.8*(np.power(0.465, -1/3) - np.power(-hin[2]/monob, -1/3))), np.nan)
+        qsr = np.where((hol2 >= -0.465) & (hol2 < 0), kappa*(dq-dqer*cskin)/(np.log(hin[1]/zot) - psit_calc(hin[2]/monob, meth) + psit_calc(zoq/monob, meth)), qsr)
+        qsr = np.where((hol2 >= 0) & (hol2 <= 1), kappa*(dq-dqer*cskin) / (np.log(hin[1]/zoq)+5*hin[2]/monob - 5*zoq/monob), qsr)
+        qsr = np.where(hol2 > 1, kappa*(dq-dqer*cskin)/(np.log(monob/zoq)+5-5*zoq/monob + 5*np.log(hin[2]/monob) + hin[2]/monob-1), qsr)
 
-                 
-                                # Zeng et al. 1998 (7-10)
-        tsr = np.where(hin[1]/monob < -0.465, kappa*(dt-dter*cskin-dtwl*wl) /
-                       (np.log((-0.465*monob)/zot) -
-                        psit_calc(-0.465, meth)+0.8*(np.power(0.465, -1/3) -
-                        np.power(-hin[1]/monob, -1/3))),
-                       np.where(hin[1]/monob < 0, kappa*(dt-dter*cskin-dtwl*wl) /
-                                (np.log(hin[1]/zot) -
-                                 psit_calc(hin[1]/monob, meth) +
-                                 psit_calc(zot/monob, meth)),
-                                np.where(hin[1]/monob <= 1,
-                                         kappa*(dt-dter*cskin-dtwl*wl) /
-                                         (np.log(hin[1]/zot) +
-                                          5*hin[1]/monob-5*zot/monob),
-                                         kappa*(dt-dter*cskin-dtwl*wl) /
-                                         (np.log(monob/zot)+5 -
-                                          5*zot/monob+5*np.log(hin[1]/monob) +
-                                          hin[1]/monob-1))))
-                                # Zeng et al. 1998 (11-14)
-        qsr = np.where(hin[2]/monob < -0.465, kappa*(dq-dqer*cskin) /
-                       (np.log((-0.465*monob)/zoq) -
-                        psit_calc(-0.465, meth)+psit_calc(zoq/monob, meth) +
-                        0.8*(np.power(0.465, -1/3) -
-                             np.power(-hin[2]/monob, -1/3))),
-                       np.where(hin[2]/monob < 0,
-                                kappa*(dq-dqer*cskin)/(np.log(hin[1]/zot) -
-                                psit_calc(hin[2]/monob, meth) +
-                                psit_calc(zoq/monob, meth)),
-                                np.where(hin[2]/monob <= 1,
-                                         kappa*(dq-dqer*cskin) /
-                                         (np.log(hin[1]/zoq)+5*hin[2]/monob -
-                                          5*zoq/monob),
-                                         kappa*(dq-dqer*cskin)/
-                                         (np.log(monob/zoq)+5-5*zoq/monob +
-                                          5*np.log(hin[2]/monob) +
-                                          hin[2]/monob-1))))
     elif (meth == "C30" or meth == "C35"): #   or meth == "C40"
         usr = (wind*kappa/(np.log(hin[0]/zo)-psiu_26(hin[0]/monob, meth)))
-        tsr = ((dt-dter*cskin-dtwl*wl)*(kappa/(np.log(hin[1]/zot) -
-                                       psit_26(hin[1]/monob))))
-        qsr = ((dq-dqer*cskin)*(kappa/(np.log(hin[2]/zoq) -
-                                       psit_26(hin[2]/monob))))
+        tsr = ((dt-dter*cskin-dtwl*wl)*(kappa/(np.log(hin[1]/zot) - psit_26(hin[1]/monob))))
+        qsr = ((dq-dqer*cskin)*(kappa/(np.log(hin[2]/zoq) - psit_26(hin[2]/monob))))
     else:
         usr = (wind*kappa/(np.log(hin[0]/zo)-psim_calc(hin[0]/monob, meth)))
         tsr = ct*wind*(dt-dter*cskin-dtwl*wl)/usr
