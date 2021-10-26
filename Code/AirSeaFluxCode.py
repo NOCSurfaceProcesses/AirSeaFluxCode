@@ -8,7 +8,19 @@ from flux_subs import *
 from cs_wl_subs import *
 
 class S88:
-    
+
+    def _wind_firstguess(self):
+        if (self.gust[0] == 1):
+            self.wind = np.sqrt(np.power(np.copy(self.spd), 2)+np.power(0.5, 2))
+        else:
+            self.wind = np.copy(self.spd)
+
+    def _wind_iterate(self,ind):
+        if(self.gust[0] == 1):
+            self.wind[ind] = np.sqrt(np.power(np.copy(self.spd[ind]), 2) +
+                                np.power(get_gust(self.gust[1], self.Ta[ind], self.usr[ind],
+                                                  self.tsrv[ind], self.gust[2],
+                                                  self.lat[ind]), 2))
     def get_heights(self, hin, hout=10):
         self.hout = hout
         self.hin = hin
@@ -132,8 +144,11 @@ class S88:
         self.tv10n = self.t10n*(1+0.6077*self.q10n)
 
         #  Zeng et al. 1998
-        tv = self.th*(1+0.6077*self.qair)   # virtual potential T
+        self.tv = self.th*(1+0.6077*self.qair)   # virtual potential T
         self.dtv = self.dt*(1+0.6077*self.qair)+0.6077*self.th*self.dq
+
+        # Set the wind array
+        self._wind_firstguess()
 
         # Rb eq. 11 Grachev & Fairall 1997
         Rb = self.g*10*(self.dtv)/(np.where(self.T < 200, np.copy(self.T)+CtoK, np.copy(self.T)) * np.power(self.wind, 2))
@@ -150,12 +165,7 @@ class S88:
         self.Qs = 0.945*self.Rs
         self.dtwl = np.full(self.T.shape,0.3)*self.msk
         self.skt = np.copy(self.SST)
-
-        # Apply the gustiness adjustment if defined for this class
-        try:
-            self._adjust_gust()
-        except AttributeError:
-            pass
+        
 
         self.u10n = self.wind*np.log(10/1e-4)/np.log(self.hin[0]/1e-4)
         self.usr = 0.035*self.u10n
@@ -280,12 +290,14 @@ class S88:
             self.psiq[ind] = psit_calc(self.h_in[2, ind]/self.monob[ind], self.meth)
 
             # gust[0] is asserted to be either 0 or 1
-            if (self.gust[0] == 1):
-                self.wind[ind] = np.sqrt(np.power(np.copy(self.spd[ind]), 2) + np.power(get_gust(self.gust[1], self.Ta[ind], self.usr[ind],
-                                                                                                 self.tsrv[ind], self.gust[2], self.lat[ind]), 2))
-            else:
-                self.wind[ind] = np.copy(self.spd[ind])
+            # if (self.gust[0] == 1):
+            #     self.wind[ind] = np.sqrt(np.power(np.copy(self.spd[ind]), 2) + np.power(get_gust(self.gust[1], self.Ta[ind], self.usr[ind],
+            #                                                                                      self.tsrv[ind], self.gust[2], self.lat[ind]), 2))
+            # else:
+            #     self.wind[ind] = np.copy(self.spd[ind])
 
+            # Update the wind values
+            self._wind_iterate(ind)
                 
             self.u10n[ind] = self.wind[ind]-self.usr[ind]/kappa*(np.log(self.h_in[0, ind]/10) - self.psim[ind])
 
@@ -435,7 +447,7 @@ class S88:
         # Set the final wind speed values
         self.wind_spd = np.sqrt(np.power(self.wind, 2)-np.power(self.spd, 2))
 
-        # Get class specific flags
+        # Get class specific flags (will only work if self.utmp_hi and self.utmp_lo have been set in the class)
         try:
             self._class_flag()
         except AttributeError:
@@ -483,13 +495,6 @@ class S88:
         self.msk = np.where(np.isnan(spd+T+SST), np.nan, 1)
         self.Rb = np.empty(SST.shape)*self.msk
         self.dtwl = np.full(T.shape,0.3)*self.msk
-
-        # Set the wind array
-        # gust[0] is asserted to be either 0 or 1
-        if (self.gust[0] == 1):
-            self.wind = np.sqrt(np.power(np.copy(self.spd), 2)+np.power(0.5, 2))
-        else:
-            self.wind = np.copy(spd)
         
     def add_gust(self,gust=None):
 
@@ -507,8 +512,8 @@ class S88:
 
     def _class_flag(self):
         "A flag specific to this class - only used for certain classes where utmp_lo and utmp_hi are defined"
-        self.flag = np.where(((self.utmp < self.utmp_lo) | (self.utmp > self.utmp_hi)) & (self.flag == "n"), "o",
-                             np.where(((self.utmp < self.utmp_lo) | (self.utmp > self.utmp_hi)) &
+        self.flag = np.where(((self.utmp < self.utmp_lo[0]) | (self.utmp > self.utmp_hi[0])) & (self.flag == "n"), "o",
+                             np.where(((self.utmp < self.utmp_lo[1]) | (self.utmp > self.utmp_hi[1])) &
                                       ((self.flag != "n") &
                                        (np.char.find(self.flag.astype(str), 'u') == -1) &
                                        (np.char.find(self.flag.astype(str), 'q') == -1)),
@@ -521,22 +526,22 @@ class S80(S88):
 
     def __init__(self):
         self.meth = "S80"
-        self.utmp_lo = 6
-        self.utmp_hi = 22
+        self.utmp_lo = [6,6]
+        self.utmp_hi = [22,22]
         
 class YT96(S88):
 
     def __init__(self):
         self.meth = "YT96"
-        self.utmp_lo = 0
-        self.utmp_hi = 26
+        self.utmp_lo = [0,3]
+        self.utmp_hi = [26,26]
 
 class LP82(S88):
     
     def __init__(self):
         self.meth = "LP82"
-        self.utmp_lo = 3
-        self.utmp_hi = 25
+        self.utmp_lo = [3,3]
+        self.utmp_hi = [25,25]
 
 
 class NCAR(S88):
@@ -561,17 +566,27 @@ class NCAR(S88):
 
 class UA(S88):
     
-    def _adjust_gust(self):
+    def _wind_firstguess(self):
         # gustiness adjustment
         if (self.gust[0] == 1):
             self.wind = np.where(self.dtv >= 0, np.where(self.spd > 0.1, self.spd, 0.1),
                                  np.sqrt(np.power(np.copy(self.spd), 2)+np.power(0.5, 2)))
-
+        else:
+            self.wind = np.copy(self.spd)
+    def _wind_iterate(self,ind):
+        if(self.gust[0] == 1):
+            self.wind[ind] = np.where(self.dtv[ind] >= 0, np.where(self.spd[ind] > 0.1,
+                                                         self.spd[ind], 0.1),
+                                      np.sqrt(np.power(np.copy(self.spd[ind]), 2) +
+                                         np.power(get_gust(self.gust[1], self.tv[ind],
+                                                           self.usr[ind], self.tsrv[ind],
+                                                           self.gust[2], self.lat[ind]),
+                                                  2)))  # Zeng et al. 1998 (20)
     def __init__(self):
         self.meth = "UA"
         self.default_gust = [1,1,1000]
-        self.utmp_lo = 18
-        self.utmp_hi = 999
+        self.utmp_lo = [-999,-999]
+        self.utmp_hi = [18,18]
 
 
 class C30(S88):
