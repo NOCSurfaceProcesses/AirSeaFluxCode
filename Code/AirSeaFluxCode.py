@@ -189,7 +189,7 @@ class S88:
         zo = ref_ht/np.exp(kappa/np.sqrt(cd10n))
         return zo
     
-    def iterate(self,n=10, tol=None):
+    def iterate(self, n=30, tol=None):
 
         if n < 5:
             warnings.warn("Iteration number <5 - resetting to 5.")
@@ -620,7 +620,7 @@ class Beljaars(C30):
         
 def AirSeaFluxCode(spd, T, SST, lat=None, hum=None, P=None, hin=18, hout=10,
                    Rl=None, Rs=None, cskin=None, skin="C35", wl=0, gust=None,
-                   meth="S88", qmeth="Buck2", tol=None, n=10, out=0, L=None):
+                   meth="S88", qmeth="Buck2", tol=None, n=30, out=0, L=None):
     """
     Calculates turbulent surface fluxes using different parameterizations
     Calculates height adjusted values for spd, T, q
