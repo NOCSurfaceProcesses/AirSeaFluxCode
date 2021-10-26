@@ -3,7 +3,6 @@ from util_subs import (kappa, gc, visc_air)
 
 # ---------------------------------------------------------------------
 
-
 def cdn_calc(u10n, usr, Ta, lat, meth):
     """
     Calculates neutral drag coefficient
@@ -720,22 +719,18 @@ def get_strs(hin, monob, wind, zo, zot, zoq, dt, dq, dter, dqer, dtwl, ct, cq,
 
     """
     if (meth == "UA"):
-        usr = np.where(hin[0]/monob <= -1.574, kappa*wind /
-                       (np.log(-1.574*monob/zo)-psim_calc(-1.574, meth) +
-                        psim_calc(zo/monob, meth) +
-                        1.14*(np.power(-hin[0]/monob, 1/3) -
-                        np.power(1.574, 1/3))),
-                       np.where(hin[0]/monob < 0, kappa*wind /
-                                (np.log(hin[0]/zo) -
-                                 psim_calc(hin[0]/monob, meth) +
-                                 psim_calc(zo/monob, meth)),
-                                np.where(hin[0]/monob <= 1, kappa*wind /
-                                         (np.log(hin[0]/zo) +
-                                          5*hin[0]/monob-5*zo/monob),
-                                         kappa*wind/(np.log(monob/zo)+5 -
-                                                     5*zo/monob +
-                                                     5*np.log(hin[0]/monob) +
-                                                     hin[0]/monob-1))))
+        usr = np.where(hin[0]/monob <= -1.574, kappa*wind / (np.log(-1.574*monob/zo)-psim_calc(-1.574, meth) + psim_calc(zo/monob, meth) + 1.14*(np.power(-hin[0]/monob, 1/3) - np.power(1.574, 1/3))),
+                       np.where(hin[0]/monob < 0, kappa*wind / (np.log(hin[0]/zo) - psim_calc(hin[0]/monob, meth) + psim_calc(zo/monob, meth)), np.where(hin[0]/monob <= 1, kappa*wind / (np.log(hin[0]/zo) +
+                                          5*hin[0]/monob-5*zo/monob), kappa*wind/(np.log(monob/zo)+5 - 5*zo/monob + 5*np.log(hin[0]/monob) + hin[0]/monob-1))))
+
+        usr = np.where(hin[0]/monob <= -1.574, kappa*wind / (np.log(-1.574*monob/zo)-psim_calc(-1.574, meth) + psim_calc(zo/monob, meth) + 1.14*(np.power(-hin[0]/monob, 1/3) - np.power(1.574, 1/3)))
+
+                       usr = np.where(>= -1.574 hin[0]/monob < 0, kappa*wind / (np.log(hin[0]/zo) - psim_calc(hin[0]/monob, meth) + psim_calc(zo/monob, meth)
+
+        usr = np.where(hin[0]/monob <= 1, kappa*wind / (np.log(hin[0]/zo) + 5*hin[0]/monob-5*zo/monob)
+        usr = kappa*wind/(np.log(monob/zo)+5 - 5*zo/monob + 5*np.log(hin[0]/monob) + hin[0]/monob-1))))
+
+                 
                                 # Zeng et al. 1998 (7-10)
         tsr = np.where(hin[1]/monob < -0.465, kappa*(dt-dter*cskin-dtwl*wl) /
                        (np.log((-0.465*monob)/zot) -
@@ -782,4 +777,154 @@ def get_strs(hin, monob, wind, zo, zot, zoq, dt, dq, dter, dqer, dtwl, ct, cq,
         tsr = ct*wind*(dt-dter*cskin-dtwl*wl)/usr
         qsr = cq*wind*(dq-dqer*cskin)/usr
     return usr, tsr, qsr
+# ---------------------------------------------------------------------
+
+
+
+# --------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------
+# ---------------------------------------------------------------------
+ 
+def get_tsrv(tsr, qsr, Ta, qair):
+    """
+    calculates virtual star temperature
+ 
+    Parameters
+    ----------
+    tsr : float
+        star temperature (K)
+    qsr : float
+        star specific humidity (g/kg)
+    Ta : float
+        air temperature (K)
+    qair : float
+        air specific humidity (g/kg)
+ 
+    Returns
+    -------
+    tsrv : float
+        virtual star temperature (K)
+ 
+    """
+    # as in aerobulk One_on_L in mod_phymbl.f90
+    tsrv = tsr*(1+0.6077*qair)+0.6077*Ta*qsr
+    return tsrv
+ 
+# ---------------------------------------------------------------------
+ 
+def get_Rb(g, usr, hin, Ta, sst, qair, qsea, wind, monob, psim, meth):
+    """
+    calculates bulk Richardson number
+ 
+    Parameters
+    ----------
+    g : float
+        acceleration due to gravity (m/s2)
+    usr : float
+        friction wind speed (m/s)
+    hin : float
+        sensor heights (m)
+    Ta : float
+        air temperature (K)
+    sst : float
+        sea surface temperature (K)
+    qair : float
+        air specific humidity (g/kg)
+    qsea : float
+        specific humidity at sea surface (g/kg)
+    wind : float
+        wind speed (m/s)
+    monob : float
+        Monin-Obukhov length from previous iteration step (m)
+    psim : float
+        momentum stability function
+    meth : str
+        bulk parameterisation method option: "S80", "S88", "LP82", "YT96",
+        "UA", "NCAR", "C30", "C35", "ecmwf", "Beljaars"
+ 
+    Returns
+    -------
+    Rb  : float
+       Richardson number
+ 
+    """
+    thvs = sst*(1+0.6077*qsea) # virtual SST
+    thv = Ta*(1+0.6077*qair)   # virtual potential air temperature
+    dthv = thv - thvs          # virtual air - sea temp. diff
+    tv = thv + 0.5*dthv        # estimate tv within surface layer
+    # adjust wind to T sensor's height
+    uz = (wind-usr/kappa*(np.log(hin[0]/hin[1])-psim +
+                          psim_calc(hin[1]/monob, meth)))
+    Rb = g*dthv*hin[1]/(tv*uz*uz)
+    return Rb
+ 
+# ---------------------------------------------------------------------
+ 
+def get_LRb(Rb, hin, monob, zo, zot, meth):
+    """
+    calculates Monin-Obukhov length following ecmwf (IFS Documentation cy46r1)
+    default for methods ecmwf and Beljaars
+ 
+    Parameters
+    ----------
+    Rb  : float
+       Richardson number
+    hin : float
+        sensor heights (m)
+    monob : float
+        Monin-Obukhov length from previous iteration step (m)
+    zo   : float
+        surface roughness       (m)
+    zot   : float
+        temperature roughness length       (m)
+    meth : str
+        bulk parameterisation method option: "S80", "S88", "LP82", "YT96",
+        "UA", "NCAR", "C30", "C35", "ecmwf", "Beljaars"
+ 
+    Returns
+    -------
+    monob : float
+        M-O length (m)
+ 
+    """
+    zol = (Rb*(np.power(np.log((hin[1]+zo)/zo)-psim_calc((hin[1]+zo) /
+                monob, meth) + psim_calc(zo/monob, meth), 2) /
+               (np.log((hin[1]+zo)/zot) -
+               psit_calc((hin[1]+zo)/monob, meth) +
+               psit_calc(zot/monob, meth))))
+    monob = 1/zol
+    return monob
+ 
+# ---------------------------------------------------------------------
+ 
+def get_Ltsrv(tsrv, g, tv, usr):
+    """
+    calculates Monin-Obukhov length from tsrv
+ 
+    Parameters
+    ----------
+    tsrv : float
+        virtual star temperature (K)
+    g : float
+        acceleration due to gravity (m/s2)
+    tv : float
+        virtual temperature (K)
+    usr : float
+        friction wind speed (m/s)
+ 
+    Returns
+    -------
+    monob : float
+        M-O length (m)
+ 
+    """
+    if (L == "tsrv"):
+        #tmp = (g*kappa*tsrv /
+        #        np.maximum(np.power(usr, 2)*Ta*(1+0.6077*qair), 1e-9))
+        #tmp = np.minimum(np.abs(tmp), 200)*np.sign(tmp)
+        #monob = 1/np.copy(tmp)
+        monob = (np.power(usr, 2)*tv)/(g*kappa*tsrv)
+        
+    return monob
+ 
 # ---------------------------------------------------------------------
