@@ -54,7 +54,7 @@ class S88:
     def _fix_coolskin_warmlayer(self, wl, cskin, skin, Rl, Rs):
         assert wl in [0,1], "wl not valid"
         assert cskin in [0,1], "cskin not valid"
-        assert skin in ["C35", "ecmwf" or "Beljaars"], "Skin value not valid"
+        assert skin in ["C35", "ecmwf","Beljaars"], "Skin value not valid"
 
         if ((cskin == 1 or wl == 1) and (np.all(Rl == None) or np.all(np.isnan(Rl)))
             and ((np.all(Rs == None) or np.all(np.isnan(Rs))))):
@@ -112,7 +112,7 @@ class S88:
             elif (self.skin == "ecmwf"):
                 self.dter[ind] = cs_ecmwf(self.rho[ind], self.Rs[ind], self.Rnl[ind], self.cp[ind],
                                           self.lv[ind], self.usr[ind], self.tsr[ind], self.qsr[ind],
-                                          self.sst[ind], self.lat[ind])
+                                          self.SST[ind], self.lat[ind])
                 self.dtwl[ind] = wl_ecmwf(self.rho[ind], self.Rs[ind], self.Rnl[ind], self.cp[ind],
                                           self.lv[ind], self.usr[ind], self.tsr[ind], self.qsr[ind],
                                           np.copy(self.SST[ind]), np.copy(self.skt[ind]),
