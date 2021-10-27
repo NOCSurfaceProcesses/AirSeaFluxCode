@@ -557,8 +557,8 @@ class NCAR(S88):
     
     def __init__(self):
         self.meth = "NCAR"
-        self.utmp_lo = 0.5
-        self.utmp_hi = 999
+        self.utmp_lo = [0.5,0.5]
+        self.utmp_hi = [999,999]
 
 
 class UA(S88):
