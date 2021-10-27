@@ -64,8 +64,8 @@ class S88:
         self.wl = wl            
         self.cskin = cskin
         self.skin = skin
-        self.Rs = np.ones(self.spd.shape)*np.nan if Rs is None else Rs
-        self.Rl = np.ones(self.spd.shape)*np.nan if Rl is None else Rl
+        self.Rs = np.full(self.spd.shape,np.nan) if Rs is None else Rs
+        self.Rl = np.full(self.spd.shape,np.nan) if Rl is None else Rl
 
     def set_coolskin_warmlayer(self, wl=0, cskin=0, skin="C35", Rl=None, Rs=None):
         wl = 0 if wl is None else wl
@@ -160,15 +160,14 @@ class S88:
         # ------------
         self.rho = self.P*100/(287.1*self.tv10n)
         self.lv = (2.501-0.00237*(self.SST-CtoK))*1e6  # J/kg
-        
-        self.dter = np.full(self.T.shape, -0.3)*self.msk
-        self.tkt = np.full(self.T.shape, 0.001)*self.msk
+
+        dummy_array = lambda val : np.full(self.T.shape, val)*self.msk
+        self.dter, self.tkt, self.skt = [dummy_array(x) for x in (-0.3, 0.001, 0.3)]
+
         self.dqer = self.dter*0.622*self.lv*self.qsea/(287.1*np.power(self.SST, 2))
         self.Rnl = 0.97*(self.Rl-5.67e-8*np.power(self.SST-0.3*self.cskin, 4))
         self.Qs = 0.945*self.Rs
-        self.dtwl = np.full(self.T.shape,0.3)*self.msk
         self.skt = np.copy(self.SST)
-        
 
         self.u10n = self.wind*np.log(10/1e-4)/np.log(self.hin[0]/1e-4)
         self.usr = 0.035*self.u10n
@@ -176,8 +175,7 @@ class S88:
         self.cd = cd_calc(self.cd10n, self.h_in[0], self.ref_ht, self.psim)
         self.usr = np.sqrt(self.cd*np.power(self.wind, 2))
 
-        self.zo = np.full(self.arr_shp,1e-4)*self.msk
-        self.zot, self.zoq = np.copy(self.zo), np.copy(self.zo)
+        self.zo, self.zot, self.zoq = [np.full(self.arr_shp,1e-4)*self.msk for _ in range(3)]
 
         self.ct10n = np.power(kappa, 2)/(np.log(self.h_in[0]/self.zo)*np.log(self.h_in[1]/self.zot))
         self.cq10n = np.power(kappa, 2)/(np.log(self.h_in[0]/self.zo)*np.log(self.h_in[2]/self.zoq))
@@ -210,14 +208,9 @@ class S88:
         it = 0
 
         # Setup empty arrays
-        self.itera = np.full(self.arr_shp,-1)*self.msk
-        
-        self.tsrv = np.zeros(self.arr_shp)*self.msk
-        self.psim, self.psit, self.psiq = np.copy(self.tsrv), np.copy(self.tsrv), np.copy(self.tsrv)
-
-        self.tau = np.full(self.arr_shp,0.05)*self.msk
-        self.sensible = np.full(self.arr_shp,-5)*self.msk
-        self.latent = np.full(self.arr_shp,-65)*self.msk
+        self.tsrv, self.psim, self.psit, self.psiq = [np.zeros(self.arr_shp)*self.msk for _ in range(4)]
+        dummy_array = lambda val : np.full(self.arr_shp,val)*self.msk
+        self.itera, self.tau, self.sensible, self.latent = [dummy_array(x) for x in (-1,0.05,-5,-65)]
 
         # Generate the first guess values
         self._first_guess()
@@ -239,7 +232,6 @@ class S88:
                 logging.info('break %s at iteration %s cd10n<0', meth, it)
                 
             self.zo[ind] = self.ref_ht/np.exp(kappa/np.sqrt(self.cd10n[ind]))
-            #self.zo[ind] = self._zo_calc(self.ref_ht, self.cd10n[ind])
             self.psim[ind] = psim_calc(self.h_in[0, ind]/self.monob[ind], self.meth)
             self.cd[ind] = cd_calc(self.cd10n[ind], self.h_in[0, ind], self.ref_ht, self.psim[ind])
 
@@ -299,7 +291,7 @@ class S88:
 
             self.utmp = np.copy(self.u10n)
             self.utmp = np.where(self.utmp < 0, np.nan, self.utmp)
-            self.itera[ind] = np.ones(1)*it
+            self.itera[ind] = np.full(1,it)
             self.tau = self.rho*np.power(self.usr, 2)*(self.spd/self.wind)
             self.sensible = self.rho*self.cp*self.usr*self.tsr
             self.latent = self.rho*self.lv*self.usr*self.qsr
@@ -429,13 +421,9 @@ class S88:
         if (self.wl == 0): self.dtwl = np.zeros(self.T.shape)*self.msk  # reset to zero if not used
 
         # Do not calculate lhf if a measure of humidity is not input
+        # This gets filled into a pd dataframe and so no need to specify y dimension of array
         if (self.hum[0] == 'no'):
-            self.latent = np.ones(self.SST.shape)*np.nan
-            self.qsr = np.copy(self.latent)
-            self.q10n = np.copy(self.latent)
-            self.qref = np.copy(self.latent)
-            self.qair = np.copy(self.latent)
-            self.rh =  np.copy(self.latent)
+            self.latent, self.qsr, self.q10n, self.qref, self.qair, self.rh = np.empty(6)
 
         # Set the final wind speed values
         self.wind_spd = np.sqrt(np.power(self.wind, 2)-np.power(self.spd, 2))
