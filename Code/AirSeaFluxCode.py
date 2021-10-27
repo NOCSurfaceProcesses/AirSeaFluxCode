@@ -186,11 +186,11 @@ class S88:
         self.tsr = (self.dt-self.dter*self.cskin-self.dtwl*self.wl)*kappa/(np.log(self.h_in[1]/self.zot) - psit_calc(self.h_in[1]/self.monob, self.meth))
         self.qsr = (self.dq-self.dqer*self.cskin)*kappa/(np.log(self.h_in[2]/self.zoq) - psit_calc(self.h_in[2]/self.monob, self.meth))
     
-    def iterate(self, niter=30, tol=None):
+    def iterate(self, maxiter=30, tol=None):
 
-        if niter < 5:
+        if maxiter < 5:
             warnings.warn("Iteration number <5 - resetting to 5.")
-            niter = 5
+            maxiter = 5
 
         # Decide which variables to use in tolerances based on tolerance specification
         tol = ['all', 0.01, 0.01, 1e-05, 1e-3, 0.1, 0.1] if tol is None else tol
@@ -219,7 +219,7 @@ class S88:
         ii = True
         while ii:
             it += 1
-            if it > niter: break
+            if it > maxiter: break
 
             # Set the old variables (for comparison against "new")
             old = np.array([np.copy(getattr(self,i)) for i in old_vars])
@@ -314,7 +314,7 @@ class S88:
             # End of iteration loop
 
         self.itera[ind] = -1
-        self.itera = np.where(self.itera > niter, -1, self.itera)
+        self.itera = np.where(self.itera > maxiter, -1, self.itera)
         logging.info('method %s | # of iterations:%s', self.meth, it)
         logging.info('method %s | # of points that did not converge :%s \n', self.meth, self.ind[0].size)
 
@@ -596,7 +596,7 @@ class Beljaars(C30):
         
 def AirSeaFluxCode(spd, T, SST, lat=None, hum=None, P=None, hin=18, hout=10,
                    Rl=None, Rs=None, cskin=None, skin="C35", wl=0, gust=None,
-                   meth="S88", qmeth="Buck2", tol=None, niter=30, out=0, L=None):
+                   meth="S88", qmeth="Buck2", tol=None, maxiter=30, out=0, L=None):
     """
     Calculates turbulent surface fluxes using different parameterizations
     Calculates height adjusted values for spd, T, q
@@ -657,7 +657,7 @@ def AirSeaFluxCode(spd, T, SST, lat=None, hum=None, P=None, hin=18, hout=10,
            option : 'all' to set tolerance limits for both fluxes and height
                     adjustment lim1-6
            default is tol=['all', 0.01, 0.01, 1e-05, 1e-3, 0.1, 0.1]
-        niter : int
+        maxiter : int
             number of iterations (defautl = 10)
         out : int
             set 0 to set points that have not converged, negative values of
@@ -732,7 +732,7 @@ def AirSeaFluxCode(spd, T, SST, lat=None, hum=None, P=None, hin=18, hout=10,
     iclass.get_heights(hin, hout)
     iclass.get_specHumidity(qmeth=qmeth)
     iclass.set_coolskin_warmlayer(wl=wl, cskin=cskin,skin=skin,Rl=Rl,Rs=Rs)
-    iclass.iterate(tol=tol,niter=niter)
+    iclass.iterate(tol=tol,maxiter=maxiter)
     resAll = iclass.get_output(out=out)
 
     return resAll
