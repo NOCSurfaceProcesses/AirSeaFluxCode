@@ -187,10 +187,6 @@ class S88:
     
         self.tsr = (self.dt-self.dter*self.cskin-self.dtwl*self.wl)*kappa/(np.log(self.h_in[1]/self.zot) - psit_calc(self.h_in[1]/self.monob, self.meth))
         self.qsr = (self.dq-self.dqer*self.cskin)*kappa/(np.log(self.h_in[2]/self.zoq) - psit_calc(self.h_in[2]/self.monob, self.meth))
-
-    def _zo_calc(self, ref_ht, cd10n):
-        zo = ref_ht/np.exp(kappa/np.sqrt(cd10n))
-        return zo
     
     def iterate(self, niter=30, tol=None):
 
@@ -243,6 +239,7 @@ class S88:
                 logging.info('break %s at iteration %s cd10n<0', meth, it)
                 
             self.zo[ind] = self.ref_ht/np.exp(kappa/np.sqrt(self.cd10n[ind]))
+            #self.zo[ind] = self._zo_calc(self.ref_ht, self.cd10n[ind])
             self.psim[ind] = psim_calc(self.h_in[0, ind]/self.monob[ind], self.meth)
             self.cd[ind] = cd_calc(self.cd10n[ind], self.h_in[0, ind], self.ref_ht, self.psim[ind])
 
@@ -373,9 +370,9 @@ class S88:
                                       flag))
 
         # t10n flag (not currently used)
-        flag = np.where((self.t10n < -999) & (flag == "n"), "t",
-                             np.where((self.t10n < 0) & (flag != "n"), flag+[","]+["t"],
-                                      flag))
+        # flag = np.where((self.t10n < -999)  & (flag == "n"), "t",
+        #                      np.where((self.t10n < 0) & (flag != "n"), flag+[","]+["t"],
+        #                               flag))
         
         flag = np.where(((self.Rb < -0.5) | (self.Rb > 0.2) | ((self.hin[0]/self.monob) > 1000)) &
                              (flag == "n"), "l",
@@ -410,19 +407,19 @@ class S88:
         self.t10n = self.t10n-(273.16+self.tlapse*self.ref_ht)
         
         # solve for zo from cd10n
-        zo = self.ref_ht/np.exp(kappa/np.sqrt(self.cd10n))
+        self.zo = self.ref_ht/np.exp(kappa/np.sqrt(self.cd10n))
         
         # adjust neutral cdn at any output height
-        self.cdn = np.power(kappa/np.log(self.hout/zo), 2)
+        self.cdn = np.power(kappa/np.log(self.hout/self.zo), 2)
         self.cd = cd_calc(self.cdn, self.h_out[0], self.h_out[0], self.psim)
 
         # solve for zot, zoq from ct10n, cq10n
-        zot = self.ref_ht/(np.exp(kappa**2/(self.ct10n*np.log(self.ref_ht/zo))))
-        zoq = self.ref_ht/(np.exp(kappa**2/(self.cq10n*np.log(self.ref_ht/zo))))
+        self.zot = self.ref_ht/(np.exp(kappa**2/(self.ct10n*np.log(self.ref_ht/self.zo))))
+        self.zoq = self.ref_ht/(np.exp(kappa**2/(self.cq10n*np.log(self.ref_ht/self.zo))))
         
         # adjust neutral ctn, cqn at any output height
-        self.ctn = np.power(kappa, 2)/(np.log(self.h_out[0]/zo)*np.log(self.h_out[1]/zot))
-        self.cqn = np.power(kappa, 2)/(np.log(self.h_out[0]/zo)*np.log(self.h_out[2]/zoq))
+        self.ctn = np.power(kappa, 2)/(np.log(self.h_out[0]/self.zo)*np.log(self.h_out[1]/self.zot))
+        self.cqn = np.power(kappa, 2)/(np.log(self.h_out[0]/self.zo)*np.log(self.h_out[2]/self.zoq))
         self.ct, self.cq = ctcq_calc(self.cdn, self.cd, self.ctn, self.cqn, self.h_out, self.h_out, self.psit, self.psiq)
         self.uref = (self.spd-self.usr/kappa*(np.log(self.h_in[0]/self.h_out[0])-self.psim + psim_calc(self.h_out[0]/self.monob, self.meth)))
         tref = (self.Ta-self.tsr/kappa*(np.log(self.h_in[1]/self.h_out[1])-self.psit + psit_calc(self.h_out[0]/self.monob, self.meth)))
@@ -543,23 +540,17 @@ class LP82(S88):
 
 class NCAR(S88):
 
+
     def _minimum_params(self):
         self.cd = np.maximum(np.copy(self.cd), 1e-4)
         self.ct = np.maximum(np.copy(self.ct), 1e-4)
         self.cq = np.maximum(np.copy(self.cq), 1e-4)
         self.zo = np.minimum(np.copy(self.zo), 0.0025)
-
-    def _zo_calc(self, ref_ht, cd10n):
-        "Special z0 calculation for NCAR"
-        zo = ref_ht/np.exp(kappa/np.sqrt(cd10n))
-        zo = np.minimum(np.copy(zo), 0.0025)
-        return zo
     
     def __init__(self):
         self.meth = "NCAR"
         self.utmp_lo = [0.5,0.5]
         self.utmp_hi = [999,999]
-
 
 class UA(S88):
     
