@@ -423,8 +423,8 @@ class S88:
         # Do not calculate lhf if a measure of humidity is not input
         # This gets filled into a pd dataframe and so no need to specify y dimension of array
         if (self.hum[0] == 'no'):
-            self.latent, self.qsr, self.q10n, self.qref, self.qair, self.rh = np.empty(6)
-
+            self.latent, self.qsr, self.q10n, self.qref, self.qair, self.rh = np.full(6,np.nan)
+            
         # Set the final wind speed values
         self.wind_spd = np.sqrt(np.power(self.wind, 2)-np.power(self.spd, 2))
 
@@ -445,13 +445,15 @@ class S88:
         if (out == 0):
             res[:, self.ind] = np.nan
             # set missing values where data have non acceptable values
-            if (self.hum[0] != 'no'): res = np.asarray([np.where(self.q10n < 0, np.nan, res[i][:]) for i in range(len(res_vars))]) # FIXME: why 41?
+            if (self.hum[0] != 'no'): res = np.asarray([np.where(self.q10n < 0, np.nan, res[i][:]) for i in range(len(res_vars))])
             res = np.asarray([np.where(self.u10n < 0, np.nan, res[i][:]) for i in range(len(res_vars))])
         else:
             warnings.warn("Warning: the output will contain values for points that have not converged and negative values (if any) for u10n/q10n")
 
-        resAll = pd.DataFrame(data=res.T, index=range(self.nlen), columns=res_vars)
-    
+        # Output pd dataframe with certain column names changed
+        out_names_dic = {"sensible":"shf","latent":"lhf","monob":"L","itera":"iteration","wind_spd":"ug","Rb":"Rib","tkt":"delta"}
+        out_names = [out_names_dic[i] if i in out_names_dic.keys() else i for i in res_vars]
+        resAll = pd.DataFrame(data=res.T, index=range(self.nlen), columns=out_names)
         resAll["flag"] = self.flag
 
         return resAll
