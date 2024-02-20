@@ -1,5 +1,6 @@
 import unittest
 import pandas as pd
+pd.set_option('display.max_columns', 10)
 import numpy as np
 import os
 from AirSeaFluxCode import AirSeaFluxCode
@@ -9,6 +10,34 @@ class TestHeight(unittest.TestCase):
     data_file = os.path.join(
         os.path.dirname(__file__), 'data', 'data_all.csv')
     df = pd.read_csv(data_file)
+
+    def test_input_ref_height_match(self):
+        # TEST: That ref height = input height
+        test_data = self.df.head()
+
+        lat = np.asarray(test_data["Latitude"])
+        spd = np.asarray(test_data["Wind speed"])
+        t = np.asarray(test_data["Air temperature"])
+        sst = np.asarray(test_data["SST"])
+        q = 10*np.asarray(test_data["RH"])  # Quick conversion % (100*kg/kg) -> g/kg
+        p = np.asarray(test_data["P"])
+        sw = np.asarray(test_data["Rs"])
+        hu = np.asarray(test_data["zu"])
+        ht = np.asarray(test_data["zt"])
+        hin = [10, 10, 10]  # Not actually the height values in the data!
+        del hu, ht, test_data
+        out_var = ('tau', 'latent', 'sensible', 'uref', 'tref', 'qref')
+
+        res = AirSeaFluxCode(
+            spd, t, sst, "bulk", meth="UA", lat=lat, hin=hin,
+            hum=["q", q], P=p, cskin=0, Rs=sw, hout=10,
+            tol=['all', 0.01, 0.01, 1e-2, 1e-3, 0.1, 0.1], L="tsrv",
+            out_var=out_var)
+
+        # TEST: ref == 10 so expect these to be equal (maybe some thresh)
+        assert np.isclose(spd, res['uref'], rtol=1e-3).all()
+        assert np.isclose(t+273.16, res['tref'], rtol=1e-3).all()
+        assert np.isclose(q, res['qref'], rtol=1e-3).all()
 
     def test_height_adjust(self):
         # TEST: That height adjusted data gives similar results
