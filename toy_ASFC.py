@@ -17,6 +17,7 @@ import numpy as np
 import pandas as pd
 from AirSeaFluxCode import AirSeaFluxCode
 import time
+import os
 from tabulate import tabulate
 #%%
 def toy_ASFC(inF, outF, outS, sst_fl, gustIn, cskinIn, tolIn, meth, qmIn, LIn,
@@ -55,7 +56,9 @@ def toy_ASFC(inF, outF, outS, sst_fl, gustIn, cskinIn, tolIn, meth, qmIn, LIn,
     out_var = ("tau", "sensible", "latent", "u10n", "t10n", "q10n")
     if (inF == "data_all.csv"):
         #%% load data_all
-        inDt = pd.read_csv("data_all.csv")
+        inDt = pd.read_csv(os.path.join(
+            os.path.dirname(__file__),
+            "test", "data", inF))
         date = np.asarray(inDt["Date"])
         lon = np.asarray(inDt["Longitude"])
         lat = np.asarray(inDt["Latitude"])
@@ -82,7 +85,8 @@ def toy_ASFC(inF, outF, outS, sst_fl, gustIn, cskinIn, tolIn, meth, qmIn, LIn,
 
     elif (inF == 'era5_r360x180.nc'):
         #%% load era5_r360x180.nc
-        fid = nc.Dataset(inF)
+        fid = nc.Dataset(os.path.join(
+            os.path.dirname(__file__), 'test', 'data', inF))
         lon = np.array(fid.variables["lon"])
         lat = np.array(fid.variables["lat"])
         tim = np.array(fid.variables["time"])
