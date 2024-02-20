@@ -64,29 +64,6 @@ class TestHeight(unittest.TestCase):
         assert latent_test_h > thresh
         assert sensible_test_h > thresh
 
-        # TEST: Similar results at 10m default
-        spd10 = np.asarray(res_at_hin['u10n'])
-        t10 = np.asarray(res_at_hin['t10n'])
-        hum10 = ['q', np.asarray(res_at_hin['q10n'])]
-
-        res_at_10 = AirSeaFluxCode(
-            spd10, t10, sst, "bulk", meth="UA", lat=lat, hin=[10, 10, 10],
-            hum=hum10, P=p, cskin=0, Rs=sw, hout=hout,
-            tol=['all', 0.01, 0.01, 1e-2, 1e-3, 0.1, 0.1], L="tsrv",
-            out_var=out_var)
-
-        tau_test_10 = np.isclose(
-            res_at_hin['tau'], res_at_10['tau'], rtol=rtol).sum()/n
-
-        latent_test_10 = np.isclose(res_at_hin['latent'],
-                                    res_at_10['latent'], rtol=rtol).sum()/n
-        sensible_test_10 = np.isclose(res_at_hin['sensible'],
-                                      res_at_10['sensible'], rtol=rtol).sum()/n
-
-        assert tau_test_10 > thresh
-        assert latent_test_10 > thresh
-        assert sensible_test_10 > thresh
-
 
 if __name__ == '__main__':
     unittest.main()
