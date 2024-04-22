@@ -14,8 +14,7 @@ setup(
     author='Stavroula Biri',
     author_email='sbiri@noc.ac.uk',
     license='CCBY',
-    package_dir={'': 'src'},  # Optional
-    packages=find_packages(where='src'),  # ['AirSeaFluxCode'],
+    packages=find_packages(where=''),  # ['AirSeaFluxCode'],
     install_requires=['pandas',
                       'numpy',
                       ],
