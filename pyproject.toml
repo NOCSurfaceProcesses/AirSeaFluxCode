@@ -19,8 +19,8 @@ requires-python = ">=3.6"
 authors = [
     {name = "Stavroula Biri"},
     {name = "Richard Cornes", email = "rcornes@noc.ac.uk"},
+    {name = "David Berry"},
     {name = "Elizabeth Kent", email = "eck@noc.ac.uk"},
-    {name = "Joseph Siddons", email = "josidd@noc.ac.uk"},
     {name = "Margaret Yelland"},
 ]
 maintainers = [
