@@ -39,3 +39,7 @@ pip install git+https://github.com/NOCSurfaceProcesses/AirSeaFluxCode/
 ```
 
 This will automatically install the package and dependencies (`numpy`, `pandas`).
+
+## Documentation
+
+Pdf documentation can be found in the `docs` directory.
