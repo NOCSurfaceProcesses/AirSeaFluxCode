@@ -13,3 +13,29 @@ This work was supported by the Natural Environment Research Council grants ORCHE
 ## Licensing
 
 Please see subdirectories for code and data licenses 
+
+## Installation
+
+Clone the repository:
+
+```console
+git clone https://github.com/NOCSurfaceProcesses/AirSeaFluxCode.git
+```
+
+This will clone the repository into a directory: `AirSeaFluxCode`. Move to this directory and
+install the package with `pip`:
+
+```console
+cd AirSeaFluxCode
+pip install .
+```
+
+### Installation Directly with `pip`
+
+This package is not yet available on PyPi, however it can be installed using `pip` and `git`:
+
+```console
+pip install git+https://github.com/NOCSurfaceProcesses/AirSeaFluxCode/
+```
+
+This will automatically install the package and dependencies (`numpy`, `pandas`).
