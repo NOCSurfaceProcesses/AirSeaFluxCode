@@ -4,3 +4,51 @@ requires = [
     "wheel"
 ]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["AirSeaFluxCode"]
+
+[project]
+name = "AirSeaFluxCode"
+version = "1.2.0"
+dependencies = [
+    "pandas",
+    "numpy",
+]
+requires-python = ">=3.6"
+authors = [
+    {name = "Stavroula Biri"},
+    {name = "Richard Cornes", email = "rcornes@noc.ac.uk"},
+    {name = "Elizabeth Kent", email = "eck@noc.ac.uk"},
+    {name = "Joseph Siddons", email = "josidd@noc.ac.uk"},
+    {name = "Margaret Yelland"},
+]
+maintainers = [
+    {name = "Joseph Siddons", email = "josidd@noc.ac.uk"},
+    {name = "Richard Cornes", email = "rcornes@noc.ac.uk"},
+]
+description = "AirSeaFluxCode is a software designed to allow easy exploration of the different bulk formulae parameterizations and the wide range of implementation options"
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = []
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: CCBY License",
+    "Operating System :: OS Independent",
+]
+
+[project.optional-dependencies]
+extra = [
+    "matplotlib",
+    "netCDF4",
+    "tabulate",
+]
+test = [
+    "pytest",
+]
+
+[project.urls]
+Repository = "https://github.com/NOCSurfaceProcesses/AirSeaFluxCode.git"
+"Bug Tracker" = "https://github.com/NOCSurfaceProcesses/AirSeaFluxCode/issues"
