@@ -109,13 +109,13 @@ This section provides a description of the constants and sub-routines that are c
 Drag Coefficient Functions
 --------------------------
 
-.. automodule:: flux_subs
+.. automodule:: AirSeaFluxCode.flux_subs
    :members: cdn_calc, cdn_from_roughness, cd_calc
 
 Heat and Moisture Exchange Coefficient Functions
 ------------------------------------------------
 
-.. automodule:: flux_subs
+.. automodule:: AirSeaFluxCode.flux_subs
    :no-index:
    :members: ctqn_calc, ctq_calc
 
@@ -125,33 +125,33 @@ Stratification Functions
 The stratification functions :math:`\Psi_i` are integrals of the dimensionless profiles :math:`\Phi_i`, which are determined experimentally, and are applied as stablility corrections to the wind speed, temperature and humidity profiles.
 They are a function of the stability parameter :math:`z/L` where :math:`L` is the Monin-Obukhov length.
 
-.. automodule:: flux_subs
+.. automodule:: AirSeaFluxCode.flux_subs
    :no-index:
    :members: get_stabco, psim_calc, psit_calc, psi_Bel, psi_ecmwf, psit_26, psi_conv, psi_stab, psim_ecmwf, psiu_26, psim_conv, psim_stab
 
 Other Flux Functions
 --------------------
 
-.. automodule:: flux_subs
+.. automodule:: AirSeaFluxCode.flux_subs
    :no-index:
    :members: apply_GF, get_gust, get_strs, get_tsrv, get_Rb, get_Ltsrv, get_LRb
 
 Cool-skin/Warm-layer Functions
 ------------------------------
 
-.. automodule:: cs_wl_subs
+.. automodule:: AirSeaFluxCode.cs_wl_subs
    :members:
 
 Humidity Functions
 ------------------
 
-.. automodule:: hum_subs
+.. automodule:: AirSeaFluxCode.hum_subs
    :members:
 
 Utility Functions
 -----------------
 
-.. automodule:: util_subs
+.. automodule:: AirSeaFluxCode.util_subs
    :members:
 
 .. [Beljaars1995a] Beljaars, A. C. M. (1995a). The impact of some aspects of the boundary layer scheme in the ecmwf model. Proc. Seminar on Parameterization of Sub-Grid Scale Physical Processes, Reading, United Kingdom, ECMWF.
