@@ -2,10 +2,10 @@ import warnings
 import numpy as np
 import pandas as pd
 import logging
-from hum_subs import (get_hum, gamma)
-from util_subs import *
-from flux_subs_dev import *
-from cs_wl_subs import *
+from .hum_subs import (get_hum, gamma)
+from .util_subs import *
+from .flux_subs_dev import *
+from .cs_wl_subs import *
 
 
 class S88:
@@ -55,7 +55,7 @@ class S88:
 
         # Set lapse rate and Potential Temperature (now we have humdity)
         if self.meth == "C35":
-            self.cp  = 1004.67*np.ones(self.SST.shape)
+            self.cp = 1004.67*np.ones(self.SST.shape)
         elif self.meth in ["NCAR", "ecmwf"]:
             self.cp = 1005+1.860*self.qair  # qair [g/kg]
         else:
@@ -136,8 +136,10 @@ class S88:
                 self.skt[ind] = (np.copy(self.SST[ind])+self.dter[ind] +
                                  self.dtwl[ind])
                 self.dqer[ind] = get_dqer(self.dter[ind], self.skt[ind],
-                                          self.qsea[ind], self.lv[ind])  # [g/kg]
-                self.skq[ind] = np.copy(self.qsea[ind])+self.dqer[ind]  # [g/kg]
+                                          # [g/kg]
+                                          self.qsea[ind], self.lv[ind])
+                self.skq[ind] = np.copy(self.qsea[ind]) + \
+                    self.dqer[ind]  # [g/kg]
         else:
             self.dter[ind] = np.zeros(self.SST[ind].shape)
             self.dqer[ind] = np.zeros(self.SST[ind].shape)  # [g/kg]
@@ -149,14 +151,16 @@ class S88:
         self.ref10 = 10
 
         #  first guesses
-        self.t10n, self.q10n = np.copy(self.theta), np.copy(self.qair)  # q: [g/kg]
-        self.rho = self.P*100/(287.1*self.t10n*(1+0.6077*self.q10n*0.001))  # q: [g/kg]
+        self.t10n, self.q10n = np.copy(
+            self.theta), np.copy(self.qair)  # q: [g/kg]
+        self.rho = self.P*100 / \
+            (287.1*self.t10n*(1+0.6077*self.q10n*0.001))  # q: [g/kg]
         self.lv = (2.501-0.00237*(self.SST-CtoK))*1e6  # J/kg
 
         #  Zeng et al. 1998
         self.tv = self.theta*(1+0.6077*self.qair)   # virtual potential T
         self.dtv = self.dt_in*(1+0.6077*self.qair*0.001) + \
-                0.6077*self.theta*self.dq_in*0.001  # q: [g/kg]
+            0.6077*self.theta*self.dq_in*0.001  # q: [g/kg]
 
         # Set the wind array
         self.wind = np.sqrt(np.power(np.copy(self.spd), 2)+0.25)
@@ -192,7 +196,7 @@ class S88:
             self.u10n, self.usr, self.theta, self.grav, self.meth)
         self.psim = psim_calc(self.h_in[0]/self.monob, self.meth)
         self.cd = cd_calc(self.cd10n, self.h_in[0], self.ref10, self.psim)
-        self.usr =np.sqrt(self.cd*np.power(self.wind, 2))
+        self.usr = np.sqrt(self.cd*np.power(self.wind, 2))
         self.zot, self.zoq, self.tsr, self.qsr = [
             np.empty(self.arr_shp)*self.msk for _ in range(4)]
         self.ct10n, self.cq10n, self.ct, self.cq = [
@@ -230,9 +234,8 @@ class S88:
         self.tsrv, self.psim, self.psit, self.psiq = [
             np.zeros(self.arr_shp)*self.msk for _ in range(4)]
 
-
         # extreme values for first comparison
-        dummy_array = lambda val : np.full(self.T.shape, val)*self.msk
+        def dummy_array(val): return np.full(self.T.shape, val)*self.msk
         # you can use def instead of lambda
         # def dummy_array(val): return np.full(self.arr_shp, val)*self.msk
         self.itera, self.tau, self.sensible, self.latent = [
@@ -351,18 +354,21 @@ class S88:
             self.itera[ind] = np.full(1, it)
             if self.meth in ["NCAR", "ecmwf"]:
                 self.rho = rho_air(self.theta-self.tlapse*self.h_in[0],
-                                    self.qair, self.P*100)
+                                   self.qair, self.P*100)
                 self.rho = rho_air(self.theta-self.tlapse*self.h_in[0],
-                                    self.qair,
-                                    self.P*100-self.rho*self.grav*self.h_in[0])
+                                   self.qair,
+                                   self.P*100-self.rho*self.grav*self.h_in[0])
                 self.zUrho = self.wind*np.maximum(self.rho, 1)
                 self.tau = self.zUrho*self.cd*self.spd
-                self.sensible = self.zUrho*self.ct*(self.theta-self.SST)*self.cp
-                self.latent = self.zUrho*self.cq*(self.qair-self.qsea)*self.lv*0.001  # q: [g/kg]
+                self.sensible = self.zUrho*self.ct * \
+                    (self.theta-self.SST)*self.cp
+                self.latent = self.zUrho*self.cq * \
+                    (self.qair-self.qsea)*self.lv*0.001  # q: [g/kg]
             else:
                 self.tau = self.rho*np.power(self.usr, 2)*self.spd/self.wind
                 self.sensible = self.rho*self.cp*self.usr*self.tsr
-                self.latent = self.rho*self.lv*self.usr*self.qsr*0.001  # q: [g/kg]
+                self.latent = self.rho*self.lv * \
+                    self.usr*self.qsr*0.001  # q: [g/kg]
             # Set the new variables (for comparison against "old")
             new = np.array([np.copy(getattr(self, i)) for i in new_vars])
 
@@ -421,7 +427,7 @@ class S88:
 
         self.GFo = apply_GF(self.gust, self.spd, self.wind, "u")
         self.u10n = self.spd-self.usr/kappa/self.GFo*(
-            np.log(self.h_in[0]/self.ref10)-self.psim) # C.4-7
+            np.log(self.h_in[0]/self.ref10)-self.psim)  # C.4-7
         self.uref = self.spd-self.usr/kappa/self.GFo * \
             (np.log(self.h_in[0]/self.h_out[0])-self.psim +
              psim_calc(self.h_out[0]/self.monob, self.meth))
@@ -447,7 +453,7 @@ class S88:
                         psim_calc(self.h_in[0]/self.monob, self.meth))),
                 self.spd+(self.usr/kappa)*(np.log(self.ref10/self.h_in[0]) +
                                            5*self.ref10/self.monob -
-                                            5*self.h_in[0]/self.monob))
+                                           5*self.h_in[0]/self.monob))
         elif self.meth == "C35":
             self.uref = self.spd+self.usr/kappa/self.GustFact*(
                 np.log(self.h_out[0]/self.h_in[0]) -
@@ -471,7 +477,8 @@ class S88:
                     self.h_out[2]/self.monob, self.meth)+psit_calc(
                         self.h_in[1]/self.monob, self.meth))  # [g/kg]
             self.q10n = self.qref + \
-                psit_calc(self.ref10/self.monob, self.meth)*self.qsr/kappa  # [g/kg]
+                psit_calc(self.ref10/self.monob, self.meth) * \
+                self.qsr/kappa  # [g/kg]
         # elif self.meth == "NCAR":
         #     self.u10n = np.sqrt(self.cd10n)*self.wind/kappa*np.log(self.ref10/self.zo)
         elif self.meth == "ecmwf":
@@ -502,7 +509,6 @@ class S88:
         # Combine all output variables into a pandas array
         res_vars = get_outvars(out_var, self.cskin, self.gust)
 
-
         res = np.zeros((len(res_vars), len(self.spd)))
         for i, value in enumerate(res_vars):
             res[i][:] = getattr(self, value)
@@ -521,7 +527,7 @@ class S88:
                 for i in range(len(res_vars))])
             res = np.asarray([
                 np.where(((self.t10n < 173) | (self.t10n > 373)), np.nan,
-                          res[i][:])
+                         res[i][:])
                 for i in range(len(res_vars))])
         else:
             warnings.warn("Warning: the output will contain values for points"

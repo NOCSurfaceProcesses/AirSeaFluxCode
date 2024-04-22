@@ -1,6 +1,6 @@
 import numpy as np
 import warnings
-from util_subs import (CtoK)
+from .util_subs import (CtoK)
 
 
 def VaporPressure(temp, P, phase, meth):
@@ -91,7 +91,8 @@ def VaporPressure(temp, P, phase, meth):
                           0.1887643854e2-0.28354721e-1*T +
                           0.17838301e-4*np.power(T, 2) -
                           0.84150417e-9*np.power(T, 3) +
-                          0.44412543e-12*np.power(T, 4) +  # This line was corrected from '-' to '+' following the original citation. (HV 20140819). The change makes only negligible difference
+                          # This line was corrected from '-' to '+' following the original citation. (HV 20140819). The change makes only negligible difference
+                          0.44412543e-12*np.power(T, 4) +
                           2.858487*np.log(T))/100
         elif meth in (['GoffGratch', 'MartiMauersberger']):
             """Marti and Mauersberger don't have a vapor pressure curve over
@@ -135,7 +136,8 @@ def VaporPressure(temp, P, phase, meth):
             Ts = 273.16  # triple point temperature in K
             Psat = np.power(10, 10.79574*(1-Ts/T)-5.028*np.log10(T/Ts) +
                             1.50475e-4*(1-10**(-8.2969*(T/Ts-1))) +
-                            0.42873e-3*(10**(4.76955*(1-Ts/T))-1) +  # in eq. 13 is -4.76955; in aerobulk is like this
+                            # in eq. 13 is -4.76955; in aerobulk is like this
+                            0.42873e-3*(10**(4.76955*(1-Ts/T))-1) +
                             0.78614)
         elif meth == 'WMO2018':
             """WMO 2018 edition. Annex 4.B, eq. 4.B.1, 4.B.2, 4.B.5 """
@@ -161,13 +163,13 @@ def VaporPressure(temp, P, phase, meth):
             of this formulation is 273.16 <= T <= 647.096 K and is based on the
             ITS90 temperature scale."""
             Tc = 647.096   # K   : Temperature at the critical point
-            Pc = 22.064e4  #  hPa : Vapor pressure at the critical point
+            Pc = 22.064e4  # hPa : Vapor pressure at the critical point
             nu = (1-T/Tc)
             a1, a2, a3 = -7.85951783, 1.84408259, -11.7866497
             a4, a5, a6 = 22.6807411, -15.9618719, 1.80122502
             Psat = (Pc*np.exp(Tc/T*(a1*nu+a2*np.power(nu, 1.5) +
                     a3*np.power(nu, 3)+a4*np.power(nu, 3.5) +
-                    a5*np.power(nu, 4)+ a6*np.power(nu, 7.5))))
+                    a5*np.power(nu, 4) + a6*np.power(nu, 7.5))))
         elif meth == 'MurphyKoop':
             """Source : Murphy and Koop, Review of the vapour pressure of ice
             and supercooled water for atmospheric applications, Q. J. R.

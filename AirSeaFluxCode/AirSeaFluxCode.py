@@ -2,10 +2,10 @@ import warnings
 import numpy as np
 import pandas as pd
 import logging
-from hum_subs import (get_hum, gamma)
-from util_subs import *
-from flux_subs import *
-from cs_wl_subs import *
+from .hum_subs import (get_hum, gamma)
+from .util_subs import *
+from .flux_subs import *
+from .cs_wl_subs import *
 
 
 class S88:
@@ -117,8 +117,10 @@ class S88:
                 self.skt[ind] = (np.copy(self.SST[ind])+self.dter[ind] +
                                  self.dtwl[ind])
                 self.dqer[ind] = get_dqer(self.dter[ind], self.skt[ind],
-                                          self.qsea[ind], self.lv[ind])  # [g/kg]
-                self.skq[ind] = np.copy(self.qsea[ind])+self.dqer[ind]  # [g/kg]
+                                          # [g/kg]
+                                          self.qsea[ind], self.lv[ind])
+                self.skq[ind] = np.copy(self.qsea[ind]) + \
+                    self.dqer[ind]  # [g/kg]
         else:
             self.dter[ind] = np.zeros(self.SST[ind].shape)
             self.dqer[ind] = np.zeros(self.SST[ind].shape)  # [g/kg]
@@ -130,8 +132,10 @@ class S88:
         self.ref10 = 10
 
         #  first guesses
-        self.t10n, self.q10n = np.copy(self.theta), np.copy(self.qair)  # q [g/kg]
-        self.rho = self.P*100/(287.1*self.t10n*(1+0.6077*self.q10n*0.001))  # q [g/kg]
+        self.t10n, self.q10n = np.copy(
+            self.theta), np.copy(self.qair)  # q [g/kg]
+        self.rho = self.P*100 / \
+            (287.1*self.t10n*(1+0.6077*self.q10n*0.001))  # q [g/kg]
         self.lv = (2.501-0.00237*(self.SST-CtoK))*1e6  # J/kg
 
         #  Zeng et al. 1998
@@ -151,7 +155,7 @@ class S88:
 
         # ------------
 
-        dummy_array = lambda val : np.full(self.T.shape, val)*self.msk
+        def dummy_array(val): return np.full(self.T.shape, val)*self.msk
         # def dummy_array(val): return np.full(self.T.shape, val)*self.msk
         if self.cskin + self.wl > 0:
             self.dter, self.tkt, self.dtwl = [
@@ -175,7 +179,7 @@ class S88:
             self.u10n, self.usr, self.theta, self.grav, self.meth)
         self.psim = psim_calc(self.h_in[0]/self.monob, self.meth)
         self.cd = cd_calc(self.cd10n, self.h_in[0], self.ref10, self.psim)
-        self.usr =np.sqrt(self.cd*np.power(self.wind, 2))
+        self.usr = np.sqrt(self.cd*np.power(self.wind, 2))
         self.zot, self.zoq, self.tsr, self.qsr = [
             np.empty(self.arr_shp)*self.msk for _ in range(4)]
         self.ct10n, self.cq10n, self.ct, self.cq = [
@@ -213,9 +217,8 @@ class S88:
         self.tsrv, self.psim, self.psit, self.psiq = [
             np.zeros(self.arr_shp)*self.msk for _ in range(4)]
 
-
         # extreme values for first comparison
-        dummy_array = lambda val : np.full(self.T.shape, val)*self.msk
+        def dummy_array(val): return np.full(self.T.shape, val)*self.msk
         # you can use def instead of lambda
         # def dummy_array(val): return np.full(self.arr_shp, val)*self.msk
         self.itera, self.tau, self.sensible, self.latent = [
@@ -395,7 +398,8 @@ class S88:
         self.GFo = apply_GF(self.gust, self.spd, self.wind, "TSF")
         self.tau = self.rho*np.power(self.usr, 2)/self.GFo[0]
         self.sensible = self.rho*self.cp*(self.usr/self.GFo[1])*self.tsr
-        self.latent = self.rho*self.lv*(self.usr/self.GFo[2])*self.qsr*0.001  # qsr: [g/kg]
+        self.latent = self.rho*self.lv * \
+            (self.usr/self.GFo[2])*self.qsr*0.001  # qsr: [g/kg]
 
         self.GFo = apply_GF(self.gust, self.spd, self.wind, "u")
         if self.gust[0] in [3, 4]:
@@ -412,7 +416,7 @@ class S88:
                 psim_calc(self.h_out[0]/self.monob, self.meth))
         else:
             self.u10n = self.spd-self.usr/kappa/self.GFo*(
-                np.log(self.h_in[0]/self.ref10)-self.psim) # C.4-7
+                np.log(self.h_in[0]/self.ref10)-self.psim)  # C.4-7
             self.uref = self.spd-self.usr/kappa/self.GFo * \
                 (np.log(self.h_in[0]/self.h_out[0])-self.psim +
                  psim_calc(self.h_out[0]/self.monob, self.meth))
@@ -455,7 +459,6 @@ class S88:
         # Combine all output variables into a pandas array
         res_vars = get_outvars(out_var, self.cskin, self.gust)
 
-
         res = np.zeros((len(res_vars), len(self.spd)))
         for i, value in enumerate(res_vars):
             res[i][:] = getattr(self, value)
@@ -474,7 +477,7 @@ class S88:
                 for i in range(len(res_vars))])
             res = np.asarray([
                 np.where(((self.t10n < 173) | (self.t10n > 373)), np.nan,
-                          res[i][:])
+                         res[i][:])
                 for i in range(len(res_vars))])
         else:
             warnings.warn("Warning: the output will contain values for points"

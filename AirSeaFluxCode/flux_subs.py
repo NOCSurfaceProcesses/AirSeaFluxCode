@@ -1,5 +1,5 @@
 import numpy as np
-from util_subs import (kappa, visc_air)
+from .util_subs import (kappa, visc_air)
 
 # ---------------------------------------------------------------------
 

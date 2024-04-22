@@ -1,5 +1,5 @@
 import numpy as np
-from util_subs import (kappa, visc_air)
+from .util_subs import (kappa, visc_air)
 
 # ---------------------------------------------------------------------
 
@@ -698,7 +698,7 @@ def apply_GF(gust, spd, wind, step):
 
     """
     # 1. following C35 documentation, 2. use GF to TSF, u10n uzout,
-    # 3. GF=1, 4. UA/ecmwf,  5. C35 code 
+    # 3. GF=1, 4. UA/ecmwf,  5. C35 code
     # ratio of gusty to horizontal wind; gustiness factor
     if step in ["u"]:
         GustFact = wind*0+1

@@ -1,5 +1,5 @@
 import numpy as np
-from util_subs import (CtoK, kappa)
+from .util_subs import (CtoK, kappa)
 
 # def delta(aw, Q, usr, grav, rho, opt):
 #     """
@@ -119,10 +119,10 @@ def cs(sst, d, rho, Rs, Rnl, cp, lv, usr, tsr, qsr, grav, opt):
         for jc in range(4):
             # fraction of the solar radiation absorbed in layer delta eq. 8.153
             # and Eq.(5) Zeng & Beljaars, 2005
-            fs = 0.065+11*d-6.6e-5/d*(1-np.exp(-d/8e-4)) # eq. 8.153 Cy46r1
+            fs = 0.065+11*d-6.6e-5/d*(1-np.exp(-d/8e-4))  # eq. 8.153 Cy46r1
             Q = Qnsol+Rns*fs
             d = delta(aw, Q, usr, grav)
-    dter = Q*d/tcw # eq. 4 F96
+    dter = Q*d/tcw  # eq. 4 F96
     return dter, d
 # ---------------------------------------------------------------------
 
@@ -187,7 +187,7 @@ def cs_C35(sst, rho, Rs, Rnl, cp, lv, delta, usr, tsr, qsr, grav):
     xlamx = 6*np.ones(sst.shape)
     xlamx = np.where(Qb > 0, 6, 6/(1+(bigc*np.abs(Qb)/usr**4)**0.75)**0.333)
     delta = np.where(
-        Qb > 0, np.minimum(xlamx*visw/(np.sqrt(rho/rhow)*usr), 0.01), 
+        Qb > 0, np.minimum(xlamx*visw/(np.sqrt(rho/rhow)*usr), 0.01),
         xlamx*visw/(np.sqrt(rho/rhow)*usr))
     dter = Q*delta/tcw
     return dter, delta
@@ -224,7 +224,8 @@ def delta(aw, Q, usr, grav):
     rcst_cs = 16*grav*np.power(visw, 3)/np.power(tcw, 2)
     lm = 6*(1+(np.abs(Q)*aw*rcst_cs/np.power(usr_w, 4))**0.75)**(-1/3)
     ztmp = visw/usr_w
-    delta = np.where(Q > 0, np.minimum(6*ztmp, 0.007), np.minimum(lm*ztmp, 0.007))
+    delta = np.where(Q > 0, np.minimum(6*ztmp, 0.007),
+                     np.minimum(lm*ztmp, 0.007))
     return delta
 # ---------------------------------------------------------------------
 
