@@ -1,57 +1,6 @@
 import numpy as np
-from .util_subs import (CtoK, kappa)
-
-# def delta(aw, Q, usr, grav, rho, opt):
-#     """
-#     Compute the thickness (m) of the viscous skin layer.
-
-#     Based on Fairall et al., 1996 and cited in IFS Documentation Cy46r1
-#     eq. 8.155 p. 164
-
-#     Parameters
-#     ----------
-#     aw : float
-#         thermal expansion coefficient of sea-water  [1/K]
-#     Q : float
-#         part of the net heat flux actually absorbed in the warm layer [W/m^2]
-#     usr : float
-#         friction velocity in the air (u*) [m/s]
-#     grav : float
-#        gravity                      [ms^-2]
-
-#     Returns
-#     -------
-#     delta : float
-#         the thickness (m) of the viscous skin layer
-
-#     """
-#     if opt == "C35":
-#         rhow, cw, visw, tcw = 1022, 4000, 1e-6, 0.6
-#         # second term in eq. 14
-#         tmp = 16*grav*Q*aw*rhow*cw*np.power(rhow*visw, 3)/(
-#             np.power(usr, 4)*np.power(rho, 2)*np.power(tcw, 2))
-#         # second term in eq. 14
-#         # lm = 6*np.ones(usr.shape)
-#         lm = np.where(Q > 0, 6/np.power(1+np.power(tmp, 3/4), 1/3), 6) # eq. 14 F96
-#         delta = np.minimum(lm*visw/np.sqrt(rho/rhow)/usr, 0.01) # eq. 12 F96
-#         delta = np.where(Q > 0, lm*visw/(np.sqrt(rho/rhow)*usr), delta)
-#         # bigc = 16*grav*cw*np.power(rhow*visw, 3)/(np.power(tcw, 2)*np.power(
-#         #         rho, 2))
-#         # lm = np.where(Qb > 0, 6/(1+(bigc*Qb/usr**4)**0.75)**0.333, 6)
-#                 # d = np.minimum(xlamx*visw/(np.sqrt(rho/rhow)*usr), 0.01)
-#                 # d = np.where(Qb > 0, xlamx*visw/(np.sqrt(rho/rhow)*usr), d)
-#     elif opt == "ecmwf":
-#         rhow, cw, visw, tcw = 1025, 4190, 1e-6, 0.6
-#         # u* in the water
-#         usr_w = np.maximum(usr, 1e-4)*np.sqrt(rho/rhow)  # rhoa=1.2
-#         rcst_cs = 16*grav*np.power(visw, 3)/np.power(tcw, 2)#/(rhow*cw)
-#         # eq. 8.155 Cy46r1
-#         # lm = 6/np.power(1+np.power(Q*aw*rcst_cs/np.power(usr_w, 4), 3/4), 1/3)
-#         lm = 6*(1+np.maximum(Q*aw*rcst_cs/np.power(usr_w, 4), 0)**0.75)**(-1/3)
-#         ztmp = visw/usr_w
-#         delta = np.where(Q > 0, np.minimum(6*ztmp, 0.007), lm*ztmp)
-#     return delta
-# ---------------------------------------------------------------------
+from ..util_subs import CtoK
+from .cs_wl_subs import delta
 
 
 def cs(sst, d, rho, Rs, Rnl, cp, lv, usr, tsr, qsr, grav, opt):
@@ -191,43 +140,7 @@ def cs_C35(sst, rho, Rs, Rnl, cp, lv, delta, usr, tsr, qsr, grav):
         xlamx*visw/(np.sqrt(rho/rhow)*usr))
     dter = Q*delta/tcw
     return dter, delta
-# ---------------------------------------------------------------------
-
-
-def delta(aw, Q, usr, grav):
-    """
-    Compute the thickness (m) of the viscous skin layer.
-
-    Based on Fairall et al., 1996 and cited in IFS Documentation Cy46r1
-    eq. 8.155 p. 164
-
-    Parameters
-    ----------
-    aw : float
-        thermal expansion coefficient of sea-water  [1/K]
-    Q : float
-        part of the net heat flux actually absorbed in the warm layer [W/m^2]
-    usr : float
-        friction velocity in the air (u*) [m/s]
-    grav : float
-        gravity                      [ms^-2]
-
-    Returns
-    -------
-    delta : float
-        the thickness (m) of the viscous skin layer
-
-    """
-    rhow, visw, tcw = 1025, 1e-6, 0.6
-    # u* in the water
-    usr_w = np.maximum(usr, 1e-4)*np.sqrt(1.2/rhow)  # rhoa=1.2
-    rcst_cs = 16*grav*np.power(visw, 3)/np.power(tcw, 2)
-    lm = 6*(1+(np.abs(Q)*aw*rcst_cs/np.power(usr_w, 4))**0.75)**(-1/3)
-    ztmp = visw/usr_w
-    delta = np.where(Q > 0, np.minimum(6*ztmp, 0.007),
-                     np.minimum(lm*ztmp, 0.007))
-    return delta
-# ---------------------------------------------------------------------
+# ----------------
 
 
 def cs_ecmwf(rho, Rs, Rnl, cp, lv, usr, tsr, qsr, sst, grav):
@@ -279,85 +192,6 @@ def cs_ecmwf(rho, Rs, Rnl, cp, lv, usr, tsr, qsr, sst, grav):
         d = delta(aw, Q, usr, grav)
     dtc = Q*d/0.6  # (rhow*cw*kw)eq. 8.151
     return dtc
-# ---------------------------------------------------------------------
-
-
-def wl_ecmwf(rho, Rs, Rnl, cp, lv, usr, tsr, qsr, sst, skt, dtc, grav):
-    """
-    Calculate warm layer correction following IFS Documentation cy46r1.
-    and aerobulk (Brodeau et al., 2016)
-
-    Parameters
-    ----------
-    rho : float
-        density of air               [kg/m^3]
-    Rs : float
-        downward solar radiation    [Wm-2]
-    Rnl : float
-        net thermal radiation  [Wm-2]
-    cp : float
-       specific heat of air at constant pressure [J/K/kg]
-    lv : float
-       latent heat of vaporization   [J/kg]
-    usr : float
-        friction velocity           [m/s]
-    tsr : float
-       star temperature              [K]
-    qsr : float
-       star humidity                 [g/kg]
-    sst : float
-        bulk sst                    [K]
-    skt : float
-        skin sst from previous step [K]
-    dtc : float
-        cool skin correction        [K]
-    grav : float
-       gravity                      [ms^-2]
-
-    Returns
-    -------
-    dtwl : float
-        warm layer correction       [K]
-
-    """
-    if np.nanmin(sst) < 200:  # if sst in Celsius convert to Kelvin
-        sst = sst+CtoK
-    rhow, cpw, visw, rd0 = 1025, 4190, 1e-6, 3
-    Rns = 0.945*Rs
-    #  Previous value of dT / warm-layer, adapted to depth:
-    # thermal expansion coefficient of sea-water (SST accurate enough#)
-    aw = 2.1e-5*np.power(np.maximum(sst-CtoK+3.2, 0), 0.79)
-    # *** Rd = Fraction of solar radiation absorbed in warm layer (-)
-    a1, a2, a3 = 0.28, 0.27, 0.45
-    b1, b2, b3 = -71.5, -2.8, -0.06  # [m-1]
-    Rd = 1-(a1*np.exp(b1*rd0)+a2*np.exp(b2*rd0)+a3*np.exp(b3*rd0))
-    shf = rho*cp*usr*tsr
-    lhf = rho*lv*usr*qsr*0.001  # qsr [g/kg]
-    Qnsol = shf+lhf+Rnl
-    usrw = np.maximum(usr, 1e-4)*np.sqrt(1.2/rhow)   # u* in the water
-    zc3 = rd0*kappa*grav/np.power(1.2/rhow, 3/2)
-    zc4 = (0.3+1)*kappa/rd0
-    zc5 = (0.3+1)/(0.3*rd0)
-    for jwl in range(10):  # iteration to solve implicitely eq. for warm layer
-        dsst = skt-sst-dtc
-        # Buoyancy flux and stability parameter (zdl = -z/L) in water
-        ZSRD = (Qnsol+Rns*Rd)/(rhow*cpw)
-        ztmp = np.maximum(dsst, 0)
-        zdl = np.where(ZSRD > 0, 2*(np.power(usrw, 2) *
-                                    np.sqrt(ztmp/(5*rd0*grav*aw/visw)))+ZSRD,
-                       np.power(usrw, 2)*np.sqrt(ztmp/(5*rd0*grav*aw/visw)))
-        usr = np.maximum(usr, 1e-4)
-        zdL = zc3*aw*zdl/np.power(usr, 3)
-        # Stability function Phi_t(-z/L) (zdL is -z/L) :
-        zphi = np.where(zdL > 0, (1+(5*zdL+4*np.power(zdL, 2)) /
-                                  (1+3*zdL+0.25*np.power(zdL, 2)) +
-                                  2/np.sqrt(1-16*(-np.abs(zdL)))),
-                        1/np.sqrt(1-16*(-np.abs(zdL))))
-        zz = zc4*(usrw)/zphi
-        zz = np.maximum(np.abs(zz), 1e-4)*np.sign(zz)
-        dtwl = np.maximum(0, (zc5*ZSRD)/zz)
-    return dtwl
-# ----------------------------------------------------------------------
 
 
 def cs_Beljaars(rho, Rs, Rnl, cp, lv, usr, tsr, qsr, grav, Qs):
@@ -419,33 +253,3 @@ def cs_Beljaars(rho, Rs, Rnl, cp, lv, usr, tsr, qsr, grav, Qs):
     Q = Rnl+shf+lhf+Qs
     dtc = Q*delta/tcw
     return Qs, dtc
-# ----------------------------------------------------------------------
-
-
-def get_dqer(dter, sst, qsea, lv):
-    """
-    Calculate humidity correction.
-
-    Parameters
-    ----------
-    dter : float
-        cool skin correction         [K]
-    sst : float
-        sea surface temperature      [K]
-    qsea : float
-        specific humidity over sea   [g/kg]
-    lv : float
-       latent heat of vaporization   [J/kg]
-
-    Returns
-    -------
-    dqer : float
-       humidity correction            [g/kg]
-
-    """
-    if np.nanmin(sst) < 200:  # if sst in Celsius convert to Kelvin
-        sst = sst+CtoK
-    wetc = 0.622*lv*qsea/(287.1*np.power(sst, 2))
-    dqer = wetc*dter
-    return dqer
-# ----------------------------------------------------------------------
