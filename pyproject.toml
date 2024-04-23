@@ -27,10 +27,13 @@ maintainers = [
     {name = "Joseph Siddons", email = "josidd@noc.ac.uk"},
     {name = "Richard Cornes", email = "rcornes@noc.ac.uk"},
 ]
-description = "AirSeaFluxCode is a software designed to allow easy exploration of the different bulk formulae parameterizations and the wide range of implementation options"
+description = "AirSeaFluxCode is a python package designed to allow easy exploration of the different bulk formulae parameterizations and the wide range of implementation options"
 readme = "README.md"
 license = {file = "LICENSE"}
-keywords = []
+keywords = [
+    "fluxes", "momentum", "turbulence", "heat", "moisture", "ocean",
+    "air-sea", "height adjustment",
+]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Science/Research",
