@@ -8,7 +8,7 @@
 
 Biri S, Cornes RC, Berry DI, Kent EC and Yelland MJ (2023). AirSeaFluxCode: Open source software for calculating turbulent air-sea fluxes from meteorological parameters. Front. Mar. Sci. 9:1049168. doi: [10.3389/fmars.2022.1049168](https://www.frontiersin.org/articles/10.3389/fmars.2022.1049168/full)
 
-This work was supported by the Natural Environment Research Council grants ORCHESTRA, (NE/N018095/1), ENCORE (NE/V013254/1) and CLASS (NE/R015953/1).
+This work was supported by the Natural Environment Research Council grants ORCHESTRA (NE/N018095/1), ENCORE (NE/V013254/1), CLASS (NE/R015953/1), and NERC-funded AtlantiS programme (Atlantic Climate and Environment Strategic Science).
 
 ## Licensing
 
