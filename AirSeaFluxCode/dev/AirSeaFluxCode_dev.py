@@ -2,10 +2,11 @@ import warnings
 import numpy as np
 import pandas as pd
 import logging
-from .hum_subs import (get_hum, gamma)
-from .util_subs import *
+
+from ..hum_subs import (get_hum, gamma)
+from ..util_subs import *
 from .flux_subs_dev import *
-from .cs_wl_subs import *
+from ..cs_wl_subs import *
 
 
 class S88:
