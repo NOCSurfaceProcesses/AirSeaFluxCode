@@ -101,55 +101,55 @@ AirSeaFluxCode module
 .. automodule:: AirSeaFluxCode
    :members: AirSeaFluxCode
 
-Description of Sub-Routines
-===========================
+Flux Module
+===========
 
-This section provides a description of the constants and sub-routines that are called in AirSeaFluxCode.
+This section provides a description of the sub-routines that can be called from the :code:`flux_subs` module.
 
 Drag Coefficient Functions
 --------------------------
 
-.. automodule:: AirSeaFluxCode.flux_subs
+.. automodule:: AirSeaFluxCode.flux_subs.drag_coef
    :members: cdn_calc, cdn_from_roughness, cd_calc
 
 Heat and Moisture Exchange Coefficient Functions
 ------------------------------------------------
 
-.. automodule:: AirSeaFluxCode.flux_subs
-   :no-index:
+.. automodule:: AirSeaFluxCode.flux_subs.heat_coef
    :members: ctqn_calc, ctq_calc
 
 Stratification Functions
 ------------------------
 
-The stratification functions :math:`\Psi_i` are integrals of the dimensionless profiles :math:`\Phi_i`, which are determined experimentally, and are applied as stablility corrections to the wind speed, temperature and humidity profiles.
-They are a function of the stability parameter :math:`z/L` where :math:`L` is the Monin-Obukhov length.
-
-.. automodule:: AirSeaFluxCode.flux_subs
-   :no-index:
+.. automodule:: AirSeaFluxCode.flux_subs.stratification
    :members: get_stabco, psim_calc, psit_calc, psi_Bel, psi_ecmwf, psit_26, psi_conv, psi_stab, psim_ecmwf, psiu_26, psim_conv, psim_stab
 
 Other Flux Functions
 --------------------
 
 .. automodule:: AirSeaFluxCode.flux_subs
-   :no-index:
    :members: apply_GF, get_gust, get_strs, get_tsrv, get_Rb, get_Ltsrv, get_LRb
 
-Cool-skin/Warm-layer Functions
-------------------------------
+Cool-skin/Warm-layer Module
+===========================
+
+This section provides a description of the sub-routines that can be called from the :code:`cs_wl_subs` module.
 
 .. automodule:: AirSeaFluxCode.cs_wl_subs
    :members:
 
-Humidity Functions
-------------------
+Humidity Sub-Routines
+=====================
+
+This section provides a description of the sub-routines that can be called from the :code:`hum_subs` module.
 
 .. automodule:: AirSeaFluxCode.hum_subs
    :members:
 
-Utility Functions
------------------
+Utility Sub-Routines
+====================
+
+This section provides a description of the sub-routines that can be called from the :code:`util_subs` module.
 
 .. automodule:: AirSeaFluxCode.util_subs
    :members:
