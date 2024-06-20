@@ -1,3 +1,4 @@
+import os
 from .AirSeaFluxCode import AirSeaFluxCode
 
 from .cs_wl_subs import (cs, cs_Beljaars, cs_C35,
@@ -20,5 +21,7 @@ __all__ = ['AirSeaFluxCode', 'cs', 'cs_Beljaars', 'cs_C35', 'cs_ecmwf',
            'psiu_26', 'psim_conv', 'psim_stab', 'gamma', 'get_hum', 'qsat_air',
            'qsat_sea', 'VaporPressure', 'CtoK', 'kappa', 'get_heights', 'gc',
            'visc_air', 'set_flag', 'get_outvars', 'rho_air']
+
+__base__ = os.path.dirname(__file__)
 
 __version__ = '1.2.0'
