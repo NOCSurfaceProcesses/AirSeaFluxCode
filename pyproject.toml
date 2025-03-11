@@ -17,7 +17,7 @@ dependencies = [
     "pandas",
     "numpy",
 ]
-requires-python = ">=3.6"
+requires-python = ">=3.9"
 authors = [
     {name = "Stavroula Biri"},
     {name = "Richard Cornes", email = "rcornes@noc.ac.uk"},
@@ -40,6 +40,11 @@ classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Science/Research",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: CCBY License",
     "Operating System :: OS Independent",
 ]
