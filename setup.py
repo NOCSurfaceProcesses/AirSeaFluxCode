@@ -7,15 +7,14 @@ long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
     name='AirSeaFluxCode',
-    version='1.1.0',
+    version='1.2.0',
     description='A package to compute turbulent surface fluxes',
     long_description=long_description,  # Optional
-    url='https://git.noc.ac.uk/NOCSurfaceProcesses/AirSeaFluxCode',
+    url='https://github.com/NOCSurfaceProcesses/AirSeaFluxCode',
     author='Stavroula Biri',
     author_email='sbiri@noc.ac.uk',
     license='CCBY',
-    package_dir={'': 'src'},  # Optional
-    packages=find_packages(where='src'),  # ['AirSeaFluxCode'],
+    packages=find_packages(where=''),  # ['AirSeaFluxCode'],
     install_requires=['pandas',
                       'numpy',
                       ],
@@ -30,10 +29,11 @@ setup(
         'License :: OSI Approved :: CCBY License',
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
     ],
 )
 
@@ -140,9 +140,6 @@ setup(
 #         # that you indicate you support Python 3. These classifiers are *not*
 #         # checked by 'pip install'. See instead 'python_requires' below.
 #         'Programming Language :: Python :: 3',
-#         'Programming Language :: Python :: 3.6',
-#         'Programming Language :: Python :: 3.7',
-#         'Programming Language :: Python :: 3.8',
 #         'Programming Language :: Python :: 3.9',
 #         "Programming Language :: Python :: 3.10",
 #         'Programming Language :: Python :: 3 :: Only',
