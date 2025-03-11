@@ -658,152 +658,157 @@ def AirSeaFluxCode(spd, T, SST, SST_fl, meth, lat=None, hum=None, P=None,
 
     Parameters
     ----------
-        spd : float
-            relative wind speed in [m/s] (is assumed as magnitude difference
-            between wind and surface current vectors)
-        T : float
-            air temperature [K] (will convert if < 200)
-        SST : float
-            sea surface temperature [K] (will convert if < 200)
-        SST_fl : str
-            provides information on the type of the input SST; "bulk" or
-            "skin"
-        meth : str
-            "S80", "S88", "LP82", "YT96", "UA", "NCAR", "C30", "C35",
-            "ecmwf", "Beljaars"
-        lat : float
-            latitude [deg], default 45deg
-        hum : float
-            humidity input switch 2x1 [x, values] default is relative humidity
-            x='rh' : relative humidity [%]
-            x='q' : specific humidity [g/kg]
-            x='Td' : dew point temperature [K]
-        P : float
-            air pressure [hPa], default 1013hPa
-        hin : float
-            sensor heights [m] (array 3x1 or 3xn), default 18m
-        hout : float
-            output height [m], default is 10m
-        Rl : float
-            downward longwave radiation [W/m^2]
-        Rs : float
-            downward shortwave radiation [W/m^2]
-        cskin : int
-            0 switch cool skin adjustment off, else 1
-            default is 0
-        skin : str
-            cool skin method option "C35", "ecmwf" or "Beljaars"
-        wl : int
-            warm layer correction default is 0, to switch on set to 1
-        gust : int
-            4x1 [x, beta, zi, ustb] x=0 gustiness is OFF, x=1-5 gustiness is ON
-            and use gustiness factor: 1. Fairall et al. 2003, 2. GF is removed
-            from TSFs u10n, uref, 3. GF=1, 4. following ECMWF, 
-            4. following Zeng et al. 1998, 6. following C35 matlab code;
-            beta gustiness parameter, default is 1.2,
-            zi PBL height [m] default is 600,
-            min is the value for gust speed in stable conditions [m/s],
-            default is 0.01 m/s
-        qmeth : str
-            is the saturation evaporation method to use amongst [
-                "HylandWexler", "Hardy", "Preining", "Wexler",
-                "GoffGratch", "WMO", "MagnusTetens", "Buck",
-                "Buck2", "WMO2018", "Sonntag", "Bolton",
-                "IAPWS", "MurphyKoop"]
-            default is Buck2
-        tol : float
-           4x1 or 7x1 [option, lim1-3 or lim1-6]
-           option : 'flux' to set tolerance limits for fluxes only lim1-3
-           option : 'ref' to set tolerance limits for height adjustment lim-1-3
-           option : 'all' to set tolerance limits for both fluxes and height
-                    adjustment lim1-6
-           default is tol=['all', 0.01, 0.01, 1e-2, 1e-3, 0.1, 0.1]
-        maxiter : int
-            number of iterations (default = 10)
-        out : int
-            set 0 to set points that have not converged, negative values of
-                  u10n, q10n or T10n out of limits to missing (default)
-            set 1 to keep points
-        out_var : str
-            optional. user can define pandas array of variables to be output.
-            the default full pandas array, with cskin=0 gust=0, is :
-                out_var = ("tau", "sensible", "latent", "monob", "cd", "cd10n",
-                           "ct", "ct10n", "cq", "cq10n", "tsrv", "tsr", "qsr",
-                           "usr", "psim", "psit", "psiq", "psim_ref", "psit_ref",
-                           "psiq_ref", "u10n", "t10n", "q10n", "zo", "zot", "zoq",
-                           "uref", "tref", "qref", "qair", "qsea", "Rb", "rh",
-                           "rho", "cp", "lv", "theta", "itera")
-            the "limited" pandas array is:
-                out_var = ("tau", "sensible", "latent", "uref", "tref", "qref")
-            the user can define a custom pandas array of variables to  output.
-        L : str
-           Monin-Obukhov length definition options
-           "tsrv"  : default
-           "Rb" : following ecmwf (IFS Documentation cy46r1)
+    spd : float
+        relative wind speed in [m/s] (is assumed as magnitude difference
+        between wind and surface current vectors)
+    T : float
+        air temperature [K] (will convert if < 200)
+    SST : float
+        sea surface temperature [K] (will convert if < 200)
+    SST_fl : str
+        provides information on the type of the input SST; "bulk" or
+        "skin"
+    meth : str
+        "S80", "S88", "LP82", "YT96", "UA", "NCAR", "C30", "C35",
+        "ecmwf", "Beljaars"
+    lat : float
+        latitude [deg], default 45deg
+    hum : float
+        humidity input switch 2x1 [x, values] default is relative humidity
+        x='rh' : relative humidity [%]
+        x='q' : specific humidity [g/kg]
+        x='Td' : dew point temperature [K]
+    P : float
+        air pressure [hPa], default 1013hPa
+    hin : float
+        sensor heights [m] (array 3x1 or 3xn), default 18m
+    hout : float
+        output height [m], default is 10m
+    Rl : float
+        downward longwave radiation [W/m^2]
+    Rs : float
+        downward shortwave radiation [W/m^2]
+    cskin : int
+        0 switch cool skin adjustment off, else 1
+        default is 0
+    skin : str
+        cool skin method option "C35", "ecmwf" or "Beljaars"
+    wl : int
+        warm layer correction default is 0, to switch on set to 1
+    gust : int
+        4x1 [x, beta, zi, ustb] x=0 gustiness is OFF, x=1-5 gustiness is ON
+        and use gustiness factor: 1. Fairall et al. 2003, 2. GF is removed
+        from TSFs u10n, uref, 3. GF=1, 4. following ECMWF, 
+        4. following Zeng et al. 1998, 6. following C35 matlab code;
+        beta gustiness parameter, default is 1.2,
+        zi PBL height [m] default is 600,
+        min is the value for gust speed in stable conditions [m/s],
+        default is 0.01 m/s
+    qmeth : str
+        is the saturation evaporation method to use amongst [
+            "HylandWexler", "Hardy", "Preining", "Wexler",
+            "GoffGratch", "WMO", "MagnusTetens", "Buck",
+            "Buck2", "WMO2018", "Sonntag", "Bolton",
+            "IAPWS", "MurphyKoop"]
+        default is Buck2
+    tol : float
+       4x1 or 7x1 [option, lim1-3 or lim1-6]
+       option : 'flux' to set tolerance limits for fluxes only lim1-3
+       option : 'ref' to set tolerance limits for height adjustment lim-1-3
+       option : 'all' to set tolerance limits for both fluxes and height
+                adjustment lim1-6
+       default is tol=['all', 0.01, 0.01, 1e-2, 1e-3, 0.1, 0.1]
+    maxiter : int
+        number of iterations (default = 10)
+    out : int
+        set 0 to set points that have not converged, negative values of
+              u10n, q10n or T10n out of limits to missing (default)
+        set 1 to keep points
+    out_var : str
+        optional. user can define pandas array of variables to be output.
+        the default full pandas array, with cskin=0 gust=0, is :
+            out_var = ("tau", "sensible", "latent", "monob", "cd", "cd10n",
+                       "ct", "ct10n", "cq", "cq10n", "tsrv", "tsr", "qsr",
+                       "usr", "psim", "psit", "psiq", "psim_ref", "psit_ref",
+                       "psiq_ref", "u10n", "t10n", "q10n", "zo", "zot", "zoq",
+                       "uref", "tref", "qref", "qair", "qsea", "Rb", "rh",
+                       "rho", "cp", "lv", "theta", "itera")
+        the "limited" pandas array is:
+            out_var = ("tau", "sensible", "latent", "uref", "tref", "qref")
+        the user can define a custom pandas array of variables to  output.
+    L : str
+       Monin-Obukhov length definition options
+       "tsrv"  : default
+       "Rb" : following ecmwf (IFS Documentation cy46r1)
 
     Returns
     -------
-        res : array that contains
-                       1. momentum flux       [N/m^2]
-                       2. sensible heat       [W/m^2]
-                       3. latent heat         [W/m^2]
-                       4. Monin-Obhukov length [m]
-                       5. drag coefficient (cd)
-                       6. neutral drag coefficient (cd10n)
-                       7. heat exchange coefficient (ct)
-                       8. neutral heat exchange coefficient (ct10n)
-                       9. moisture exhange coefficient (cq)
-                       10. neutral moisture exchange coefficient (cq10n)
-                       11. star virtual temperatcure (tsrv)
-                       12. star temperature (tsr) [K]
-                       13. star specific humidity (qsr) [g/kg]
-                       14. star wind speed (usr) [m/s]
-                       15. momentum stability function (psim)
-                       16. heat stability function (psit)
-                       17. moisture stability function (psiq)
-                       18. momentum stability function at hout (psim_ref)
-                       19. heat stability function at hout (psit_ref)
-                       20. moisture stability function at hout (psiq_ref)
-                       21. 10m neutral wind speed (u10n) [m/s]
-                       22. 10m neutral temperature (t10n) [K]
-                       23. 10m neutral specific humidity (q10n) [g/kg]
-                       24. surface roughness length (zo) [m]
-                       25. heat roughness length (zot) [m]
-                       26. moisture roughness length (zoq) [m]
-                       27. wind speed at reference height (uref) [m/s]
-                       28. temperature at reference height (tref) [K]
-                       29. specific humidity at reference height (qref) [g/kg]
-                       30. cool-skin temperature depression (dter) [K]
-                       31. cool-skin humidity depression (dqer) [g/kg]
-                       32. warm layer correction (dtwl)
-                       33. thickness of the viscous layer (delta)
-                       34. specific humidity of air (qair) [g/kg]
-                       35. specific humidity at sea surface (qsea) [g/kg]
-                       36. downward longwave radiation (Rl)
-                       37. downward shortwave radiation (Rs)
-                       38. downward net longwave radiation (Rnl)
-                       39. gust wind speed (ug) [m/s]
-                       40. star wind speed with gust (usr_gust) [m/s]
-                       41. Gustiness Factor (GustFact)
-                       42. Bulk Richardson number (Rb)
-                       43. relative humidity (rh) [%]
-                       44. air density (rho)
-                       45. specific heat of moist air (cp)
-                       46. lv latent heat of vaporization (Jkg−1)
-                       47. potential temperature (theta)
-                       48. number of iterations until convergence
-                       49. flag ("n": normal, "o": out of nominal range,
-                                 "u": u10n<0, "q":q10n<0 or q>40
-                                 "m": missing,
-                                 "l": Rib<-0.5 or Rib>0.2 or z/L>1000,
-                                 "r" : rh>100%,
-                                 "t" : t10n<173K or t10n>373K
-                                 "i": convergence fail at n)
+    res : array that contains
+        1. momentum flux       [N/m^2]
+        2. sensible heat       [W/m^2]
+        3. latent heat         [W/m^2]
+        4. Monin-Obhukov length [m]
+        5. drag coefficient (cd)
+        6. neutral drag coefficient (cd10n)
+        7. heat exchange coefficient (ct)
+        8. neutral heat exchange coefficient (ct10n)
+        9. moisture exhange coefficient (cq)
+        10. neutral moisture exchange coefficient (cq10n)
+        11. star virtual temperatcure (tsrv)
+        12. star temperature (tsr) [K]
+        13. star specific humidity (qsr) [g/kg]
+        14. star wind speed (usr) [m/s]
+        15. momentum stability function (psim)
+        16. heat stability function (psit)
+        17. moisture stability function (psiq)
+        18. momentum stability function at hout (psim_ref)
+        19. heat stability function at hout (psit_ref)
+        20. moisture stability function at hout (psiq_ref)
+        21. 10m neutral wind speed (u10n) [m/s]
+        22. 10m neutral temperature (t10n) [K]
+        23. 10m neutral specific humidity (q10n) [g/kg]
+        24. surface roughness length (zo) [m]
+        25. heat roughness length (zot) [m]
+        26. moisture roughness length (zoq) [m]
+        27. wind speed at reference height (uref) [m/s]
+        28. temperature at reference height (tref) [K]
+        29. specific humidity at reference height (qref) [g/kg]
+        30. cool-skin temperature depression (dter) [K]
+        31. cool-skin humidity depression (dqer) [g/kg]
+        32. warm layer correction (dtwl)
+        33. thickness of the viscous layer (delta)
+        34. specific humidity of air (qair) [g/kg]
+        35. specific humidity at sea surface (qsea) [g/kg]
+        36. downward longwave radiation (Rl)
+        37. downward shortwave radiation (Rs)
+        38. downward net longwave radiation (Rnl)
+        39. gust wind speed (ug) [m/s]
+        40. star wind speed with gust (usr_gust) [m/s]
+        41. Gustiness Factor (GustFact)
+        42. Bulk Richardson number (Rb)
+        43. relative humidity (rh) [%]
+        44. air density (rho)
+        45. specific heat of moist air (cp)
+        46. lv latent heat of vaporization [J/kg]
+        47. potential temperature (theta)
+        48. number of iterations until convergence
+        49. flag: 
+            "n": normal,
+            "o": out of nominal range,
+            "u": u10n<0,
+            "q":q10n<0 or q>40,
+            "m": missing,
+            "l": Rib<-0.5 or Rib>0.2 or z/L>1000,
+            "r" : rh>100%,
+            "t" : t10n<173K or t10n>373K,
+            "i": convergence fail at n.
 
-    2021 / Author S. Biri
-    2021 / Restructured by R. Cornes
-    2021 / Simplified by E. Kent
-    2024 / Units corrected by J. Siddons
+    Notes
+    -----
+    | 2021: Author S. Biri
+    | 2021: Restructured by R. Cornes
+    | 2021: Simplified by E. Kent
+    | 2024: Units corrected by J. Siddons
     """
     logging.basicConfig(filename='flux_calc.log', filemode="w",
                         format='%(asctime)s %(message)s', level=logging.INFO)
