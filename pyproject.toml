@@ -34,7 +34,7 @@ readme = "README.md"
 license = {file = "LICENSE"}
 keywords = [
     "fluxes", "momentum", "turbulence", "heat", "moisture", "ocean",
-    "air-sea", "height adjustment",
+    "air-sea", "height adjustment", "bulk formulae", "air-sea interaction"
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
