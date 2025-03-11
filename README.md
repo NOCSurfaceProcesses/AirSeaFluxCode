@@ -2,7 +2,7 @@
 
 ## Description
 
-`AirSeaFluxCode` is a python 3.6 software designed to allow easy exploration of the different bulk formulae parameterizations and the wide range of implementation options.
+`AirSeaFluxCode` is a library for python 3.9 (and above) designed to allow easy exploration of the different bulk formulae parameterizations and the wide range of implementation options.
 
 ## Citation
 
@@ -18,14 +18,14 @@ Please see subdirectories for code and data licenses
 
 Clone the repository:
 
-```console
+```bash
 git clone https://github.com/NOCSurfaceProcesses/AirSeaFluxCode.git
 ```
 
 This will clone the repository into a directory: `AirSeaFluxCode`. Move to this directory and
 install the package with `pip`:
 
-```console
+```bash
 cd AirSeaFluxCode
 pip install .
 ```
@@ -34,7 +34,7 @@ pip install .
 
 This package is not yet available on PyPi, however it can be installed using `pip` and `git`:
 
-```console
+```bash
 pip install git+https://github.com/NOCSurfaceProcesses/AirSeaFluxCode/
 ```
 
