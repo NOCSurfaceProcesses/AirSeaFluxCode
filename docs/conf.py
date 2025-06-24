@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath('../'))
 # -- Project information -----------------------------------------------------
 
 project = 'AirSeaFluxCode'
-copyright = '2023, Stavroula Biri'
+copyright = '2023-2025, Stavroula Biri'
 author = 'Stavroula Biri'
 
 # The full version, including alpha/beta/rc tags

@@ -76,7 +76,7 @@ def toy_ASFC(inF, outF, outS, sst_fl, gustIn, cskinIn, tolIn, meth, qmIn, LIn,
         #%% run AirSeaFluxCode
         res = AirSeaFluxCode(spd, t, sst, sst_fl, lat=lat, hum=['rh', rh], P=p,
                              hin=hin, Rs=sw, tol=tolIn, gust=gustIn,
-                             cskin=cskinIn, meth=meth, qmeth=qmIn, L=LIn, 
+                             cskin=cskinIn, meth=meth, qmeth=qmIn, L=LIn,
                              maxiter=10, out_var = out_var)
         flg = res["flag"]
 
@@ -367,7 +367,7 @@ elif (outS[-4:] != '.txt'):
 #------------------------------------------------------------------------------
 print("\n run_ASFC.py, started for method "+meth)
 
-res, lon, lat = toy_ASFC(inF, outF, outS, sst_fl, gustIn, cskinIn, tolIn, 
+res, lon, lat = toy_ASFC(inF, outF, outS, sst_fl, gustIn, cskinIn, tolIn,
                          meth, qmIn, LIn, stdIn)
 print("run_ASFC.py took ", np.round((time.perf_counter()-start_time)/60, 2),
       "minutes to run")
@@ -421,7 +421,7 @@ print('input file name: {}, \n method: {}, \n gustiness: {}, \n cskin: {},'
                                                            cskinIn, tolIn,
                                                            qmIn, LIn),
       file=open('./'+outS, 'a'))
-ttl = np.asarray(["tau  ", "shf  ", "lhf  ", 
+ttl = np.asarray(["tau  ", "shf  ", "lhf  ",
                   "u10n ", "t10n ", "q10n "])
 header = ["var", "mean", "median", "min", "max", "5%", "95%"]
 n = np.shape(res)
