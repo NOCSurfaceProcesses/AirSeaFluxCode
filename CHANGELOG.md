@@ -29,4 +29,3 @@ Contributors to this release: Joseph Siddons (@jtsiddons), Richard Cornes (@rcor
 ### Internal Changes
 
 * Formatting of variables, types, and units are now consistent in documentation ([#2](https://github.com/NOCSurfaceProcesses/AirSeaFluxCode/pull/2)).
-

@@ -65,8 +65,8 @@ def apply_GF(gust, spd, wind, step):
         1: gustiness is switched ON following Fairall et al.
         2: gustiness is switched ON and GF is removed from TSFs u10n, uref
         3: gustiness is switched ON and GF=1
-        4: gustiness is switched ON following ECMWF 
-        5: gustiness is switched ON following Zeng et al. (1998) 
+        4: gustiness is switched ON following ECMWF
+        5: gustiness is switched ON following Zeng et al. (1998)
         6: gustiness is switched ON following C35 matlab code
     spd : float
         wind speed                      [ms^{-1}]

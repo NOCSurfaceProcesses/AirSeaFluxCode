@@ -731,7 +731,7 @@ def AirSeaFluxCode_dev(spd, T, SST, SST_fl, meth, lat=None, hum=None, P=None,
         gust : int
             4x1 [x, beta, zi, ustb] x=0 gustiness is OFF, x=1-5 gustiness is ON
             and use gustiness factor: 1. Fairall et al. 2003, 2. GF is removed
-            from TSFs u10n, uref, 3. GF=1, 4. following ECMWF, 
+            from TSFs u10n, uref, 3. GF=1, 4. following ECMWF,
             4. following Zeng et al. 1998, 6. following C35 matlab code;
             beta gustiness parameter, default is 1.2,
             zi PBL height [m] default is 600,

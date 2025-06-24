@@ -712,7 +712,7 @@ def AirSeaFluxCode(spd, T, SST, SST_fl, meth, lat=None, hum=None, P=None,
     gust : int
         4x1 [x, beta, zi, ustb] x=0 gustiness is OFF, x=1-5 gustiness is ON
         and use gustiness factor: 1. Fairall et al. 2003, 2. GF is removed
-        from TSFs u10n, uref, 3. GF=1, 4. following ECMWF, 
+        from TSFs u10n, uref, 3. GF=1, 4. following ECMWF,
         4. following Zeng et al. 1998, 6. following C35 matlab code;
         beta gustiness parameter, default is 1.2,
         zi PBL height [m] default is 600,
@@ -806,7 +806,7 @@ def AirSeaFluxCode(spd, T, SST, SST_fl, meth, lat=None, hum=None, P=None,
         46. lv latent heat of vaporization [J/kg]
         47. potential temperature (theta)
         48. number of iterations until convergence
-        49. flag: 
+        49. flag:
             "n": normal,
             "o": out of nominal range,
             "u": u10n<0,

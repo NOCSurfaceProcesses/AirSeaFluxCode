@@ -137,27 +137,27 @@ The flux calculation code was implemented in order to provide a useful, easy to 
 \sphinxAtStartPar
 Differences in the calculations between different methods can be found in:
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 the way they compute specific humidity from relative humidity, temperature and pressure
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 the way they parameterise the exchange coefficients
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 the inclusion of heat and moisture roughness lengths
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 the inclusion of cool skin/warm layer correction instead of the bulk sea surface temperature
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 the inclusion of gustiness in the wind speed, and
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 the momentum, heat and moisture stability functions definitions
 
@@ -166,39 +166,39 @@ the momentum, heat and moisture stability functions definitions
 \sphinxAtStartPar
 The available parameterizations in AirSeaFluxCode provided in order to calculate the momentum, sensible heat and latent heat fluxes are implemented following:
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxcite{users_guide:smith1980} as S80: the surface drag coefficient is related to 10m wind speed (u$_{\text{10}}$), surface heat and moisture exchange coefficients are constant. The stability parameterizations are based on the Monin\sphinxhyphen{}Obukhov similarity theory for stable and unstable condition which modify the wind, temperature and humidity profiles and derives surface turbulent fluxes in open ocean conditions (valid for wind speeds from 6 to 22 ms$^{\text{\sphinxhyphen{}1}}$).
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxcite{users_guide:smith1988} as S88: is an improvement of the S80 parameterization in the sense that it provides the surface drag coefficient in relation to surface roughness over smooth and viscous surface and otherwise derives surface turbulent fluxes in open ocean conditions as described for S80.
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxcite{users_guide:largepond1981}, \sphinxcite{users_guide:largepond1982} as LP82: the surface drag coefficient is computed in relation to u$_{\text{10}}$ and has different parameterization for different ranges of wind speed. The heat and moisture exchange coefficients are constant for wind speeds\textless{}11ms$^{\text{\sphinxhyphen{}1}}$ and a function of u$_{\text{10}}$ for wind speeds between 11 and 25ms$^{\text{\sphinxhyphen{}1}}$. The stability parameterizations are based on the Monin\sphinxhyphen{}Obukhov similarity theory for stable and unstable condition.
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxcite{users_guide:yellandtaylor1996}, \sphinxcite{users_guide:yelland1998} as YT96: the surface drag coefficient is a function of u$_{\text{*}}$. The heat and moisture exchange coefficients are considered constant as in the cases of S80 and S88.
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxcite{users_guide:zeng1998} as UA: the drag coefficient is given as a function of roughness length over smooth and viscous surface. The parameterization includes the effect of gustiness. The heat and moisture exchange coefficients are a function of heat and moisture roughness lengths and are valid in the range of 0.5 and 18 ms$^{\text{\sphinxhyphen{}1}}$.
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxcite{users_guide:largeyeager2004}, \sphinxcite{users_guide:largeyeager2009} as NCAR: the surface drag coefficient is computed in relation to wind speed for u$_{\text{10}}$ \textgreater{}0.5 ms$^{\text{\sphinxhyphen{}1}}$. The heat exchange coefficient is given as a function of the drag coefficient (one for stable and one for unstable conditions) and the moisture exchange coefficient is also a function of the drag coefficient.
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxcite{users_guide:fairall1996}, \sphinxcite{users_guide:fairall2003}, \sphinxcite{users_guide:edson2013} as C30, and C35: is based on data collected from four expeditions in order to improve the drag and exchange coefficients parameterizations relative to surface roughness. It includes the effects of “cool skin”, and gustiness. The effects of waves and sea state are neglected in order to keep the software as simple as possible, without compromising the integrity of the outputs though.
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxcite{users_guide:ecmwf2019} as ecmwf: the drag, heat and moisture coefficients parameterizations are computed relative to surface roughness estimates. It includes gustiness in the computation of wind speed.
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxcite{users_guide:beljaars1995a}, \sphinxcite{users_guide:beljaars1995b}, \sphinxcite{users_guide:zengbeljaars2005} as Beljaars: the drag, heat and moisture coefficients parameterizations are computed relative to surface roughness estimates. It includes gustiness in the computation of wind speed.
 
@@ -216,19 +216,19 @@ Additionally, non essential parameters can be given as inputs, such as: downward
 \sphinxAtStartPar
 The air and sea surface specific humidity are calculated using the functions qsat\_air(T, P, RH, qmeth) and qsat\_sea(SST, P, qmeth) , which call functions contained in VaporPressure.py to calculate saturation vapour pressure following a chosen method (default is \sphinxcite{users_guide:buck2012}).
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 The air temperature is converted to air temperature for adiabatic expansion following: Ta = T + 273.16 + \(\Gamma \cdot\)hin
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 The density of air is defined as \(\rho\)= (0.34838\(\cdot\)P)/T$_{\text{v10n}}$
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 The specific heat at constant pressure is defined  as c$_{\text{p}}$= 1004.67(1 + 0.00084\(\cdot\)q$_{\text{sea}}$)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 The latent heat of vapourization is defined as L$_{\text{v}}$= (2.501\sphinxhyphen{}0.00237\(\cdot\)SST)10$^{\text{6}}$ (SST in C)
 
@@ -263,13 +263,13 @@ A set of flags are provided as an output that signify: “m” where input value
 \sphinxaftertopcaption
 \begin{tabulary}{\linewidth}[t]{TTT}
 \sphinxtoprule
-\sphinxstyletheadfamily 
+\sphinxstyletheadfamily
 \sphinxAtStartPar
 Variable
-&\sphinxstyletheadfamily 
+&\sphinxstyletheadfamily
 \sphinxAtStartPar
 Tolerance
-&\sphinxstyletheadfamily 
+&\sphinxstyletheadfamily
 \sphinxAtStartPar
 Significance
 \\
@@ -358,74 +358,74 @@ Calculate turbulent surface fluxes using different parameterizations.
 Calculate height adjusted values for spd, T, q
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{spd}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} relative wind speed in {[}m/s{]} (is assumed as magnitude difference
 between wind and surface current vectors)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{T}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature {[}K{]} (will convert if \textless{} 200)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{SST}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sea surface temperature {[}K{]} (will convert if \textless{} 200)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{SST\_fl}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} provides information on the type of the input SST; “bulk” or
 “skin”
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} “S80”, “S88”, “LP82”, “YT96”, “UA”, “NCAR”, “C30”, “C35”,
 “ecmwf”, “Beljaars”
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{lat}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} latitude {[}deg{]}, default 45deg
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hum}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} humidity input switch 2x1 {[}x, values{]} default is relative humidity
 x=’rh’ : relative humidity {[}\%{]}
 x=’q’ : specific humidity {[}g/kg{]}
 x=’Td’ : dew point temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{P}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air pressure {[}hPa{]}, default 1013hPa
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hin}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sensor heights {[}m{]} (array 3x1 or 3xn), default 18m
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hout}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} output height {[}m{]}, default is 10m
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rl}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} downward longwave radiation {[}W/m\textasciicircum{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rs}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} downward shortwave radiation {[}W/m\textasciicircum{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cskin}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} 0 switch cool skin adjustment off, else 1
 default is 0
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{skin}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} cool skin method option “C35”, “ecmwf” or “Beljaars”
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{wl}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} warm layer correction default is 0, to switch on set to 1
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{gust}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} 4x1 {[}x, beta, zi, ustb{]} x=0 gustiness is OFF, x=1\sphinxhyphen{}5 gustiness is ON
 and use gustiness factor: 1. Fairall et al. 2003, 2. GF is removed
@@ -436,7 +436,7 @@ zi PBL height {[}m{]} default is 600,
 min is the value for gust speed in stable conditions {[}m/s{]},
 default is 0.01 m/s
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qmeth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} \begin{description}
 \sphinxlineitem{is the saturation evaporation method to use amongst {[}}
@@ -452,9 +452,9 @@ default is 0.01 m/s
 default is Buck2
 
 
-\item {} 
+\item {}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{tol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} 
+\sphinxstyleliteralstrong{\sphinxupquote{tol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{}
 \sphinxAtStartPar
 4x1 or 7x1 {[}option, lim1\sphinxhyphen{}3 or lim1\sphinxhyphen{}6{]}
 option : ‘flux’ to set tolerance limits for fluxes only lim1\sphinxhyphen{}3
@@ -470,11 +470,11 @@ adjustment lim1\sphinxhyphen{}6
 default is tol={[}‘all’, 0.01, 0.01, 1e\sphinxhyphen{}2, 1e\sphinxhyphen{}3, 0.1, 0.1{]}
 
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{maxiter}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} number of iterations (default = 10)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{out}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} \begin{description}
 \sphinxlineitem{set 0 to set points that have not converged, negative values of}
@@ -487,9 +487,9 @@ u10n, q10n or T10n out of limits to missing (default)
 set 1 to keep points
 
 
-\item {} 
+\item {}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{out\_var}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} 
+\sphinxstyleliteralstrong{\sphinxupquote{out\_var}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{}
 \sphinxAtStartPar
 optional. user can define pandas array of variables to be output.
 the default full pandas array, with cskin=0 gust=0, is :
@@ -516,7 +516,7 @@ out\_var = (“tau”, “sensible”, “latent”, “uref”, “tref”, “
 the user can define a custom pandas array of variables to  output.
 
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{L}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} Monin\sphinxhyphen{}Obukhov length definition options
 “tsrv”  : default
@@ -531,199 +531,199 @@ the user can define a custom pandas array of variables to  output.
 \sphinxstylestrong{res} \textendash{}
 \begin{enumerate}
 \sphinxsetlistlabels{\arabic}{enumi}{enumii}{}{.}%
-\item {} 
+\item {}
 \sphinxAtStartPar
 momentum flux       {[}N/m\textasciicircum{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 sensible heat       {[}W/m\textasciicircum{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 latent heat         {[}W/m\textasciicircum{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 Monin\sphinxhyphen{}Obhukov length {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 drag coefficient (cd)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 neutral drag coefficient (cd10n)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 heat exchange coefficient (ct)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 neutral heat exchange coefficient (ct10n)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 moisture exhange coefficient (cq)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 neutral moisture exchange coefficient (cq10n)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 star virtual temperatcure (tsrv)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 star temperature (tsr) {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 star specific humidity (qsr) {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 star wind speed (usr) {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 momentum stability function (psim)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 heat stability function (psit)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 moisture stability function (psiq)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 momentum stability function at hout (psim\_ref)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 heat stability function at hout (psit\_ref)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 moisture stability function at hout (psiq\_ref)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 10m neutral wind speed (u10n) {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 10m neutral temperature (t10n) {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 10m neutral specific humidity (q10n) {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 surface roughness length (zo) {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 heat roughness length (zot) {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 moisture roughness length (zoq) {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 wind speed at reference height (uref) {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 temperature at reference height (tref) {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 specific humidity at reference height (qref) {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 cool\sphinxhyphen{}skin temperature depression (dter) {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 cool\sphinxhyphen{}skin humidity depression (dqer) {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 warm layer correction (dtwl)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 thickness of the viscous layer (delta)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 specific humidity of air (qair) {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 specific humidity at sea surface (qsea) {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 downward longwave radiation (Rl)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 downward shortwave radiation (Rs)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 downward net longwave radiation (Rnl)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 gust wind speed (ug) {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 star wind speed with gust (usr\_gust) {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 Gustiness Factor (GustFact)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 Bulk Richardson number (Rb)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 relative humidity (rh) {[}\%{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 air density (rho)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 specific heat of moist air (cp)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 lv latent heat of vaporization {[}J/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 potential temperature (theta)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 number of iterations until convergence
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 flag:
 “n”: normal,
@@ -778,19 +778,19 @@ This section provides a description of the sub\sphinxhyphen{}routines that can b
 Calculate drag coefficient at reference height.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cdn}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} neutral drag coefficient
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hin}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} wind speed height       {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hout}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} reference height        {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{psim}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} momentum stability function
 
@@ -822,23 +822,23 @@ float
 Calculate neutral drag coefficient.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{u10n}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} neutral 10m wind speed {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity      {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Ta}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature        {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} gravity               {[}m/s\textasciicircum{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}})
 
@@ -847,11 +847,11 @@ Calculate neutral drag coefficient.
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{cdn} (\sphinxstyleemphasis{float})
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{zo} (\sphinxstyleemphasis{float})
 
@@ -876,23 +876,23 @@ Calculate neutral drag coefficient.
 Calculate neutral drag coefficient from roughness length.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{u10n}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} neutral 10m wind speed {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity      {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Ta}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature        {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{                {[}}}\sphinxstyleliteralemphasis{\sphinxupquote{m/s}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} gravity
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}})
 
@@ -927,27 +927,27 @@ float
 Calculate heat and moisture exchange coefficients at reference height.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cdn}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} neutral drag coefficient
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cd}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} drag coefficient at reference height
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{ctqn}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} neutral heat or moisture exchange coefficient
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hin}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} original temperature or humidity sensor height {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hout}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} reference height                   {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{psitq}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} heat or moisture stability function
 
@@ -979,31 +979,31 @@ float
 Calculate neutral heat and moisture exchange coefficients.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{corq}} (\sphinxstyleliteralemphasis{\sphinxupquote{flag to select}}) \textendash{} “ct” or “cq”
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} height over MO length
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cdn}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} neutral drag coefficient
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity      {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zo}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} surface roughness       {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Ta}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature         {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}})
 
@@ -1012,11 +1012,11 @@ Calculate neutral heat and moisture exchange coefficients.
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{ctqn} (\sphinxstyleemphasis{float}) \textendash{} neutral heat exchange coefficient
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{zotq} (\sphinxstyleemphasis{float}) \textendash{} roughness length for t or q
 
@@ -1077,11 +1077,11 @@ float
 Calculate momentum/heat stability function.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} height over MO length
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} parameterisation method
 
@@ -1113,11 +1113,11 @@ float
 Calculate heat stability function for unstable conditions.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} height over MO length
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} parameterisation method
 
@@ -1181,11 +1181,11 @@ float
 Calculate heat stability function for stable conditions.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} height over MO length
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} parameterisation method
 
@@ -1217,11 +1217,11 @@ float
 Calculate momentum stability function.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} height over MO length
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}})
 
@@ -1253,11 +1253,11 @@ float
 Calculate momentum stability function for unstable conditions.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} height over MO length
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} parameterisation method
 
@@ -1318,11 +1318,11 @@ float
 Calculate momentum stability function for stable conditions.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} height over MO length
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} parameterisation method
 
@@ -1383,11 +1383,11 @@ float
 Calculate heat stability function.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} height over MO length
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} parameterisation method
 
@@ -1455,7 +1455,7 @@ There are different ways to remove the effect of gustiness according to
 the user’s choice.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{gust}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} option on how to apply gustiness
 0: gustiness is switched OFF
@@ -1466,15 +1466,15 @@ the user’s choice.
 5: gustiness is switched ON following Zeng et al. (1998)
 6: gustiness is switched ON following C35 matlab code
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{spd}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} wind speed                      {[}ms\textasciicircum{}\{\sphinxhyphen{}1\}{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{wind}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} wind speed including gust       {[}ms\textasciicircum{}\{\sphinxhyphen{}1\}{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{step}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} step during AirSeaFluxCode the GF is applied: “u”, “TSF”
 
@@ -1509,27 +1509,27 @@ Calculate Monin\sphinxhyphen{}Obukhov length following ecmwf (IFS Documentation 
 default for methods ecmwf and Beljaars
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rb}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Richardson number
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hin\_t}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} t sensor height {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{monob}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Monin\sphinxhyphen{}Obukhov length from previous iteration step {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zo}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} surface roughness       {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zot}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} temperature roughness length       {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} bulk parameterisation method option: “S80”, “S88”, “LP82”, “YT96”,
 “UA”, “NCAR”, “C30”, “C35”, “ecmwf”, “Beljaars”
@@ -1562,19 +1562,19 @@ float
 Calculate Monin\sphinxhyphen{}Obukhov length from tsrv.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tsrv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} virtual star temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} acceleration due to gravity {[}m/s2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} virtual temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction wind speed {[}m/s{]}
 
@@ -1606,39 +1606,39 @@ float
 Calculate bulk Richardson number.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} acceleration due to gravity {[}m/s2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction wind speed {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hin\_u}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} u sensor height {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hin\_t}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} t sensor height {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} virtual temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{dtv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} virtual temperature difference, air and sea {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{wind}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} wind speed {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{monob}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Monin\sphinxhyphen{}Obukhov length from previous iteration step {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} bulk parameterisation method option: “S80”, “S88”, “LP82”, “YT96”,
 “UA”, “NCAR”, “C30”, “C35”, “ecmwf”, “Beljaars”
@@ -1671,31 +1671,31 @@ float
 Compute gustiness.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{beta}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} constant
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zi}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} scale height of the boundary layer depth {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{ustb}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} gust wind in stable conditions   {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Ta}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature   {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tsrv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star virtual temperature of air {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} gravity
 
@@ -1727,51 +1727,51 @@ float        {[}m/s{]}
 Calculate star wind speed, temperature and specific humidity.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hin}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sensor heights {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{monob}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} M\sphinxhyphen{}O length     {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{wind}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} wind speed     {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zo}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} momentum roughness length    {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zot}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} temperature roughness length {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zoq}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} moisture roughness length    {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{dt}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} temperature difference       {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{dq}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} specific humidity difference {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cd}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} drag coefficient
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{ct}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} temperature exchange coefficient
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cq}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} moisture exchange coefficient
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} bulk parameterisation method option: “S80”, “S88”, “LP82”, “YT96”,
 “UA”, “NCAR”, “C30”, “C35”, “ecmwf”, “Beljaars”
@@ -1781,15 +1781,15 @@ Calculate star wind speed, temperature and specific humidity.
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{usr} (\sphinxstyleemphasis{float}) \textendash{} friction wind speed {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{tsr} (\sphinxstyleemphasis{float}) \textendash{} star temperature    {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{qsr} (\sphinxstyleemphasis{float}) \textendash{} star specific humidity {[}g/kg{]}
 
@@ -1814,19 +1814,19 @@ Calculate star wind speed, temperature and specific humidity.
 Calculate virtual star temperature.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star specific humidity {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Ta}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qair}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air specific humidity {[}g/kg{]}
 
@@ -1867,51 +1867,51 @@ Compute cool skin.
 Based on COARE3.5 (Fairall et al. 1996, Edson et al. 2013)
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{sst}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sea surface temperature      {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{d}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} cool skin thickness           {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{rho}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} density of air               {[}kg/m\textasciicircum{}3{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rs}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} downward shortwave radiation {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rnl}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} net upwelling IR radiation       {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cp}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} specific heat of air at constant pressure {[}J/K/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{lv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} latent heat of vaporization   {[}J/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity             {[}ms\textasciicircum{}\sphinxhyphen{}1{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star temperature              {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star humidity                 {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} gravity                      {[}ms\textasciicircum{}\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{opt}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} method to follow
 
@@ -1920,11 +1920,11 @@ Based on COARE3.5 (Fairall et al. 1996, Edson et al. 2013)
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{dter} (\sphinxstyleemphasis{float}) \textendash{} cool skin correction         {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{delta} (\sphinxstyleemphasis{float}) \textendash{} cool skin thickness           {[}m{]}
 
@@ -1950,43 +1950,43 @@ cool skin adjustment based on Beljaars (1997)
 air\sphinxhyphen{}sea interaction in the ECMWF model
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{rho}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} density of air           {[}kg/m\textasciicircum{}3{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rs}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} downward solar radiation {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rnl}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} net thermal radiaion     {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cp}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} specific heat of air at constant pressure {[}J/K/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{lv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} latent heat of vaporization   {[}J/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity         {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star temperature              {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star humidity                 {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} gravity                      {[}ms\textasciicircum{}\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Qs}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} radiation balance
 
@@ -1995,11 +1995,11 @@ air\sphinxhyphen{}sea interaction in the ECMWF model
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{Qs} (\sphinxstyleemphasis{float}) \textendash{} radiation balance
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{dtc} (\sphinxstyleemphasis{float}) \textendash{} cool skin temperature correction {[}K{]}
 
@@ -2027,47 +2027,47 @@ Compute cool skin.
 Based on COARE3.5 (Fairall et al. 1996, Edson et al. 2013)
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{sst}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sea surface temperature      {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{rho}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} density of air               {[}kg/m\textasciicircum{}3{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rs}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} downward shortwave radiation {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rnl}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} net upwelling IR radiation       {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cp}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} specific heat of air at constant pressure {[}J/K/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{lv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} latent heat of vaporization   {[}J/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{delta}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} cool skin thickness           {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity             {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star temperature              {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star humidity                 {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} gravity                      {[}ms\textasciicircum{}\sphinxhyphen{}2{]}
 
@@ -2076,15 +2076,15 @@ Based on COARE3.5 (Fairall et al. 1996, Edson et al. 2013)
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{dter} (\sphinxstyleemphasis{float}) \textendash{} cool skin correction         {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{dqer} (\sphinxstyleemphasis{float}) \textendash{} humidity corrction            {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{delta} (\sphinxstyleemphasis{float}) \textendash{} cool skin thickness           {[}m{]}
 
@@ -2109,43 +2109,43 @@ Based on COARE3.5 (Fairall et al. 1996, Edson et al. 2013)
 cool skin adjustment based on IFS Documentation cy46r1
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{rho}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} density of air               {[}kg/m\textasciicircum{}3{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rs}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} downward solar radiation {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rnl}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} net thermal radiation     {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cp}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} specific heat of air at constant pressure {[}J/K/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{lv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} latent heat of vaporization   {[}J/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity         {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star temperature              {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star humidity                 {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{sst}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sea surface temperature  {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} gravity                      {[}ms\textasciicircum{}\sphinxhyphen{}2{]}
 
@@ -2181,19 +2181,19 @@ Based on Fairall et al., 1996 and cited in IFS Documentation Cy46r1
 eq. 8.155 p. 164
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{aw}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} thermal expansion coefficient of sea\sphinxhyphen{}water  {[}1/K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Q}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} part of the net heat flux actually absorbed in the warm layer {[}W/m\textasciicircum{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity in the air (u*) {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} gravity                      {[}ms\textasciicircum{}\sphinxhyphen{}2{]}
 
@@ -2225,19 +2225,19 @@ float
 Calculate humidity correction.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{dter}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} cool skin correction         {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{sst}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sea surface temperature      {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qsea}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} specific humidity over sea   {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{lv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} latent heat of vaporization   {[}J/kg{]}
 
@@ -2270,51 +2270,51 @@ Calculate warm layer correction following IFS Documentation cy46r1.
 and aerobulk (Brodeau et al., 2016)
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{rho}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} density of air               {[}kg/m\textasciicircum{}3{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rs}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} downward solar radiation    {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rnl}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} net thermal radiation  {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cp}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} specific heat of air at constant pressure {[}J/K/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{lv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} latent heat of vaporization   {[}J/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity           {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star temperature              {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star humidity                 {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{sst}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} bulk sst                    {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{skt}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} skin sst from previous step {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{dtc}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} cool skin correction        {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} gravity                      {[}ms\textasciicircum{}\sphinxhyphen{}2{]}
 
@@ -2367,16 +2367,16 @@ Goff Gratch for ice.
 Ported to Python and modified by S. Biri from Holger Voemel’s original
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{temp}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Temperature {[}C{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{phase}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} ‘liquid’ : Calculate vapor pressure over liquid water or
 ‘ice’ : Calculate vapor pressure over ice
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} formula to be used
 Hardy               : vaporpressure formula from Hardy (1998)
@@ -2422,25 +2422,25 @@ float
 Compute the adiabatic lapse\sphinxhyphen{}rate.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{opt}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} type of adiabatic lapse rate dry or “moist”
 dry has options to be constant “dry\_c”, for dry air “dry”, or
 for unsaturated air with water vapor “dry\_v”
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{sst}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sea surface temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{t}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{q}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} specific humidity of air {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cp}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} specific capacity of air at constant Pressure
 
@@ -2472,7 +2472,7 @@ float
 Get specific humidity output.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hum}} (\sphinxstyleliteralemphasis{\sphinxupquote{array}}) \textendash{} \begin{description}
 \sphinxlineitem{humidity input switch 2x1 {[}x, values{]} default is relative humidity}
@@ -2484,19 +2484,19 @@ x=’Td’ : dew point temperature {[}K{]}
 \end{description}
 
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{T}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{sst}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sea surface temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{P}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air pressure at sea level {[}hPa{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qmeth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} method to calculate specific humidity from vapor pressure
 
@@ -2505,11 +2505,11 @@ x=’Td’ : dew point temperature {[}K{]}
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{qair} (\sphinxstyleemphasis{float}) \textendash{} specific humidity of air {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{qsea} (\sphinxstyleemphasis{float}) \textendash{} specific humidity over sea surface {[}g/kg{]}
 
@@ -2534,19 +2534,19 @@ x=’Td’ : dew point temperature {[}K{]}
 Compute saturation specific humidity {[}g/kg{]}.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{T}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} temperature {[}\$\textasciicircum{}circ\$,C{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{P}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} pressure {[}mb{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{rh}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} relative humidity {[}\%{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qmeth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} method to calculate vapor pressure
 
@@ -2578,15 +2578,15 @@ float
 Compute surface saturation specific humidity {[}g/kg{]}.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{T}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} temperature {[}\$\textasciicircum{}circ\$,C{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{P}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} pressure {[}mb{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qmeth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} method to calculate vapor pressure
 
@@ -2624,11 +2624,11 @@ This section provides a description of the sub\sphinxhyphen{}routines that can b
 Computes gravity relative to latitude
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{lat}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} latitude {[}\$\textasciicircum{}circ\${]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{lon}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} longitude {[}\$\textasciicircum{}circ\$, optional{]}
 
@@ -2660,11 +2660,11 @@ float
 Reads input heights for velocity, temperature and humidity
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{h}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} input heights {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{dim\_len}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} length dimension
 
@@ -2699,15 +2699,15 @@ Compute density of (moist) air using the eq. of state of the atmosphere.
 as in aerobulk (\sphinxurl{https://github.com/brodeau/aerobulk/}) Brodeau et al. (2016)
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{T}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} absolute air temperature             {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qair}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air specific humidity   {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{p}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} pressure in                {[}Pa{]}
 
@@ -2739,43 +2739,43 @@ TYPE
 Set general flags.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{miss}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} mask of missing input points
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{rh}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} relative humidity             {[}\%{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{u10n}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} 10m neutral wind speed        {[}ms\textasciicircum{}\{\sphinxhyphen{}1\}{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{q10n}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} 10m neutral specific humidity {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{t10n}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} 10m neutral air temperature   {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rb}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} bulk Richardson number
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hin}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} measurement heights           {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{monob}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Monin\sphinxhyphen{}Obukhov length          {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{itera}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} number of iteration
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{out}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{optional}}) \textendash{} output option for non converged points. The default is 0.
 
