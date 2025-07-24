@@ -1,3 +1,5 @@
+"""Scales"""
+
 import numpy as np
 
 from .stratification import psim_calc, psit_calc

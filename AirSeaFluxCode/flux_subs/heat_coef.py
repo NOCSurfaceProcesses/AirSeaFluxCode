@@ -1,3 +1,5 @@
+"""Heat Coefficient Sub-routines"""
+
 import numpy as np
 from ..util_subs import kappa, visc_air
 

@@ -1,7 +1,7 @@
+"""Development Flux Sub-routines"""
+
 import numpy as np
 from ..util_subs import kappa, visc_air
-
-# ---------------------------------------------------------------------
 
 
 def cdn_calc(u10n, usr, Ta, grav, meth):

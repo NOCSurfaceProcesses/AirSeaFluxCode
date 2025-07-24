@@ -1,6 +1,10 @@
 r"""
-The stratification functions :math:`\Psi_i` are integrals of the dimensionless profiles :math:`\Phi_i`, which are determined experimentally, and are applied as stablility corrections to the wind speed, temperature and humidity profiles.
-They are a function of the stability parameter :math:`z/L` where :math:`L` is the Monin-Obukhov length.
+The stratification functions :math:`\Psi_i` are integrals of the dimensionless profiles
+:math:`\Phi_i`, which are determined experimentally, and are applied as stablility
+corrections to the wind speed, temperature and humidity profiles.
+
+They are a function of the stability parameter :math:`z/L` where :math:`L` is the
+Monin-Obukhov length.
 """
 
 import numpy as np
@@ -311,6 +315,8 @@ def psiu_26(zol, meth):
         )
         f = np.power(zol[k], 2) / (1 + np.power(zol[k], 2))
         psi[k] = (1 - f) * psik + f * psic
+    else:
+        raise NotImplementedError(f"'psiu_26' not available for {meth = }")
 
     return psi
 

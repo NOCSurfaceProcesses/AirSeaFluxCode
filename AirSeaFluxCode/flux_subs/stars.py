@@ -1,3 +1,5 @@
+"""Stars"""
+
 import numpy as np
 
 from ..util_subs import kappa

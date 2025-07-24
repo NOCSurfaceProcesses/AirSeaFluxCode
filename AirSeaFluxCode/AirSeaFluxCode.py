@@ -1,15 +1,39 @@
+"""Main AirSeaFluxCode Module"""
+
 import warnings
 import numpy as np
 import pandas as pd
 import logging
 
+from .cs_wl_subs import (
+    cs_Beljaars,
+    cs_C35,
+    cs_ecmwf,
+    get_dqer,
+    wl_ecmwf,
+)
+from .flux_subs import (
+    apply_GF,
+    cd_calc,
+    cdn_calc,
+    ctq_calc,
+    ctqn_calc,
+    get_LRb,
+    get_Ltsrv,
+    get_Rb,
+    get_gust,
+    get_strs,
+    get_tsrv,
+    psim_calc,
+    psit_calc,
+)
 from .hum_subs import get_hum, gamma
-from .util_subs import *
-from .flux_subs import *
-from .cs_wl_subs import *
+from .util_subs import get_outvars, get_heights, gc, set_flag, kappa, CtoK
 
 
 class S88:
+    """Smith 1988 Parametrization"""
+
     def _wind_iterate(self, ind):
         if self.gust[0] in range(1, 7):
             self.wind[ind] = np.sqrt(
@@ -46,12 +70,14 @@ class S88:
             )
 
     def get_heights(self, hin, hout=10):
+        """Read heights"""
         self.hout = hout
         self.hin = hin
         self.h_in = get_heights(hin, len(self.spd))
         self.h_out = get_heights(self.hout, 1)
 
     def get_specHumidity(self, qmeth="Buck2"):
+        """Get specific humidity"""
         self.qair, self.qsea = get_hum(
             self.hum, self.T, self.SST, self.P, qmeth
         )  # [g/kg]
@@ -70,20 +96,17 @@ class S88:
 
     def _fix_coolskin_warmlayer(self, wl, cskin, skin, Rl, Rs):
         skin = self.skin if skin is None else skin
-        assert wl in [0, 1], "wl not valid"
-        assert cskin in [0, 1], "cskin not valid"
-        assert skin in ["C35", "ecmwf", "Beljaars"], "Skin value not valid"
+        self._validate_cs_wl_params(wl, cskin, skin)
 
         if (
             (cskin == 1 or wl == 1)
-            and (np.all(Rl == None) or np.all(np.isnan(Rl)))
-            and (np.all(Rs == None) or np.all(np.isnan(Rs)))
+            and (np.all(Rl == None) or np.all(np.isnan(Rl)))  # noqa: E711
+            and (np.all(Rs == None) or np.all(np.isnan(Rs)))  # noqa: E711
         ):
-            print(
+            raise ValueError(
                 "Cool skin/warm layer is switched ON; "
-                "Radiation input should not be empty"
+                + "Radiation input should not be empty"
             )
-            raise
 
         self.wl = wl
         self.cskin = cskin
@@ -91,9 +114,20 @@ class S88:
         self.Rs = np.full(self.spd.shape, np.nan) if Rs is None else Rs
         self.Rl = np.full(self.spd.shape, np.nan) if Rl is None else Rl
 
+    def _validate_cs_wl_params(self, wl, cskin, skin):
+        if wl not in [0, 1]:
+            raise ValueError("wl not valid, expected 0 or 1")
+        if cskin not in [0, 1]:
+            raise ValueError("cskin not valid, expected 0 or 1")
+        if skin not in ["C35", "ecmwf", "Beljaars"]:
+            raise ValueError(
+                "Skin value not valid, should be one of 'C35', 'ecmwf', 'Beljaars'"
+            )
+
     def set_coolskin_warmlayer(self, wl=0, cskin=0, skin=None, Rl=None, Rs=None):
+        """Set the coolskin/warmlayer"""
         wl = 0 if wl is None else wl
-        if hasattr(self, "skin") == False:
+        if not hasattr(self, "skin"):
             self.skin = "C35"
         self._fix_coolskin_warmlayer(wl, cskin, skin, Rl, Rs)
 
@@ -251,6 +285,7 @@ class S88:
         self.tv10n = self.zot
 
     def iterate(self, maxiter=10, tol=None):
+        """Iteratively solve the parameterization"""
         if maxiter < 5:
             warnings.warn("Iteration number <5 - resetting to 5.")
             maxiter = 5
@@ -258,7 +293,8 @@ class S88:
         # Decide which variables to use in tolerances based on tolerance
         # specification
         tol = ["all", 0.01, 0.01, 1e-02, 1e-3, 0.1, 0.1] if tol is None else tol
-        assert tol[0] in ["flux", "ref", "all"], "unknown tolerance input"
+        if tol[0] not in ["flux", "ref", "all"]:
+            raise ValueError("unknown tolerance input")
 
         old_vars = {
             "flux": ["tau", "sensible", "latent"],
@@ -316,7 +352,7 @@ class S88:
             )
 
             if np.all(np.isnan(self.cd10n)):
-                logging.info("break %s at iteration %s cd10n<0", self.meth, it)
+                logging.info(f"break {self.meth} at iteration {it} cd10n<0")
                 break
 
             self.psim[ind] = psim_calc(self.h_in[0, ind] / self.monob[ind], self.meth)
@@ -367,10 +403,7 @@ class S88:
             )
 
             # Some parameterizations set a minimum on parameters
-            try:
-                self._minimum_params()
-            except AttributeError:
-                pass
+            self._minimum_params()
 
             self.dt_full[ind] = (
                 self.dt_in[ind] - self.dter[ind] * self.cskin - self.dtwl[ind] * self.wl
@@ -446,19 +479,7 @@ class S88:
                 self.monob[ind],
                 self.meth,
             )
-            if self.L == "tsrv":
-                self.monob[ind] = get_Ltsrv(
-                    self.tsrv[ind], self.grav[ind], self.tv[ind], self.usr[ind]
-                )
-            else:
-                self.monob[ind] = get_LRb(
-                    self.Rb[ind],
-                    self.h_in[1, ind],
-                    self.monob[ind],
-                    self.zo[ind],
-                    self.zot[ind],
-                    self.meth,
-                )
+            self._set_monob(ind)
 
             # Update the wind values
             self._wind_iterate(ind)
@@ -483,7 +504,7 @@ class S88:
                 ind = np.where(d.max(axis=0) >= 1)
 
             self.ind = np.copy(ind)
-            ii = False if (ind[0].size == 0) else True
+            ii = ind[0].size > 0
             # End of iteration loop
 
         self.itera[ind] = -1
@@ -494,6 +515,21 @@ class S88:
             self.meth,
             self.ind[0].size,
         )
+
+    def _set_monob(self, ind):
+        if self.L == "tsrv":
+            self.monob[ind] = get_Ltsrv(
+                self.tsrv[ind], self.grav[ind], self.tv[ind], self.usr[ind]
+            )
+        else:
+            self.monob[ind] = get_LRb(
+                self.Rb[ind],
+                self.h_in[1, ind],
+                self.monob[ind],
+                self.zo[ind],
+                self.zot[ind],
+                self.meth,
+            )
 
     def _get_humidity(self):
         """Calculate RH used for flagging purposes & output."""
@@ -534,7 +570,9 @@ class S88:
         self.flag = flag
 
     def get_output(self, out_var=None, out=0):
-        assert out in [0, 1], "out must be either 0 or 1"
+        """Get the outputs"""
+        if out not in [0, 1]:
+            raise ValueError("out must be either 0 or 1")
 
         self._get_humidity()  # Get the Relative humidity
         self._flag(out=out)  # Get flags
@@ -615,10 +653,7 @@ class S88:
 
         # Get class specific flags (will only work if self.u_hi and self.u_lo
         # have been set in the class)
-        try:
-            self._class_flag()
-        except AttributeError:
-            pass
+        self._class_flag()
 
         # Combine all output variables into a pandas array
         res_vars = get_outvars(out_var, self.cskin, self.gust)
@@ -662,7 +697,7 @@ class S88:
                 "(if any) for u10n/q10n"
             )
 
-        resAll = pd.DataFrame(data=res.T, index=range(self.nlen), columns=res_vars)
+        resAll = pd.DataFrame(data=res.T, index=range(self.nlen), columns=res_vars)  # type:ignore
         if "itera" in res_vars:
             resAll["itera"] = self.itera  # restore itera
 
@@ -673,23 +708,12 @@ class S88:
     def add_variables(
         self, spd, T, SST, SST_fl, cskin=0, lat=None, hum=None, P=None, L=None
     ):
-        # Add the mandatory variables
-        assert type(spd) == type(T) == type(SST) == np.ndarray, (
-            "input type of spd, T and SST should be"
-        )
-        " numpy.ndarray"
-        if self.meth in ["S80", "S88", "LP82", "YT96", "UA", "NCAR"]:
-            assert SST_fl == "bulk", "input SST should be bulk for method " + self.meth
-        if self.meth in ["C30", "C35", "ecmwf", "Beljaars"]:
-            if cskin == 1:
-                assert SST_fl == "bulk", (
-                    "input SST should be bulk with cool skin correction switched on for method "
-                    + self.meth
-                )
-            else:
-                assert SST_fl == "skin", (
-                    "input SST should be skin for method " + self.meth
-                )
+        """Add the mandatory variables"""
+        if not all(isinstance(var, np.ndarray) for var in [spd, T, SST]):
+            raise TypeError("input type of spd, T and SST should be numpy.ndarray")
+
+        self._validate_sst_fl(SST_fl, cskin)
+
         self.L = "tsrv" if L is None else L
         self.arr_shp = spd.shape
         self.nlen = len(spd)
@@ -707,23 +731,40 @@ class S88:
         self.Rb = np.empty(SST.shape) * self.msk
 
     def add_gust(self, gust=None):
-        if np.all(gust is None):
-            try:
-                gust = self.default_gust
-            except AttributeError:
-                gust = [0, 0, 0, 0]  # gustiness OFF
-                # gust = [1, 1.2, 800]
-        elif (np.size(gust) < 3) and (gust == 0):
+        """Add the gust"""
+        if gust is None or np.all(gust is None):
+            gust = getattr(self, "default_gust", [0, 0, 0, 0])
+        elif (np.size(gust) < 3) and np.all(gust == 0):
             gust = [0, 0, 0, 0]
 
-        assert np.size(gust) == 4, "gust input must be a 4x1 array"
-        assert gust[0] in range(7), "gust at position 0 must be 0 to 6"
+        if np.size(gust) != 4:
+            raise ValueError("gust input must be a 4x1 array")
+        if gust[0] not in range(7):
+            raise ValueError("gust at position 0 must be 0 to 6")
         self.gust = gust
 
+    def _validate_sst_fl(self, SST_fl, cskin):
+        if self.meth in ["S80", "S88", "LP82", "YT96", "UA", "NCAR"]:
+            if SST_fl != "bulk":
+                raise ValueError(f"input SST should be bulk for method {self.meth}")
+        if self.meth in ["C30", "C35", "ecmwf", "Beljaars"]:
+            if cskin == 1:
+                if SST_fl != "bulk":
+                    raise ValueError(
+                        "input SST should be bulk with cool skin correction switched "
+                        + f"on for method = {self.meth}"
+                    )
+            else:
+                if SST_fl != "skin":
+                    raise ValueError(f"input SST should be skin for method {self.meth}")
+
     def _class_flag(self):
-        """A flag specific to this class - only used for certain classes where
+        """
+        A flag specific to this class - only used for certain classes where
         u_lo and u_hi are defined
         """
+        if not hasattr(self, "u_lo") or not hasattr(self, "u_hi"):
+            return
         self.flag = np.where(
             ((self.u10n < self.u_lo[0]) | (self.u10n > self.u_hi[0]))
             & (self.flag == "n"),
@@ -740,11 +781,16 @@ class S88:
             ),
         )
 
+    def _minimum_params(self):
+        return
+
     def __init__(self):
         self.meth = "S88"
 
 
 class S80(S88):
+    """Smith 1980 Parametrization"""
+
     def __init__(self):
         self.meth = "S80"
         self.u_lo = [6, 6]
@@ -752,6 +798,8 @@ class S80(S88):
 
 
 class YT96(S88):
+    """Yelland & Taylor 1996 Parametrization"""
+
     def __init__(self):
         self.meth = "YT96"
         # no limits to u range as we use eq. 21 for cdn
@@ -760,6 +808,8 @@ class YT96(S88):
 
 
 class LP82(S88):
+    """Large & Pond 1982 Parametrization"""
+
     def __init__(self):
         self.meth = "LP82"
         self.u_lo = [3, 3]
@@ -767,6 +817,8 @@ class LP82(S88):
 
 
 class NCAR(S88):
+    """NCAR Parametrization"""
+
     def _minimum_params(self):
         self.cd = np.maximum(np.copy(self.cd), 1e-4)
         self.ct = np.maximum(np.copy(self.ct), 1e-4)
@@ -780,6 +832,8 @@ class NCAR(S88):
 
 
 class UA(S88):
+    """U of Arizona Parametrization"""
+
     def __init__(self):
         self.meth = "UA"
         self.default_gust = [1, 1.2, 600, 0.01]
@@ -788,6 +842,8 @@ class UA(S88):
 
 
 class C30(S88):
+    """COARE 3.0 Parametrization"""
+
     # def set_coolskin_warmlayer(self, wl=0, cskin=1, skin="C35", Rl=None, Rs=None):
     #     self._fix_coolskin_warmlayer(wl, cskin, skin, Rl, Rs)
 
@@ -798,6 +854,8 @@ class C30(S88):
 
 
 class C35(C30):
+    """COARE 3.5 Parametrization"""
+
     def __init__(self):
         self.meth = "C35"
         self.default_gust = [1, 1.2, 600, 0.01]
@@ -805,6 +863,8 @@ class C35(C30):
 
 
 class ecmwf(C30):
+    """ECMWF Parametrization"""
+
     # def set_coolskin_warmlayer(self, wl=0, cskin=1, skin="ecmwf", Rl=None,
     #                            Rs=None):
     #     self._fix_coolskin_warmlayer(wl, cskin, skin, Rl, Rs)
@@ -821,6 +881,8 @@ class ecmwf(C30):
 
 
 class Beljaars(C30):
+    """Beljaars Parametrization"""
+
     # def set_coolskin_warmlayer(self, wl=0, cskin=1, skin="Beljaars", Rl=None,
     #                            Rs=None):
     #     self._fix_coolskin_warmlayer(wl, cskin, skin, Rl, Rs)

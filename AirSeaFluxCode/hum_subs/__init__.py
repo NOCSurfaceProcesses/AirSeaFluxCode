@@ -1,3 +1,5 @@
+"""Humidity Module"""
+
 from .vapor_pressure import VaporPressure
 from .qsat import qsat_air, qsat_sea
 from .humidity import gamma, get_hum

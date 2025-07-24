@@ -1,3 +1,5 @@
+"""Drag Coefficient Sub-routines"""
+
 import numpy as np
 from ..util_subs import kappa, visc_air
 
@@ -115,7 +117,7 @@ def cdn_from_roughness(u10n, usr, Ta, grav, meth):
             # eq. (3.26) p.38 over sea IFS Documentation cy46r1
             zo = 0.018 * np.power(usr, 2) / grav + 0.11 * visc_air(Ta) / usr
         else:
-            raise ValueError("Unknown method for cdn_from_roughness " + meth)
+            raise NotImplementedError("Unknown method for cdn_from_roughness " + meth)
 
         cdn = np.power(kappa / np.log(10 / zo), 2)
     return cdn

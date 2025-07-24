@@ -1,3 +1,5 @@
+"""Coolskin and Warmlayer Subroutines"""
+
 import numpy as np
 from ..util_subs import CtoK
 

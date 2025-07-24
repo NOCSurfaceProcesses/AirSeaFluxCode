@@ -1,3 +1,5 @@
+"""Coolskin Sub-routines"""
+
 import numpy as np
 from ..util_subs import CtoK
 from .cs_wl_subs import delta
@@ -74,6 +76,8 @@ def cs(sst, d, rho, Rs, Rnl, cp, lv, usr, tsr, qsr, grav, opt):
             )  # eq. 8.153 Cy46r1
             Q = Qnsol + Rns * fs
             d = delta(aw, Q, usr, grav)
+    else:
+        raise NotImplementedError(f"Coolskin not available for method = {opt}")
     dter = Q * d / tcw  # eq. 4 F96
     return dter, d
 

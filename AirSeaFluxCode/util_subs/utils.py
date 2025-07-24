@@ -1,6 +1,7 @@
 """Utility Functions"""
 
 import numpy as np
+from typing import List, Optional, Union
 
 CtoK = 273.16  # 273.15
 r""" Conversion factor for $^\circ\,$C to K """
@@ -231,56 +232,60 @@ def set_flag(miss, rh, u10n, q10n, t10n, Rb, hin, monob, itera, out=0):
 # ---------------------------------------------------------------------
 
 
-def get_outvars(out_var, cskin, gust):
+def get_outvars(out_var: Optional[Union[List[str], str]], cskin, gust) -> List[str]:
     """Get output variables"""
     if out_var is None:  # full output
         if cskin == 1 and gust[0] == 0:  # skin ON and gust OFF
             # fmt: off
-            res_vars = (
+            return [
                 "tau", "sensible", "latent", "monob", "cd", "cd10n", "ct", "ct10n",
                 "cq", "cq10n", "tsrv", "tsr", "qsr", "usr", "psim", "psit", "psiq",
                 "psim_ref", "psit_ref", "psiq_ref", "u10n", "t10n", "q10n", "zo",
                 "zot", "zoq", "uref", "tref", "qref", "dter", "dqer", "dtwl", "tkt",
                 "Rl", "Rs", "Rnl", "qair", "qsea", "Rb", "rh", "rho", "cp", "lv",
                 "theta", "itera",
-            )
+            ]
             # fmt: on
         elif cskin == 0 and gust[0] != 0:  # skin OFF and gust ON
             # fmt: off
-            res_vars = (
+            return [
                 "tau", "sensible", "latent", "monob", "cd", "cd10n", "ct", "ct10n",
                 "cq", "cq10n", "tsrv", "tsr", "qsr", "usr_gust", "ug", "GustFact",
                 "psim", "psit", "psiq", "psim_ref", "psit_ref", "psiq_ref", "u10n",
                 "t10n", "q10n", "zo", "zot", "zoq", "uref", "tref", "qref", "qair",
                 "qsea", "Rb", "rh", "rho", "cp", "lv", "theta", "itera",
-            )
+            ]
             # fmt: on
         elif cskin == 0 and gust[0] == 0:
             # fmt: off
-            res_vars = (
+            return [
                 "tau", "sensible", "latent", "monob", "cd", "cd10n", "ct", "ct10n",
                 "cq", "cq10n", "tsrv", "tsr", "qsr", "usr", "psim", "psit", "psiq",
                 "psim_ref", "psit_ref", "psiq_ref", "u10n", "t10n", "q10n", "zo",
                 "zot", "zoq", "uref", "tref", "qref", "qair", "qsea", "Rb", "rh",
                 "rho", "cp", "lv", "theta", "itera",
-            )
+            ]
             # fmt: on
         else:
             # fmt: off
-            res_vars = (
+            return [
                 "tau", "sensible", "latent", "monob", "cd", "cd10n", "ct", "ct10n",
                 "cq", "cq10n", "tsrv", "tsr", "qsr", "usr_gust", "ug", "GustFact",
                 "psim", "psit", "psiq", "psim_ref", "psit_ref", "psiq_ref", "u10n",
                 "t10n", "q10n", "zo", "zot", "zoq", "uref", "tref", "qref", "dter",
                 "dqer", "dtwl", "tkt", "Rl", "Rs", "Rnl", "qair", "qsea", "Rb", "rh",
                 "rho", "cp", "lv", "theta", "itera",
-            )
+            ]
             # fmt: on
     elif out_var == "limited":
-        res_vars = ("tau", "sensible", "latent", "uref", "tref", "qref")
-    else:
-        res_vars = out_var
-    return res_vars
+        return ["tau", "sensible", "latent", "uref", "tref", "qref"]
+    elif isinstance(out_var, str):
+        return [out_var]
+    elif isinstance(out_var, (list, tuple)) and all(
+        isinstance(ov, str) for ov in out_var
+    ):
+        return out_var
+    raise ValueError(f"Unknown out_var value. Got {out_var = }")
 
 
 # ---------------------------------------------------------------------
