@@ -81,14 +81,13 @@ ignore = [
 ]
 preview = true
 select = [
-  "C90",  # mccabe-complexity
-  "D",    # docstrings
-  "E",    # pycodestyle errors
-  "F",    # pyflakes
-  "ICN",  # Flake8 Import Conventions
-  "N802", # invalid-function-name
-  "S",    # bandit
-  "W",    # pycodestyle warnings
+  "C90", # mccabe-complexity
+  "D",   # docstrings
+  "E",   # pycodestyle errors
+  "F",   # pyflakes
+  "ICN", # Flake8 Import Conventions
+  "S",   # bandit
+  "W",   # pycodestyle warnings
 ]
 
 [tool.ruff.lint.per-file-ignores]
