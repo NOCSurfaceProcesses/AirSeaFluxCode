@@ -61,7 +61,7 @@ def cs(sst, d, rho, Rs, Rnl, cp, lv, usr, tsr, qsr, grav, opt):
         aw = 2.1e-5 * np.power(sst + 3.2, 0.79)
         # d = delta(aw, Qnsol, usr, grav, rho, opt)
         fs = 0.065 + 11 * d - 6.6e-5 / d * (1 - np.exp(-d / 8.0e-4))  # eq. 17 F96
-        # in F96 first term in eq. 17 is 0.137 insted of 0.065
+        # in F96 first term in eq. 17 is 0.137 instead of 0.065
         Q = Qnsol + Rns * fs
         Qb = aw * Q + 0.026 * np.minimum(lhf, 0) * cpw / lv  # eq. 8 F96
         d = delta(aw, Qb, usr, grav)
@@ -121,7 +121,7 @@ def cs_C35(sst, rho, Rs, Rnl, cp, lv, delta, usr, tsr, qsr, grav):
     dter : float
         cool skin correction         [K]
     dqer : float
-        humidity corrction            [g/kg]
+        humidity correction            [g/kg]
     delta : float
         cool skin thickness           [m]
     """

@@ -63,7 +63,7 @@ class S88:
                     self.GustFact[ind]
                 ) * (np.log(self.h_in[0, ind] / self.ref10) - self.psim[ind])
         else:
-            # initalisation of wind
+            # initialisation of wind
             self.wind[ind] = np.copy(self.spd[ind])
             self.u10n[ind] = self.wind[ind] - self.usr[ind] / kappa * (
                 np.log(self.h_in[0, ind] / self.ref10) - self.psim[ind]
@@ -1019,7 +1019,7 @@ def AirSeaFluxCode(
         6. neutral drag coefficient (cd10n)
         7. heat exchange coefficient (ct)
         8. neutral heat exchange coefficient (ct10n)
-        9. moisture exhange coefficient (cq)
+        9. moisture exchange coefficient (cq)
         10. neutral moisture exchange coefficient (cq10n)
         11. star virtual temperatcure (tsrv)
         12. star temperature (tsr) [K]

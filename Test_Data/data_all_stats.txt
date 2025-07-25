@@ -1,10 +1,10 @@
 Input summary
-input file name: data_all.csv, 
- method: S88, 
- gustiness: [1, 1.2, 800], 
- cskin: 0, 
- tolerance: ['all', 0.01, 0.01, 1e-05, 0.001, 0.1, 0.1], 
- qmethod: Buck2, 
+input file name: data_all.csv,
+ method: S88,
+ gustiness: [1, 1.2, 800],
+ cskin: 0,
+ tolerance: ['all', 0.01, 0.01, 1e-05, 0.001, 0.1, 0.1],
+ qmethod: Buck2,
  L: Rb
 | var   | mean      | median    | min       | max      | 5%        | 95%      |
 |-------|-----------|-----------|-----------|----------|-----------|----------|
@@ -48,4 +48,3 @@ input file name: data_all.csv,
 | Rib   | -5.95e-02 | -1.86e-02 | -7.53e+00 | 1.94e-01 | -1.86e-01 | 1.55e-02 |
 | rh    | 7.89e+01  | 7.92e+01  | 1.05e+01  | 1.00e+02 | 5.86e+01  | 9.65e+01 |
 -------------------------------------------------------------------------------
-

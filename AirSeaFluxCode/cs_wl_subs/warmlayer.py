@@ -60,7 +60,7 @@ def wl_ecmwf(rho, Rs, Rnl, cp, lv, usr, tsr, qsr, sst, skt, dtc, grav):
     zc3 = rd0 * kappa * grav / np.power(1.2 / rhow, 3 / 2)
     zc4 = (0.3 + 1) * kappa / rd0
     zc5 = (0.3 + 1) / (0.3 * rd0)
-    for jwl in range(10):  # iteration to solve implicitely eq. for warm layer
+    for jwl in range(10):  # iteration to solve implicitly eq. for warm layer
         dsst = skt - sst - dtc
         # Buoyancy flux and stability parameter (zdl = -z/L) in water
         ZSRD = (Qnsol + Rns * Rd) / (rhow * cpw)

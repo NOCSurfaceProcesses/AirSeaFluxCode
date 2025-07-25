@@ -43,7 +43,7 @@ The available parameterizations in AirSeaFluxCode provided in order to calculate
 Description of AirSeaFluxCode
 =============================
 
-In AirSeaFluxCode we use a consistent calculation approach across all algorithms; where this requires changes from published descriptions the effect of those changes are quantified and shown to be small compared to the significance levels we set in Table 1. The AirSeaFluxCode software calculates air-sea flux of momentum, sensible heat and latent heat fluxes from bulk meteorological variables (wind speed (spd), air temperature (T), and relative humidity (RH)) provided at a certain height (hin) above the surface and sea surface temperature (SST) and height adjusted values for wind speed, air temperature and specific humidity of air at a user specified reference height (default is 10 m). 
+In AirSeaFluxCode we use a consistent calculation approach across all algorithms; where this requires changes from published descriptions the effect of those changes are quantified and shown to be small compared to the significance levels we set in Table 1. The AirSeaFluxCode software calculates air-sea flux of momentum, sensible heat and latent heat fluxes from bulk meteorological variables (wind speed (spd), air temperature (T), and relative humidity (RH)) provided at a certain height (hin) above the surface and sea surface temperature (SST) and height adjusted values for wind speed, air temperature and specific humidity of air at a user specified reference height (default is 10 m).
 
 Additionally, non essential parameters can be given as inputs, such as: downward long/shortwave radiation (Rl, Rs), latitude (lat), reference output height (hout),  cool skin (cskin), cool skin correction method (skin, following either  [Fairall1996b]_ (default for C30, and C35), [ZengBeljaars2005]_ (default for Beljaars), [ECMWF2019]_ (default for ecmwf)), warm layer correction (wl), gustiness (gust) and boundary layer height (zi), choice of bulk algorithm method (meth), the choice of saturation vapour pressure function (qmeth), tolerance limits (tol), choice of Monin-Obukhov length function (L), and the maximum number of iterations (maxiter). Note that all input variables need to be loaded as numpy.ndarray.
 
@@ -73,9 +73,9 @@ The values for air density, specific heat at constant volume, and the latent hea
    \begin{array}{l}
      u_{\ast} = \frac{k\cdot u_{z}}{\log(\frac{z}{z_{om}})-\Psi_{m}(\frac{z}{L})+\Psi_{m}(\frac{z_{om}}{L})} \\
      t_{\ast} = \frac{k\cdot (T-SST)}{\log(\frac{z}{z_{oh}})-\Psi_{h}(\frac{z}{L})+\Psi_{h}(\frac{z_{oh}}{L})} \\
-     q_{\ast} = \frac{k\cdot (q_{air}-q_{sea})}{\log(\frac{z}{z_{oq}})-\Psi_{q}(\frac{z}{L})+\Psi_{q}(\frac{z_{oq}}{L})} 
-   \end{array}  
-    
+     q_{\ast} = \frac{k\cdot (q_{air}-q_{sea})}{\log(\frac{z}{z_{oq}})-\Psi_{q}(\frac{z}{L})+\Psi_{q}(\frac{z_{oq}}{L})}
+   \end{array}
+
 
 
 AirSeaFluxCode is set up to test for convergence between the i\ :sup:`th` and (i-1)\ :sup:`th` iteration according to the tolerance limits shown in Table 1 for six variables in total, of which three are relative to the height adjustment (u\ :sub:`10`\, t\ :sub:`10`\, q\ :sub:`10`\) and three to the flux calculation (:math:`\tau`, shf, lhf) respectively. The tolerance limits are set according to the maximum accuracy that can be feasible for each variable. The user can choose to allow for convergence either only for the fluxes (default), or only for height adjustment or for both (all six variables). Values that have not converged are by default set to missing, but the number of iterations until convergence is provided as an output (this number is set to -1 for non convergent points).
@@ -88,11 +88,11 @@ A set of flags are provided as an output that signify: "m" where input values ar
    Variable                       Tolerance      Significance
    =============================  =============  =============
    u\ :sub:`10n` [ms\ :sup:`-1`]  0.01           0.1
-   T\ :sub:`10n` [K]              0.01           0.1 
+   T\ :sub:`10n` [K]              0.01           0.1
    q\ :sub:`10n` [g/kg]           10\ :sup:`-2`  10\ :sup:`-1`
    :math:`\tau` [Nm\ :sup:`-2`]   10\ :sup:`-3`  10\ :sup:`-2`
-   shf [Wm\ :sup:`-2`]            0.1            2 
-   lhf [Wm\ :sup:`-2`]            0.1            2 
+   shf [Wm\ :sup:`-2`]            0.1            2
+   lhf [Wm\ :sup:`-2`]            0.1            2
    =============================  =============  =============
 
 AirSeaFluxCode module
@@ -155,7 +155,7 @@ This section provides a description of the sub-routines that can be called from 
    :members:
 
 .. [Beljaars1995a] Beljaars, A. C. M. (1995a). The impact of some aspects of the boundary layer scheme in the ecmwf model. Proc. Seminar on Parameterization of Sub-Grid Scale Physical Processes, Reading, United Kingdom, ECMWF.
-.. [Beljaars1995b] Beljaars, A. C. M. (1995b). The parameterization of surface fluxes in large scale models under free convection. Quart. J. Roy. Meteor. Soc., 121:255–270. 
+.. [Beljaars1995b] Beljaars, A. C. M. (1995b). The parameterization of surface fluxes in large scale models under free convection. Quart. J. Roy. Meteor. Soc., 121:255–270.
 .. [Buck2012] Buck, A. L. (2012). Buck research instruments, LLC, chapter Appendix I, pages 20–21. unknown, Boulder, CO 80308.
 .. [ECMWF2019] ECMWF, 2019. “Part IV: Physical processes,” in Turbulent transport and interactions with the surface. IFS documentation CY46R1 (Reading, RG2 9AX, England: ECMWF), 33–58. Available at: https://www.ecmwf.int/node/19308.
 .. [Edson2013] Edson, J. B., Jampana, V., Weller, R. A., Bigorre, S. P., Plueddemann, A. J., Fairall, C. W., Miller, S. D., Mahrt, L., Vickers, D., and Hersbach, H. (2013). On the exchange of momentum over the open ocean. Journal of Physical Oceanography, 43.
@@ -176,4 +176,3 @@ This section provides a description of the sub-routines that can be called from 
 .. [Yelland1998] Yelland, M., Moat, B. I., Taylor, P. K., Pascal, R. W., Hutchings, J., and Cornell, V. C. (1998). Wind stress measurements from the open ocean corrected for airflow distortion by the ship. Journal of Physical Oceanography, 28:1511–1526.
 .. [ZengBeljaars2005] Zeng, X. and Beljaars, A. (2005). A prognostic scheme of sea surface skin temperature for modeling and data assimilation. Geophys. Res. Lett., 32(L14605).
 .. [Zeng1998] Zeng, X., Zhao, M., and Dickinson, R. (1998). Intercomparison of bulk aerodynamic algorithms for the computation of sea surface fluxes using toga coare and tao data. J. Climate, 11:2628–2644.
-

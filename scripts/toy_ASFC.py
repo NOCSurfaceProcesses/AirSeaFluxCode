@@ -336,7 +336,7 @@ def main() -> None:  # noqa: C901, D103
     start_time = time.perf_counter()
     # ------------------------------------------------------------------------------
     inF = input("Give input file name (data_all.csv or era5_r360x180.nc): \n")
-    meth = input("Give prefered method: \n")
+    meth = input("Give preferred method: \n")
     while meth not in [
         "S80",
         "S88",
@@ -350,14 +350,14 @@ def main() -> None:  # noqa: C901, D103
         "Beljaars",
     ]:
         print("method unknown")
-        meth = input("Give prefered method: \n")
+        meth = input("Give preferred method: \n")
     else:
         meth = meth  # [meth]
     ext = meth + "_"
     # ------------------------------------------------------------------------------
     sst_fl = input("Give SST flag (bulk/sin): \n")
     # ------------------------------------------------------------------------------
-    qmIn = input("Give prefered method for specific humidity: \n")
+    qmIn = input("Give preferred method for specific humidity: \n")
     if qmIn == "":
         qmIn = "Buck2"  # default
     while qmIn not in [
@@ -377,7 +377,7 @@ def main() -> None:  # noqa: C901, D103
         "MurphyKoop",
     ]:
         print("method unknown")
-        meth = input("Give prefered method: \n")
+        meth = input("Give preferred method: \n")
     else:
         qmIn = qmIn
     # ------------------------------------------------------------------------------
@@ -434,7 +434,7 @@ def main() -> None:  # noqa: C901, D103
         tolIn = ast.literal_eval(tolIn)
     ext = ext + "tol" + tolIn[0]
     # ------------------------------------------------------------------------------
-    LIn = input("Give prefered method for L (tsrv or Rb): \n")
+    LIn = input("Give preferred method for L (tsrv or Rb): \n")
     if LIn == "":
         LIn = "tsrv"  # default
     elif LIn not in ["tsrv", "Rb"]:

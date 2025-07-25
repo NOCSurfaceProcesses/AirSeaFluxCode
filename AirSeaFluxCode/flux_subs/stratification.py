@@ -1,6 +1,6 @@
 r"""
 The stratification functions :math:`\Psi_i` are integrals of the dimensionless profiles
-:math:`\Phi_i`, which are determined experimentally, and are applied as stablility
+:math:`\Phi_i`, which are determined experimentally, and are applied as stability
 corrections to the wind speed, temperature and humidity profiles.
 
 They are a function of the stability parameter :math:`z/L` where :math:`L` is the

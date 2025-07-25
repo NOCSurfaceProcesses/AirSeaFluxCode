@@ -13,7 +13,7 @@ def VaporPressure(temp: np.ndarray, P, phase, meth):
     The optional parameter 'liquid' changes the calculation to vapor pressure
     over liquid water over the entire temperature range.
 
-    The current default fomulas are Hyland and Wexler for liquid and
+    The current default formulas are Hyland and Wexler for liquid and
     Goff Gratch for ice.
 
     Ported to Python and modified by S. Biri from Holger Voemel's original

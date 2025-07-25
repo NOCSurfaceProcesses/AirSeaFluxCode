@@ -12,7 +12,7 @@ This work was supported by the Natural Environment Research Council grants ORCHE
 
 ## Licensing
 
-Please see subdirectories for code and data licenses 
+Please see subdirectories for code and data licenses
 
 ## Installation
 

@@ -43,7 +43,7 @@
 
 
 \usepackage[Bjarne]{fncychap}
-\usepackage[,numfigreset=2,mathnumfig,mathnumsep={.}]{sphinx}
+\usepackage[,numfigreset=2,mathnumfig]{sphinx}
 
 \fvset{fontsize=auto}
 \usepackage{geometry}
@@ -64,7 +64,7 @@
 
 
 \title{AirSeaFluxCode}
-\date{Mar 11, 2025}
+\date{Jul 25, 2025}
 \release{1.2.0}
 \author{Stavroula Biri}
 \newcommand{\sphinxlogo}{\vbox{}}
@@ -137,27 +137,27 @@ The flux calculation code was implemented in order to provide a useful, easy to 
 \sphinxAtStartPar
 Differences in the calculations between different methods can be found in:
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 the way they compute specific humidity from relative humidity, temperature and pressure
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 the way they parameterise the exchange coefficients
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 the inclusion of heat and moisture roughness lengths
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 the inclusion of cool skin/warm layer correction instead of the bulk sea surface temperature
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 the inclusion of gustiness in the wind speed, and
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 the momentum, heat and moisture stability functions definitions
 
@@ -166,39 +166,39 @@ the momentum, heat and moisture stability functions definitions
 \sphinxAtStartPar
 The available parameterizations in AirSeaFluxCode provided in order to calculate the momentum, sensible heat and latent heat fluxes are implemented following:
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxcite{users_guide:smith1980} as S80: the surface drag coefficient is related to 10m wind speed (u$_{\text{10}}$), surface heat and moisture exchange coefficients are constant. The stability parameterizations are based on the Monin\sphinxhyphen{}Obukhov similarity theory for stable and unstable condition which modify the wind, temperature and humidity profiles and derives surface turbulent fluxes in open ocean conditions (valid for wind speeds from 6 to 22 ms$^{\text{\sphinxhyphen{}1}}$).
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxcite{users_guide:smith1988} as S88: is an improvement of the S80 parameterization in the sense that it provides the surface drag coefficient in relation to surface roughness over smooth and viscous surface and otherwise derives surface turbulent fluxes in open ocean conditions as described for S80.
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxcite{users_guide:largepond1981}, \sphinxcite{users_guide:largepond1982} as LP82: the surface drag coefficient is computed in relation to u$_{\text{10}}$ and has different parameterization for different ranges of wind speed. The heat and moisture exchange coefficients are constant for wind speeds\textless{}11ms$^{\text{\sphinxhyphen{}1}}$ and a function of u$_{\text{10}}$ for wind speeds between 11 and 25ms$^{\text{\sphinxhyphen{}1}}$. The stability parameterizations are based on the Monin\sphinxhyphen{}Obukhov similarity theory for stable and unstable condition.
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxcite{users_guide:yellandtaylor1996}, \sphinxcite{users_guide:yelland1998} as YT96: the surface drag coefficient is a function of u$_{\text{*}}$. The heat and moisture exchange coefficients are considered constant as in the cases of S80 and S88.
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxcite{users_guide:zeng1998} as UA: the drag coefficient is given as a function of roughness length over smooth and viscous surface. The parameterization includes the effect of gustiness. The heat and moisture exchange coefficients are a function of heat and moisture roughness lengths and are valid in the range of 0.5 and 18 ms$^{\text{\sphinxhyphen{}1}}$.
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxcite{users_guide:largeyeager2004}, \sphinxcite{users_guide:largeyeager2009} as NCAR: the surface drag coefficient is computed in relation to wind speed for u$_{\text{10}}$ \textgreater{}0.5 ms$^{\text{\sphinxhyphen{}1}}$. The heat exchange coefficient is given as a function of the drag coefficient (one for stable and one for unstable conditions) and the moisture exchange coefficient is also a function of the drag coefficient.
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxcite{users_guide:fairall1996}, \sphinxcite{users_guide:fairall2003}, \sphinxcite{users_guide:edson2013} as C30, and C35: is based on data collected from four expeditions in order to improve the drag and exchange coefficients parameterizations relative to surface roughness. It includes the effects of “cool skin”, and gustiness. The effects of waves and sea state are neglected in order to keep the software as simple as possible, without compromising the integrity of the outputs though.
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxcite{users_guide:ecmwf2019} as ecmwf: the drag, heat and moisture coefficients parameterizations are computed relative to surface roughness estimates. It includes gustiness in the computation of wind speed.
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxcite{users_guide:beljaars1995a}, \sphinxcite{users_guide:beljaars1995b}, \sphinxcite{users_guide:zengbeljaars2005} as Beljaars: the drag, heat and moisture coefficients parameterizations are computed relative to surface roughness estimates. It includes gustiness in the computation of wind speed.
 
@@ -216,19 +216,19 @@ Additionally, non essential parameters can be given as inputs, such as: downward
 \sphinxAtStartPar
 The air and sea surface specific humidity are calculated using the functions qsat\_air(T, P, RH, qmeth) and qsat\_sea(SST, P, qmeth) , which call functions contained in VaporPressure.py to calculate saturation vapour pressure following a chosen method (default is \sphinxcite{users_guide:buck2012}).
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 The air temperature is converted to air temperature for adiabatic expansion following: Ta = T + 273.16 + \(\Gamma \cdot\)hin
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 The density of air is defined as \(\rho\)= (0.34838\(\cdot\)P)/T$_{\text{v10n}}$
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 The specific heat at constant pressure is defined  as c$_{\text{p}}$= 1004.67(1 + 0.00084\(\cdot\)q$_{\text{sea}}$)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 The latent heat of vapourization is defined as L$_{\text{v}}$= (2.501\sphinxhyphen{}0.00237\(\cdot\)SST)10$^{\text{6}}$ (SST in C)
 
@@ -263,13 +263,13 @@ A set of flags are provided as an output that signify: “m” where input value
 \sphinxaftertopcaption
 \begin{tabulary}{\linewidth}[t]{TTT}
 \sphinxtoprule
-\sphinxstyletheadfamily 
+\sphinxstyletheadfamily
 \sphinxAtStartPar
 Variable
-&\sphinxstyletheadfamily 
+&\sphinxstyletheadfamily
 \sphinxAtStartPar
 Tolerance
-&\sphinxstyletheadfamily 
+&\sphinxstyletheadfamily
 \sphinxAtStartPar
 Significance
 \\
@@ -341,15 +341,15 @@ lhf {[}Wm$^{\text{\sphinxhyphen{}2}}${]}
 
 
 \section{AirSeaFluxCode module}
-\label{\detokenize{users_guide:module-AirSeaFluxCode}}\label{\detokenize{users_guide:airseafluxcode-module}}\index{module@\spxentry{module}!AirSeaFluxCode@\spxentry{AirSeaFluxCode}}\index{AirSeaFluxCode@\spxentry{AirSeaFluxCode}!module@\spxentry{module}}\index{AirSeaFluxCode() (in module AirSeaFluxCode)@\spxentry{AirSeaFluxCode()}\spxextra{in module AirSeaFluxCode}}
+\label{\detokenize{users_guide:module-AirSeaFluxCode}}\label{\detokenize{users_guide:airseafluxcode-module}}\index{module@\spxentry{module}!AirSeaFluxCode@\spxentry{AirSeaFluxCode}}\index{AirSeaFluxCode@\spxentry{AirSeaFluxCode}!module@\spxentry{module}}
+\sphinxAtStartPar
+AirSeaFluxCode
+\index{AirSeaFluxCode() (in module AirSeaFluxCode)@\spxentry{AirSeaFluxCode()}\spxextra{in module AirSeaFluxCode}}
 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.AirSeaFluxCode}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.}}\sphinxbfcode{\sphinxupquote{AirSeaFluxCode}}}
-{\sphinxparam{\DUrole{n}{spd}}\sphinxparamcomma \sphinxparam{\DUrole{n}{T}}\sphinxparamcomma \sphinxparam{\DUrole{n}{SST}}\sphinxparamcomma \sphinxparam{\DUrole{n}{SST\_fl}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}}\sphinxparamcomma \sphinxparam{\DUrole{n}{lat}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{hum}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{P}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{hin}\DUrole{o}{=}\DUrole{default_value}{18}}\sphinxparamcomma \sphinxparam{\DUrole{n}{hout}\DUrole{o}{=}\DUrole{default_value}{10}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Rl}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Rs}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{cskin}\DUrole{o}{=}\DUrole{default_value}{0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{skin}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{wl}\DUrole{o}{=}\DUrole{default_value}{0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{gust}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{qmeth}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}Buck2\textquotesingle{}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{tol}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{maxiter}\DUrole{o}{=}\DUrole{default_value}{30}}\sphinxparamcomma \sphinxparam{\DUrole{n}{out}\DUrole{o}{=}\DUrole{default_value}{0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{out\_var}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{L}\DUrole{o}{=}\DUrole{default_value}{None}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.}}\sphinxbfcode{\sphinxupquote{AirSeaFluxCode}}}{\sphinxparam{\DUrole{n,n}{spd}}, \sphinxparam{\DUrole{n,n}{T}}, \sphinxparam{\DUrole{n,n}{SST}}, \sphinxparam{\DUrole{n,n}{SST\_fl}}, \sphinxparam{\DUrole{n,n}{meth}}, \sphinxparam{\DUrole{n,n}{lat}\DUrole{o,o}{=}\DUrole{default_value}{None}}, \sphinxparam{\DUrole{n,n}{hum}\DUrole{o,o}{=}\DUrole{default_value}{None}}, \sphinxparam{\DUrole{n,n}{P}\DUrole{o,o}{=}\DUrole{default_value}{None}}, \sphinxparam{\DUrole{n,n}{hin}\DUrole{o,o}{=}\DUrole{default_value}{18}}, \sphinxparam{\DUrole{n,n}{hout}\DUrole{o,o}{=}\DUrole{default_value}{10}}, \sphinxparam{\DUrole{n,n}{Rl}\DUrole{o,o}{=}\DUrole{default_value}{None}}, \sphinxparam{\DUrole{n,n}{Rs}\DUrole{o,o}{=}\DUrole{default_value}{None}}, \sphinxparam{\DUrole{n,n}{cskin}\DUrole{o,o}{=}\DUrole{default_value}{0}}, \sphinxparam{\DUrole{n,n}{skin}\DUrole{o,o}{=}\DUrole{default_value}{None}}, \sphinxparam{\DUrole{n,n}{wl}\DUrole{o,o}{=}\DUrole{default_value}{0}}, \sphinxparam{\DUrole{n,n}{gust}\DUrole{o,o}{=}\DUrole{default_value}{None}}, \sphinxparam{\DUrole{n,n}{qmeth}\DUrole{o,o}{=}\DUrole{default_value}{\textquotesingle{}Buck2\textquotesingle{}}}, \sphinxparam{\DUrole{n,n}{tol}\DUrole{o,o}{=}\DUrole{default_value}{None}}, \sphinxparam{\DUrole{n,n}{maxiter}\DUrole{o,o}{=}\DUrole{default_value}{30}}, \sphinxparam{\DUrole{n,n}{out}\DUrole{o,o}{=}\DUrole{default_value}{0}}, \sphinxparam{\DUrole{n,n}{out\_var}\DUrole{o,o}{=}\DUrole{default_value}{None}}, \sphinxparam{\DUrole{n,n}{L}\DUrole{o,o}{=}\DUrole{default_value}{None}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate turbulent surface fluxes using different parameterizations.
@@ -358,74 +358,74 @@ Calculate turbulent surface fluxes using different parameterizations.
 Calculate height adjusted values for spd, T, q
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{spd}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} relative wind speed in {[}m/s{]} (is assumed as magnitude difference
 between wind and surface current vectors)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{T}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature {[}K{]} (will convert if \textless{} 200)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{SST}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sea surface temperature {[}K{]} (will convert if \textless{} 200)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{SST\_fl}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} provides information on the type of the input SST; “bulk” or
 “skin”
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} “S80”, “S88”, “LP82”, “YT96”, “UA”, “NCAR”, “C30”, “C35”,
 “ecmwf”, “Beljaars”
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{lat}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} latitude {[}deg{]}, default 45deg
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hum}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} humidity input switch 2x1 {[}x, values{]} default is relative humidity
 x=’rh’ : relative humidity {[}\%{]}
 x=’q’ : specific humidity {[}g/kg{]}
 x=’Td’ : dew point temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{P}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air pressure {[}hPa{]}, default 1013hPa
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hin}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sensor heights {[}m{]} (array 3x1 or 3xn), default 18m
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hout}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} output height {[}m{]}, default is 10m
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rl}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} downward longwave radiation {[}W/m\textasciicircum{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rs}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} downward shortwave radiation {[}W/m\textasciicircum{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cskin}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} 0 switch cool skin adjustment off, else 1
 default is 0
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{skin}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} cool skin method option “C35”, “ecmwf” or “Beljaars”
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{wl}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} warm layer correction default is 0, to switch on set to 1
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{gust}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} 4x1 {[}x, beta, zi, ustb{]} x=0 gustiness is OFF, x=1\sphinxhyphen{}5 gustiness is ON
 and use gustiness factor: 1. Fairall et al. 2003, 2. GF is removed
@@ -436,7 +436,7 @@ zi PBL height {[}m{]} default is 600,
 min is the value for gust speed in stable conditions {[}m/s{]},
 default is 0.01 m/s
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qmeth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} \begin{description}
 \sphinxlineitem{is the saturation evaporation method to use amongst {[}}
@@ -452,9 +452,9 @@ default is 0.01 m/s
 default is Buck2
 
 
-\item {} 
+\item {}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{tol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} 
+\sphinxstyleliteralstrong{\sphinxupquote{tol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{}
 \sphinxAtStartPar
 4x1 or 7x1 {[}option, lim1\sphinxhyphen{}3 or lim1\sphinxhyphen{}6{]}
 option : ‘flux’ to set tolerance limits for fluxes only lim1\sphinxhyphen{}3
@@ -470,11 +470,11 @@ adjustment lim1\sphinxhyphen{}6
 default is tol={[}‘all’, 0.01, 0.01, 1e\sphinxhyphen{}2, 1e\sphinxhyphen{}3, 0.1, 0.1{]}
 
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{maxiter}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} number of iterations (default = 10)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{out}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} \begin{description}
 \sphinxlineitem{set 0 to set points that have not converged, negative values of}
@@ -487,9 +487,9 @@ u10n, q10n or T10n out of limits to missing (default)
 set 1 to keep points
 
 
-\item {} 
+\item {}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{out\_var}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} 
+\sphinxstyleliteralstrong{\sphinxupquote{out\_var}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{}
 \sphinxAtStartPar
 optional. user can define pandas array of variables to be output.
 the default full pandas array, with cskin=0 gust=0, is :
@@ -516,7 +516,7 @@ out\_var = (“tau”, “sensible”, “latent”, “uref”, “tref”, “
 the user can define a custom pandas array of variables to  output.
 
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{L}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} Monin\sphinxhyphen{}Obukhov length definition options
 “tsrv”  : default
@@ -531,199 +531,199 @@ the user can define a custom pandas array of variables to  output.
 \sphinxstylestrong{res} \textendash{}
 \begin{enumerate}
 \sphinxsetlistlabels{\arabic}{enumi}{enumii}{}{.}%
-\item {} 
+\item {}
 \sphinxAtStartPar
 momentum flux       {[}N/m\textasciicircum{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 sensible heat       {[}W/m\textasciicircum{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 latent heat         {[}W/m\textasciicircum{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 Monin\sphinxhyphen{}Obhukov length {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 drag coefficient (cd)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 neutral drag coefficient (cd10n)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 heat exchange coefficient (ct)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 neutral heat exchange coefficient (ct10n)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
-moisture exhange coefficient (cq)
+moisture exchange coefficient (cq)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 neutral moisture exchange coefficient (cq10n)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 star virtual temperatcure (tsrv)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 star temperature (tsr) {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 star specific humidity (qsr) {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 star wind speed (usr) {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 momentum stability function (psim)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 heat stability function (psit)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 moisture stability function (psiq)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 momentum stability function at hout (psim\_ref)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 heat stability function at hout (psit\_ref)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 moisture stability function at hout (psiq\_ref)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 10m neutral wind speed (u10n) {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 10m neutral temperature (t10n) {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 10m neutral specific humidity (q10n) {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 surface roughness length (zo) {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 heat roughness length (zot) {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 moisture roughness length (zoq) {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 wind speed at reference height (uref) {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 temperature at reference height (tref) {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 specific humidity at reference height (qref) {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 cool\sphinxhyphen{}skin temperature depression (dter) {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 cool\sphinxhyphen{}skin humidity depression (dqer) {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 warm layer correction (dtwl)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 thickness of the viscous layer (delta)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 specific humidity of air (qair) {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 specific humidity at sea surface (qsea) {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 downward longwave radiation (Rl)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 downward shortwave radiation (Rs)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 downward net longwave radiation (Rnl)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 gust wind speed (ug) {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 star wind speed with gust (usr\_gust) {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 Gustiness Factor (GustFact)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 Bulk Richardson number (Rb)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 relative humidity (rh) {[}\%{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 air density (rho)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 specific heat of moist air (cp)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 lv latent heat of vaporization {[}J/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 potential temperature (theta)
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 number of iterations until convergence
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 flag:
 “n”: normal,
@@ -764,33 +764,33 @@ This section provides a description of the sub\sphinxhyphen{}routines that can b
 
 
 \subsection{Drag Coefficient Functions}
-\label{\detokenize{users_guide:module-AirSeaFluxCode.flux_subs.drag_coef}}\label{\detokenize{users_guide:drag-coefficient-functions}}\index{module@\spxentry{module}!AirSeaFluxCode.flux\_subs.drag\_coef@\spxentry{AirSeaFluxCode.flux\_subs.drag\_coef}}\index{AirSeaFluxCode.flux\_subs.drag\_coef@\spxentry{AirSeaFluxCode.flux\_subs.drag\_coef}!module@\spxentry{module}}\index{cd\_calc() (in module AirSeaFluxCode.flux\_subs.drag\_coef)@\spxentry{cd\_calc()}\spxextra{in module AirSeaFluxCode.flux\_subs.drag\_coef}}
+\label{\detokenize{users_guide:module-AirSeaFluxCode.flux_subs.drag_coef}}\label{\detokenize{users_guide:drag-coefficient-functions}}\index{module@\spxentry{module}!AirSeaFluxCode.flux\_subs.drag\_coef@\spxentry{AirSeaFluxCode.flux\_subs.drag\_coef}}\index{AirSeaFluxCode.flux\_subs.drag\_coef@\spxentry{AirSeaFluxCode.flux\_subs.drag\_coef}!module@\spxentry{module}}
+\sphinxAtStartPar
+Drag Coefficient Sub\sphinxhyphen{}routines
+\index{cd\_calc() (in module AirSeaFluxCode.flux\_subs.drag\_coef)@\spxentry{cd\_calc()}\spxextra{in module AirSeaFluxCode.flux\_subs.drag\_coef}}
 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.drag_coef.cd_calc}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.drag\_coef.}}\sphinxbfcode{\sphinxupquote{cd\_calc}}}
-{\sphinxparam{\DUrole{n}{cdn}}\sphinxparamcomma \sphinxparam{\DUrole{n}{hin}}\sphinxparamcomma \sphinxparam{\DUrole{n}{hout}}\sphinxparamcomma \sphinxparam{\DUrole{n}{psim}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.drag\_coef.}}\sphinxbfcode{\sphinxupquote{cd\_calc}}}{\sphinxparam{\DUrole{n,n}{cdn}}, \sphinxparam{\DUrole{n,n}{hin}}, \sphinxparam{\DUrole{n,n}{hout}}, \sphinxparam{\DUrole{n,n}{psim}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate drag coefficient at reference height.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cdn}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} neutral drag coefficient
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hin}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} wind speed height       {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hout}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} reference height        {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{psim}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} momentum stability function
 
@@ -813,45 +813,42 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.drag_coef.cdn_calc}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.drag\_coef.}}\sphinxbfcode{\sphinxupquote{cdn\_calc}}}
-{\sphinxparam{\DUrole{n}{u10n}}\sphinxparamcomma \sphinxparam{\DUrole{n}{usr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Ta}}\sphinxparamcomma \sphinxparam{\DUrole{n}{grav}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.drag\_coef.}}\sphinxbfcode{\sphinxupquote{cdn\_calc}}}{\sphinxparam{\DUrole{n,n}{u10n}}, \sphinxparam{\DUrole{n,n}{usr}}, \sphinxparam{\DUrole{n,n}{Ta}}, \sphinxparam{\DUrole{n,n}{grav}}, \sphinxparam{\DUrole{n,n}{meth}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate neutral drag coefficient.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{u10n}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} neutral 10m wind speed {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity      {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Ta}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature        {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} gravity               {[}m/s\textasciicircum{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}})
+\sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{}
 
 \end{itemize}
 
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{cdn} (\sphinxstyleemphasis{float})
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{zo} (\sphinxstyleemphasis{float})
 
@@ -867,34 +864,31 @@ Calculate neutral drag coefficient.
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.drag_coef.cdn_from_roughness}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.drag\_coef.}}\sphinxbfcode{\sphinxupquote{cdn\_from\_roughness}}}
-{\sphinxparam{\DUrole{n}{u10n}}\sphinxparamcomma \sphinxparam{\DUrole{n}{usr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Ta}}\sphinxparamcomma \sphinxparam{\DUrole{n}{grav}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.drag\_coef.}}\sphinxbfcode{\sphinxupquote{cdn\_from\_roughness}}}{\sphinxparam{\DUrole{n,n}{u10n}}, \sphinxparam{\DUrole{n,n}{usr}}, \sphinxparam{\DUrole{n,n}{Ta}}, \sphinxparam{\DUrole{n,n}{grav}}, \sphinxparam{\DUrole{n,n}{meth}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate neutral drag coefficient from roughness length.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{u10n}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} neutral 10m wind speed {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity      {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Ta}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature        {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{                {[}}}\sphinxstyleliteralemphasis{\sphinxupquote{m/s}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} gravity
 
-\item {} 
+\item {}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}})
+\sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{}
 
 \end{itemize}
 
@@ -913,41 +907,41 @@ float
 
 
 \subsection{Heat and Moisture Exchange Coefficient Functions}
-\label{\detokenize{users_guide:module-AirSeaFluxCode.flux_subs.heat_coef}}\label{\detokenize{users_guide:heat-and-moisture-exchange-coefficient-functions}}\index{module@\spxentry{module}!AirSeaFluxCode.flux\_subs.heat\_coef@\spxentry{AirSeaFluxCode.flux\_subs.heat\_coef}}\index{AirSeaFluxCode.flux\_subs.heat\_coef@\spxentry{AirSeaFluxCode.flux\_subs.heat\_coef}!module@\spxentry{module}}\index{ctq\_calc() (in module AirSeaFluxCode.flux\_subs.heat\_coef)@\spxentry{ctq\_calc()}\spxextra{in module AirSeaFluxCode.flux\_subs.heat\_coef}}
+\label{\detokenize{users_guide:module-AirSeaFluxCode.flux_subs.heat_coef}}\label{\detokenize{users_guide:heat-and-moisture-exchange-coefficient-functions}}\index{module@\spxentry{module}!AirSeaFluxCode.flux\_subs.heat\_coef@\spxentry{AirSeaFluxCode.flux\_subs.heat\_coef}}\index{AirSeaFluxCode.flux\_subs.heat\_coef@\spxentry{AirSeaFluxCode.flux\_subs.heat\_coef}!module@\spxentry{module}}
+\sphinxAtStartPar
+Heat Coefficient Sub\sphinxhyphen{}routines
+\index{ctq\_calc() (in module AirSeaFluxCode.flux\_subs.heat\_coef)@\spxentry{ctq\_calc()}\spxextra{in module AirSeaFluxCode.flux\_subs.heat\_coef}}
 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.heat_coef.ctq_calc}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.heat\_coef.}}\sphinxbfcode{\sphinxupquote{ctq\_calc}}}
-{\sphinxparam{\DUrole{n}{cdn}}\sphinxparamcomma \sphinxparam{\DUrole{n}{cd}}\sphinxparamcomma \sphinxparam{\DUrole{n}{ctqn}}\sphinxparamcomma \sphinxparam{\DUrole{n}{hin}}\sphinxparamcomma \sphinxparam{\DUrole{n}{hout}}\sphinxparamcomma \sphinxparam{\DUrole{n}{psitq}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.heat\_coef.}}\sphinxbfcode{\sphinxupquote{ctq\_calc}}}{\sphinxparam{\DUrole{n,n}{cdn}}, \sphinxparam{\DUrole{n,n}{cd}}, \sphinxparam{\DUrole{n,n}{ctqn}}, \sphinxparam{\DUrole{n,n}{hin}}, \sphinxparam{\DUrole{n,n}{hout}}, \sphinxparam{\DUrole{n,n}{psitq}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate heat and moisture exchange coefficients at reference height.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cdn}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} neutral drag coefficient
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cd}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} drag coefficient at reference height
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{ctqn}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} neutral heat or moisture exchange coefficient
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hin}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} original temperature or humidity sensor height {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hout}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} reference height                   {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{psitq}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} heat or moisture stability function
 
@@ -970,53 +964,50 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.heat_coef.ctqn_calc}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.heat\_coef.}}\sphinxbfcode{\sphinxupquote{ctqn\_calc}}}
-{\sphinxparam{\DUrole{n}{corq}}\sphinxparamcomma \sphinxparam{\DUrole{n}{zol}}\sphinxparamcomma \sphinxparam{\DUrole{n}{cdn}}\sphinxparamcomma \sphinxparam{\DUrole{n}{usr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{zo}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Ta}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.heat\_coef.}}\sphinxbfcode{\sphinxupquote{ctqn\_calc}}}{\sphinxparam{\DUrole{n,n}{corq}}, \sphinxparam{\DUrole{n,n}{zol}}, \sphinxparam{\DUrole{n,n}{cdn}}, \sphinxparam{\DUrole{n,n}{usr}}, \sphinxparam{\DUrole{n,n}{zo}}, \sphinxparam{\DUrole{n,n}{Ta}}, \sphinxparam{\DUrole{n,n}{meth}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate neutral heat and moisture exchange coefficients.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{corq}} (\sphinxstyleliteralemphasis{\sphinxupquote{flag to select}}) \textendash{} “ct” or “cq”
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} height over MO length
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cdn}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} neutral drag coefficient
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity      {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zo}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} surface roughness       {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Ta}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature         {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}})
+\sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{}
 
 \end{itemize}
 
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{ctqn} (\sphinxstyleemphasis{float}) \textendash{} neutral heat exchange coefficient
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{zotq} (\sphinxstyleemphasis{float}) \textendash{} roughness length for t or q
 
@@ -1032,24 +1023,26 @@ Calculate neutral heat and moisture exchange coefficients.
 \subsection{Stratification Functions}
 \label{\detokenize{users_guide:module-AirSeaFluxCode.flux_subs.stratification}}\label{\detokenize{users_guide:stratification-functions}}\index{module@\spxentry{module}!AirSeaFluxCode.flux\_subs.stratification@\spxentry{AirSeaFluxCode.flux\_subs.stratification}}\index{AirSeaFluxCode.flux\_subs.stratification@\spxentry{AirSeaFluxCode.flux\_subs.stratification}!module@\spxentry{module}}
 \sphinxAtStartPar
-The stratification functions \(\Psi_i\) are integrals of the dimensionless profiles \(\Phi_i\), which are determined experimentally, and are applied as stablility corrections to the wind speed, temperature and humidity profiles.
-They are a function of the stability parameter \(z/L\) where \(L\) is the Monin\sphinxhyphen{}Obukhov length.
+The stratification functions \(\Psi_i\) are integrals of the dimensionless profiles
+\(\Phi_i\), which are determined experimentally, and are applied as stability
+corrections to the wind speed, temperature and humidity profiles.
+
+\sphinxAtStartPar
+They are a function of the stability parameter \(z/L\) where \(L\) is the
+Monin\sphinxhyphen{}Obukhov length.
 \index{get\_stabco() (in module AirSeaFluxCode.flux\_subs.stratification)@\spxentry{get\_stabco()}\spxextra{in module AirSeaFluxCode.flux\_subs.stratification}}
 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.stratification.get_stabco}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{get\_stabco}}}
-{\sphinxparam{\DUrole{n}{meth}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{get\_stabco}}}{\sphinxparam{\DUrole{n,n}{meth}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Give the coefficients \$alpha\$, \$beta\$, \$gamma\$ for stability functions.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}})
+\sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{}
 
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
@@ -1068,20 +1061,17 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.stratification.psi_Bel}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psi\_Bel}}}
-{\sphinxparam{\DUrole{n}{zol}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psi\_Bel}}}{\sphinxparam{\DUrole{n,n}{zol}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate momentum/heat stability function.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} height over MO length
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} parameterisation method
 
@@ -1104,20 +1094,17 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.stratification.psi_conv}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psi\_conv}}}
-{\sphinxparam{\DUrole{n}{zol}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psi\_conv}}}{\sphinxparam{\DUrole{n,n}{zol}}, \sphinxparam{\DUrole{n,n}{meth}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate heat stability function for unstable conditions.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} height over MO length
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} parameterisation method
 
@@ -1140,10 +1127,7 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.stratification.psi_ecmwf}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psi\_ecmwf}}}
-{\sphinxparam{\DUrole{n}{zol}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psi\_ecmwf}}}{\sphinxparam{\DUrole{n,n}{zol}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate heat stability function for stable conditions.
@@ -1172,20 +1156,17 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.stratification.psi_stab}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psi\_stab}}}
-{\sphinxparam{\DUrole{n}{zol}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psi\_stab}}}{\sphinxparam{\DUrole{n,n}{zol}}, \sphinxparam{\DUrole{n,n}{meth}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate heat stability function for stable conditions.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} height over MO length
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} parameterisation method
 
@@ -1208,22 +1189,19 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.stratification.psim_calc}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psim\_calc}}}
-{\sphinxparam{\DUrole{n}{zol}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psim\_calc}}}{\sphinxparam{\DUrole{n,n}{zol}}, \sphinxparam{\DUrole{n,n}{meth}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate momentum stability function.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} height over MO length
 
-\item {} 
+\item {}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}})
+\sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{}
 
 \end{itemize}
 
@@ -1244,20 +1222,17 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.stratification.psim_conv}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psim\_conv}}}
-{\sphinxparam{\DUrole{n}{zol}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psim\_conv}}}{\sphinxparam{\DUrole{n,n}{zol}}, \sphinxparam{\DUrole{n,n}{meth}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate momentum stability function for unstable conditions.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} height over MO length
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} parameterisation method
 
@@ -1280,10 +1255,7 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.stratification.psim_ecmwf}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psim\_ecmwf}}}
-{\sphinxparam{\DUrole{n}{zol}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psim\_ecmwf}}}{\sphinxparam{\DUrole{n,n}{zol}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate momentum stability function for method ecmwf.
@@ -1309,20 +1281,17 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.stratification.psim_stab}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psim\_stab}}}
-{\sphinxparam{\DUrole{n}{zol}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psim\_stab}}}{\sphinxparam{\DUrole{n,n}{zol}}, \sphinxparam{\DUrole{n,n}{meth}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate momentum stability function for stable conditions.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} height over MO length
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} parameterisation method
 
@@ -1345,10 +1314,7 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.stratification.psit_26}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psit\_26}}}
-{\sphinxparam{\DUrole{n}{zol}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psit\_26}}}{\sphinxparam{\DUrole{n,n}{zol}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Compute temperature structure function as in C35.
@@ -1374,20 +1340,17 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.stratification.psit_calc}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psit\_calc}}}
-{\sphinxparam{\DUrole{n}{zol}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psit\_calc}}}{\sphinxparam{\DUrole{n,n}{zol}}, \sphinxparam{\DUrole{n,n}{meth}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate heat stability function.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zol}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} height over MO length
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} parameterisation method
 
@@ -1410,10 +1373,7 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.stratification.psiu_26}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psiu\_26}}}
-{\sphinxparam{\DUrole{n}{zol}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.stratification.}}\sphinxbfcode{\sphinxupquote{psiu\_26}}}{\sphinxparam{\DUrole{n,n}{zol}}, \sphinxparam{\DUrole{n,n}{meth}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Compute velocity structure function C35.
@@ -1437,15 +1397,15 @@ float
 
 
 \subsection{Other Flux Functions}
-\label{\detokenize{users_guide:module-AirSeaFluxCode.flux_subs}}\label{\detokenize{users_guide:other-flux-functions}}\index{module@\spxentry{module}!AirSeaFluxCode.flux\_subs@\spxentry{AirSeaFluxCode.flux\_subs}}\index{AirSeaFluxCode.flux\_subs@\spxentry{AirSeaFluxCode.flux\_subs}!module@\spxentry{module}}\index{apply\_GF() (in module AirSeaFluxCode.flux\_subs)@\spxentry{apply\_GF()}\spxextra{in module AirSeaFluxCode.flux\_subs}}
+\label{\detokenize{users_guide:module-AirSeaFluxCode.flux_subs}}\label{\detokenize{users_guide:other-flux-functions}}\index{module@\spxentry{module}!AirSeaFluxCode.flux\_subs@\spxentry{AirSeaFluxCode.flux\_subs}}\index{AirSeaFluxCode.flux\_subs@\spxentry{AirSeaFluxCode.flux\_subs}!module@\spxentry{module}}
+\sphinxAtStartPar
+Flux Module
+\index{apply\_GF() (in module AirSeaFluxCode.flux\_subs)@\spxentry{apply\_GF()}\spxextra{in module AirSeaFluxCode.flux\_subs}}
 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.apply_GF}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.}}\sphinxbfcode{\sphinxupquote{apply\_GF}}}
-{\sphinxparam{\DUrole{n}{gust}}\sphinxparamcomma \sphinxparam{\DUrole{n}{spd}}\sphinxparamcomma \sphinxparam{\DUrole{n}{wind}}\sphinxparamcomma \sphinxparam{\DUrole{n}{step}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.}}\sphinxbfcode{\sphinxupquote{apply\_GF}}}{\sphinxparam{\DUrole{n,n}{gust}}, \sphinxparam{\DUrole{n,n}{spd}}, \sphinxparam{\DUrole{n,n}{wind}}, \sphinxparam{\DUrole{n,n}{step}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Apply gustiness factor according if gustiness ON.
@@ -1455,7 +1415,7 @@ There are different ways to remove the effect of gustiness according to
 the user’s choice.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{gust}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} option on how to apply gustiness
 0: gustiness is switched OFF
@@ -1466,15 +1426,15 @@ the user’s choice.
 5: gustiness is switched ON following Zeng et al. (1998)
 6: gustiness is switched ON following C35 matlab code
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{spd}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} wind speed                      {[}ms\textasciicircum{}\{\sphinxhyphen{}1\}{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{wind}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} wind speed including gust       {[}ms\textasciicircum{}\{\sphinxhyphen{}1\}{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{step}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} step during AirSeaFluxCode the GF is applied: “u”, “TSF”
 
@@ -1497,10 +1457,7 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.get_LRb}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.}}\sphinxbfcode{\sphinxupquote{get\_LRb}}}
-{\sphinxparam{\DUrole{n}{Rb}}\sphinxparamcomma \sphinxparam{\DUrole{n}{hin\_t}}\sphinxparamcomma \sphinxparam{\DUrole{n}{monob}}\sphinxparamcomma \sphinxparam{\DUrole{n}{zo}}\sphinxparamcomma \sphinxparam{\DUrole{n}{zot}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.}}\sphinxbfcode{\sphinxupquote{get\_LRb}}}{\sphinxparam{\DUrole{n,n}{Rb}}, \sphinxparam{\DUrole{n,n}{hin\_t}}, \sphinxparam{\DUrole{n,n}{monob}}, \sphinxparam{\DUrole{n,n}{zo}}, \sphinxparam{\DUrole{n,n}{zot}}, \sphinxparam{\DUrole{n,n}{meth}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate Monin\sphinxhyphen{}Obukhov length following ecmwf (IFS Documentation cy46r1).
@@ -1509,27 +1466,27 @@ Calculate Monin\sphinxhyphen{}Obukhov length following ecmwf (IFS Documentation 
 default for methods ecmwf and Beljaars
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rb}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Richardson number
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hin\_t}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} t sensor height {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{monob}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Monin\sphinxhyphen{}Obukhov length from previous iteration step {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zo}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} surface roughness       {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zot}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} temperature roughness length       {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} bulk parameterisation method option: “S80”, “S88”, “LP82”, “YT96”,
 “UA”, “NCAR”, “C30”, “C35”, “ecmwf”, “Beljaars”
@@ -1553,28 +1510,25 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.get_Ltsrv}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.}}\sphinxbfcode{\sphinxupquote{get\_Ltsrv}}}
-{\sphinxparam{\DUrole{n}{tsrv}}\sphinxparamcomma \sphinxparam{\DUrole{n}{grav}}\sphinxparamcomma \sphinxparam{\DUrole{n}{tv}}\sphinxparamcomma \sphinxparam{\DUrole{n}{usr}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.}}\sphinxbfcode{\sphinxupquote{get\_Ltsrv}}}{\sphinxparam{\DUrole{n,n}{tsrv}}, \sphinxparam{\DUrole{n,n}{grav}}, \sphinxparam{\DUrole{n,n}{tv}}, \sphinxparam{\DUrole{n,n}{usr}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate Monin\sphinxhyphen{}Obukhov length from tsrv.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tsrv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} virtual star temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} acceleration due to gravity {[}m/s2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} virtual temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction wind speed {[}m/s{]}
 
@@ -1597,48 +1551,45 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.get_Rb}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.}}\sphinxbfcode{\sphinxupquote{get\_Rb}}}
-{\sphinxparam{\DUrole{n}{grav}}\sphinxparamcomma \sphinxparam{\DUrole{n}{usr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{hin\_u}}\sphinxparamcomma \sphinxparam{\DUrole{n}{hin\_t}}\sphinxparamcomma \sphinxparam{\DUrole{n}{tv}}\sphinxparamcomma \sphinxparam{\DUrole{n}{dtv}}\sphinxparamcomma \sphinxparam{\DUrole{n}{wind}}\sphinxparamcomma \sphinxparam{\DUrole{n}{monob}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.}}\sphinxbfcode{\sphinxupquote{get\_Rb}}}{\sphinxparam{\DUrole{n,n}{grav}}, \sphinxparam{\DUrole{n,n}{usr}}, \sphinxparam{\DUrole{n,n}{hin\_u}}, \sphinxparam{\DUrole{n,n}{hin\_t}}, \sphinxparam{\DUrole{n,n}{tv}}, \sphinxparam{\DUrole{n,n}{dtv}}, \sphinxparam{\DUrole{n,n}{wind}}, \sphinxparam{\DUrole{n,n}{monob}}, \sphinxparam{\DUrole{n,n}{meth}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate bulk Richardson number.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} acceleration due to gravity {[}m/s2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction wind speed {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hin\_u}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} u sensor height {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hin\_t}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} t sensor height {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} virtual temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{dtv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} virtual temperature difference, air and sea {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{wind}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} wind speed {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{monob}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Monin\sphinxhyphen{}Obukhov length from previous iteration step {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} bulk parameterisation method option: “S80”, “S88”, “LP82”, “YT96”,
 “UA”, “NCAR”, “C30”, “C35”, “ecmwf”, “Beljaars”
@@ -1662,40 +1613,37 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.get_gust}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.}}\sphinxbfcode{\sphinxupquote{get\_gust}}}
-{\sphinxparam{\DUrole{n}{beta}}\sphinxparamcomma \sphinxparam{\DUrole{n}{zi}}\sphinxparamcomma \sphinxparam{\DUrole{n}{ustb}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Ta}}\sphinxparamcomma \sphinxparam{\DUrole{n}{usr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{tsrv}}\sphinxparamcomma \sphinxparam{\DUrole{n}{grav}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.}}\sphinxbfcode{\sphinxupquote{get\_gust}}}{\sphinxparam{\DUrole{n,n}{beta}}, \sphinxparam{\DUrole{n,n}{zi}}, \sphinxparam{\DUrole{n,n}{ustb}}, \sphinxparam{\DUrole{n,n}{Ta}}, \sphinxparam{\DUrole{n,n}{usr}}, \sphinxparam{\DUrole{n,n}{tsrv}}, \sphinxparam{\DUrole{n,n}{grav}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Compute gustiness.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{beta}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} constant
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zi}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} scale height of the boundary layer depth {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{ustb}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} gust wind in stable conditions   {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Ta}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature   {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tsrv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star virtual temperature of air {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} gravity
 
@@ -1718,60 +1666,57 @@ float        {[}m/s{]}
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.get_strs}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.}}\sphinxbfcode{\sphinxupquote{get\_strs}}}
-{\sphinxparam{\DUrole{n}{hin}}\sphinxparamcomma \sphinxparam{\DUrole{n}{monob}}\sphinxparamcomma \sphinxparam{\DUrole{n}{wind}}\sphinxparamcomma \sphinxparam{\DUrole{n}{zo}}\sphinxparamcomma \sphinxparam{\DUrole{n}{zot}}\sphinxparamcomma \sphinxparam{\DUrole{n}{zoq}}\sphinxparamcomma \sphinxparam{\DUrole{n}{dt}}\sphinxparamcomma \sphinxparam{\DUrole{n}{dq}}\sphinxparamcomma \sphinxparam{\DUrole{n}{cd}}\sphinxparamcomma \sphinxparam{\DUrole{n}{ct}}\sphinxparamcomma \sphinxparam{\DUrole{n}{cq}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.}}\sphinxbfcode{\sphinxupquote{get\_strs}}}{\sphinxparam{\DUrole{n,n}{hin}}, \sphinxparam{\DUrole{n,n}{monob}}, \sphinxparam{\DUrole{n,n}{wind}}, \sphinxparam{\DUrole{n,n}{zo}}, \sphinxparam{\DUrole{n,n}{zot}}, \sphinxparam{\DUrole{n,n}{zoq}}, \sphinxparam{\DUrole{n,n}{dt}}, \sphinxparam{\DUrole{n,n}{dq}}, \sphinxparam{\DUrole{n,n}{cd}}, \sphinxparam{\DUrole{n,n}{ct}}, \sphinxparam{\DUrole{n,n}{cq}}, \sphinxparam{\DUrole{n,n}{meth}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate star wind speed, temperature and specific humidity.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hin}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sensor heights {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{monob}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} M\sphinxhyphen{}O length     {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{wind}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} wind speed     {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zo}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} momentum roughness length    {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zot}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} temperature roughness length {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{zoq}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} moisture roughness length    {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{dt}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} temperature difference       {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{dq}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} specific humidity difference {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cd}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} drag coefficient
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{ct}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} temperature exchange coefficient
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cq}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} moisture exchange coefficient
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} bulk parameterisation method option: “S80”, “S88”, “LP82”, “YT96”,
 “UA”, “NCAR”, “C30”, “C35”, “ecmwf”, “Beljaars”
@@ -1781,15 +1726,15 @@ Calculate star wind speed, temperature and specific humidity.
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{usr} (\sphinxstyleemphasis{float}) \textendash{} friction wind speed {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{tsr} (\sphinxstyleemphasis{float}) \textendash{} star temperature    {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{qsr} (\sphinxstyleemphasis{float}) \textendash{} star specific humidity {[}g/kg{]}
 
@@ -1805,28 +1750,25 @@ Calculate star wind speed, temperature and specific humidity.
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.flux_subs.get_tsrv}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.}}\sphinxbfcode{\sphinxupquote{get\_tsrv}}}
-{\sphinxparam{\DUrole{n}{tsr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{qsr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Ta}}\sphinxparamcomma \sphinxparam{\DUrole{n}{qair}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.flux\_subs.}}\sphinxbfcode{\sphinxupquote{get\_tsrv}}}{\sphinxparam{\DUrole{n,n}{tsr}}, \sphinxparam{\DUrole{n,n}{qsr}}, \sphinxparam{\DUrole{n,n}{Ta}}, \sphinxparam{\DUrole{n,n}{qair}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate virtual star temperature.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star specific humidity {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Ta}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qair}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air specific humidity {[}g/kg{]}
 
@@ -1850,15 +1792,16 @@ float
 \label{\detokenize{users_guide:cool-skin-warm-layer-module}}
 \sphinxAtStartPar
 This section provides a description of the sub\sphinxhyphen{}routines that can be called from the \sphinxcode{\sphinxupquote{cs\_wl\_subs}} module.
-\index{module@\spxentry{module}!AirSeaFluxCode.cs\_wl\_subs@\spxentry{AirSeaFluxCode.cs\_wl\_subs}}\index{AirSeaFluxCode.cs\_wl\_subs@\spxentry{AirSeaFluxCode.cs\_wl\_subs}!module@\spxentry{module}}\index{cs() (in module AirSeaFluxCode.cs\_wl\_subs)@\spxentry{cs()}\spxextra{in module AirSeaFluxCode.cs\_wl\_subs}}\phantomsection\label{\detokenize{users_guide:module-AirSeaFluxCode.cs_wl_subs}}
+
+\phantomsection\label{\detokenize{users_guide:module-AirSeaFluxCode.cs_wl_subs}}\index{module@\spxentry{module}!AirSeaFluxCode.cs\_wl\_subs@\spxentry{AirSeaFluxCode.cs\_wl\_subs}}\index{AirSeaFluxCode.cs\_wl\_subs@\spxentry{AirSeaFluxCode.cs\_wl\_subs}!module@\spxentry{module}}
+\sphinxAtStartPar
+Cool\sphinxhyphen{}skin and Warmlayer Module
+\index{cs() (in module AirSeaFluxCode.cs\_wl\_subs)@\spxentry{cs()}\spxextra{in module AirSeaFluxCode.cs\_wl\_subs}}
 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.cs_wl_subs.cs}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.cs\_wl\_subs.}}\sphinxbfcode{\sphinxupquote{cs}}}
-{\sphinxparam{\DUrole{n}{sst}}\sphinxparamcomma \sphinxparam{\DUrole{n}{d}}\sphinxparamcomma \sphinxparam{\DUrole{n}{rho}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Rs}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Rnl}}\sphinxparamcomma \sphinxparam{\DUrole{n}{cp}}\sphinxparamcomma \sphinxparam{\DUrole{n}{lv}}\sphinxparamcomma \sphinxparam{\DUrole{n}{usr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{tsr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{qsr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{grav}}\sphinxparamcomma \sphinxparam{\DUrole{n}{opt}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.cs\_wl\_subs.}}\sphinxbfcode{\sphinxupquote{cs}}}{\sphinxparam{\DUrole{n,n}{sst}}, \sphinxparam{\DUrole{n,n}{d}}, \sphinxparam{\DUrole{n,n}{rho}}, \sphinxparam{\DUrole{n,n}{Rs}}, \sphinxparam{\DUrole{n,n}{Rnl}}, \sphinxparam{\DUrole{n,n}{cp}}, \sphinxparam{\DUrole{n,n}{lv}}, \sphinxparam{\DUrole{n,n}{usr}}, \sphinxparam{\DUrole{n,n}{tsr}}, \sphinxparam{\DUrole{n,n}{qsr}}, \sphinxparam{\DUrole{n,n}{grav}}, \sphinxparam{\DUrole{n,n}{opt}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Compute cool skin.
@@ -1867,51 +1810,51 @@ Compute cool skin.
 Based on COARE3.5 (Fairall et al. 1996, Edson et al. 2013)
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{sst}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sea surface temperature      {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{d}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} cool skin thickness           {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{rho}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} density of air               {[}kg/m\textasciicircum{}3{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rs}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} downward shortwave radiation {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rnl}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} net upwelling IR radiation       {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cp}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} specific heat of air at constant pressure {[}J/K/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{lv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} latent heat of vaporization   {[}J/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity             {[}ms\textasciicircum{}\sphinxhyphen{}1{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star temperature              {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star humidity                 {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} gravity                      {[}ms\textasciicircum{}\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{opt}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} method to follow
 
@@ -1920,11 +1863,11 @@ Based on COARE3.5 (Fairall et al. 1996, Edson et al. 2013)
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{dter} (\sphinxstyleemphasis{float}) \textendash{} cool skin correction         {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{delta} (\sphinxstyleemphasis{float}) \textendash{} cool skin thickness           {[}m{]}
 
@@ -1940,53 +1883,50 @@ Based on COARE3.5 (Fairall et al. 1996, Edson et al. 2013)
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.cs_wl_subs.cs_Beljaars}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.cs\_wl\_subs.}}\sphinxbfcode{\sphinxupquote{cs\_Beljaars}}}
-{\sphinxparam{\DUrole{n}{rho}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Rs}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Rnl}}\sphinxparamcomma \sphinxparam{\DUrole{n}{cp}}\sphinxparamcomma \sphinxparam{\DUrole{n}{lv}}\sphinxparamcomma \sphinxparam{\DUrole{n}{usr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{tsr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{qsr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{grav}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Qs}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.cs\_wl\_subs.}}\sphinxbfcode{\sphinxupquote{cs\_Beljaars}}}{\sphinxparam{\DUrole{n,n}{rho}}, \sphinxparam{\DUrole{n,n}{Rs}}, \sphinxparam{\DUrole{n,n}{Rnl}}, \sphinxparam{\DUrole{n,n}{cp}}, \sphinxparam{\DUrole{n,n}{lv}}, \sphinxparam{\DUrole{n,n}{usr}}, \sphinxparam{\DUrole{n,n}{tsr}}, \sphinxparam{\DUrole{n,n}{qsr}}, \sphinxparam{\DUrole{n,n}{grav}}, \sphinxparam{\DUrole{n,n}{Qs}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
-cool skin adjustment based on Beljaars (1997)
+Cool skin adjustment based on Beljaars (1997)
 air\sphinxhyphen{}sea interaction in the ECMWF model
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{rho}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} density of air           {[}kg/m\textasciicircum{}3{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rs}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} downward solar radiation {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rnl}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} net thermal radiaion     {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cp}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} specific heat of air at constant pressure {[}J/K/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{lv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} latent heat of vaporization   {[}J/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity         {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star temperature              {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star humidity                 {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} gravity                      {[}ms\textasciicircum{}\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Qs}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} radiation balance
 
@@ -1995,11 +1935,11 @@ air\sphinxhyphen{}sea interaction in the ECMWF model
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{Qs} (\sphinxstyleemphasis{float}) \textendash{} radiation balance
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{dtc} (\sphinxstyleemphasis{float}) \textendash{} cool skin temperature correction {[}K{]}
 
@@ -2015,10 +1955,7 @@ air\sphinxhyphen{}sea interaction in the ECMWF model
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.cs_wl_subs.cs_C35}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.cs\_wl\_subs.}}\sphinxbfcode{\sphinxupquote{cs\_C35}}}
-{\sphinxparam{\DUrole{n}{sst}}\sphinxparamcomma \sphinxparam{\DUrole{n}{rho}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Rs}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Rnl}}\sphinxparamcomma \sphinxparam{\DUrole{n}{cp}}\sphinxparamcomma \sphinxparam{\DUrole{n}{lv}}\sphinxparamcomma \sphinxparam{\DUrole{n}{delta}}\sphinxparamcomma \sphinxparam{\DUrole{n}{usr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{tsr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{qsr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{grav}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.cs\_wl\_subs.}}\sphinxbfcode{\sphinxupquote{cs\_C35}}}{\sphinxparam{\DUrole{n,n}{sst}}, \sphinxparam{\DUrole{n,n}{rho}}, \sphinxparam{\DUrole{n,n}{Rs}}, \sphinxparam{\DUrole{n,n}{Rnl}}, \sphinxparam{\DUrole{n,n}{cp}}, \sphinxparam{\DUrole{n,n}{lv}}, \sphinxparam{\DUrole{n,n}{delta}}, \sphinxparam{\DUrole{n,n}{usr}}, \sphinxparam{\DUrole{n,n}{tsr}}, \sphinxparam{\DUrole{n,n}{qsr}}, \sphinxparam{\DUrole{n,n}{grav}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Compute cool skin.
@@ -2027,47 +1964,47 @@ Compute cool skin.
 Based on COARE3.5 (Fairall et al. 1996, Edson et al. 2013)
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{sst}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sea surface temperature      {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{rho}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} density of air               {[}kg/m\textasciicircum{}3{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rs}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} downward shortwave radiation {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rnl}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} net upwelling IR radiation       {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cp}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} specific heat of air at constant pressure {[}J/K/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{lv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} latent heat of vaporization   {[}J/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{delta}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} cool skin thickness           {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity             {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star temperature              {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star humidity                 {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} gravity                      {[}ms\textasciicircum{}\sphinxhyphen{}2{]}
 
@@ -2076,15 +2013,15 @@ Based on COARE3.5 (Fairall et al. 1996, Edson et al. 2013)
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{dter} (\sphinxstyleemphasis{float}) \textendash{} cool skin correction         {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
-\sphinxstylestrong{dqer} (\sphinxstyleemphasis{float}) \textendash{} humidity corrction            {[}g/kg{]}
+\sphinxstylestrong{dqer} (\sphinxstyleemphasis{float}) \textendash{} humidity correction            {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{delta} (\sphinxstyleemphasis{float}) \textendash{} cool skin thickness           {[}m{]}
 
@@ -2100,52 +2037,49 @@ Based on COARE3.5 (Fairall et al. 1996, Edson et al. 2013)
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.cs_wl_subs.cs_ecmwf}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.cs\_wl\_subs.}}\sphinxbfcode{\sphinxupquote{cs\_ecmwf}}}
-{\sphinxparam{\DUrole{n}{rho}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Rs}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Rnl}}\sphinxparamcomma \sphinxparam{\DUrole{n}{cp}}\sphinxparamcomma \sphinxparam{\DUrole{n}{lv}}\sphinxparamcomma \sphinxparam{\DUrole{n}{usr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{tsr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{qsr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{sst}}\sphinxparamcomma \sphinxparam{\DUrole{n}{grav}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.cs\_wl\_subs.}}\sphinxbfcode{\sphinxupquote{cs\_ecmwf}}}{\sphinxparam{\DUrole{n,n}{rho}}, \sphinxparam{\DUrole{n,n}{Rs}}, \sphinxparam{\DUrole{n,n}{Rnl}}, \sphinxparam{\DUrole{n,n}{cp}}, \sphinxparam{\DUrole{n,n}{lv}}, \sphinxparam{\DUrole{n,n}{usr}}, \sphinxparam{\DUrole{n,n}{tsr}}, \sphinxparam{\DUrole{n,n}{qsr}}, \sphinxparam{\DUrole{n,n}{sst}}, \sphinxparam{\DUrole{n,n}{grav}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
-cool skin adjustment based on IFS Documentation cy46r1
+Cool skin adjustment based on IFS Documentation cy46r1
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{rho}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} density of air               {[}kg/m\textasciicircum{}3{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rs}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} downward solar radiation {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rnl}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} net thermal radiation     {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cp}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} specific heat of air at constant pressure {[}J/K/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{lv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} latent heat of vaporization   {[}J/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity         {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star temperature              {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star humidity                 {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{sst}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sea surface temperature  {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} gravity                      {[}ms\textasciicircum{}\sphinxhyphen{}2{]}
 
@@ -2168,10 +2102,7 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.cs_wl_subs.delta}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.cs\_wl\_subs.}}\sphinxbfcode{\sphinxupquote{delta}}}
-{\sphinxparam{\DUrole{n}{aw}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Q}}\sphinxparamcomma \sphinxparam{\DUrole{n}{usr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{grav}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.cs\_wl\_subs.}}\sphinxbfcode{\sphinxupquote{delta}}}{\sphinxparam{\DUrole{n,n}{aw}}, \sphinxparam{\DUrole{n,n}{Q}}, \sphinxparam{\DUrole{n,n}{usr}}, \sphinxparam{\DUrole{n,n}{grav}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Compute the thickness (m) of the viscous skin layer.
@@ -2181,19 +2112,19 @@ Based on Fairall et al., 1996 and cited in IFS Documentation Cy46r1
 eq. 8.155 p. 164
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{aw}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} thermal expansion coefficient of sea\sphinxhyphen{}water  {[}1/K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Q}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} part of the net heat flux actually absorbed in the warm layer {[}W/m\textasciicircum{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity in the air (u*) {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} gravity                      {[}ms\textasciicircum{}\sphinxhyphen{}2{]}
 
@@ -2216,28 +2147,25 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.cs_wl_subs.get_dqer}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.cs\_wl\_subs.}}\sphinxbfcode{\sphinxupquote{get\_dqer}}}
-{\sphinxparam{\DUrole{n}{dter}}\sphinxparamcomma \sphinxparam{\DUrole{n}{sst}}\sphinxparamcomma \sphinxparam{\DUrole{n}{qsea}}\sphinxparamcomma \sphinxparam{\DUrole{n}{lv}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.cs\_wl\_subs.}}\sphinxbfcode{\sphinxupquote{get\_dqer}}}{\sphinxparam{\DUrole{n,n}{dter}}, \sphinxparam{\DUrole{n,n}{sst}}, \sphinxparam{\DUrole{n,n}{qsea}}, \sphinxparam{\DUrole{n,n}{lv}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate humidity correction.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{dter}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} cool skin correction         {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{sst}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sea surface temperature      {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qsea}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} specific humidity over sea   {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{lv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} latent heat of vaporization   {[}J/kg{]}
 
@@ -2260,61 +2188,58 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.cs_wl_subs.wl_ecmwf}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.cs\_wl\_subs.}}\sphinxbfcode{\sphinxupquote{wl\_ecmwf}}}
-{\sphinxparam{\DUrole{n}{rho}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Rs}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Rnl}}\sphinxparamcomma \sphinxparam{\DUrole{n}{cp}}\sphinxparamcomma \sphinxparam{\DUrole{n}{lv}}\sphinxparamcomma \sphinxparam{\DUrole{n}{usr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{tsr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{qsr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{sst}}\sphinxparamcomma \sphinxparam{\DUrole{n}{skt}}\sphinxparamcomma \sphinxparam{\DUrole{n}{dtc}}\sphinxparamcomma \sphinxparam{\DUrole{n}{grav}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.cs\_wl\_subs.}}\sphinxbfcode{\sphinxupquote{wl\_ecmwf}}}{\sphinxparam{\DUrole{n,n}{rho}}, \sphinxparam{\DUrole{n,n}{Rs}}, \sphinxparam{\DUrole{n,n}{Rnl}}, \sphinxparam{\DUrole{n,n}{cp}}, \sphinxparam{\DUrole{n,n}{lv}}, \sphinxparam{\DUrole{n,n}{usr}}, \sphinxparam{\DUrole{n,n}{tsr}}, \sphinxparam{\DUrole{n,n}{qsr}}, \sphinxparam{\DUrole{n,n}{sst}}, \sphinxparam{\DUrole{n,n}{skt}}, \sphinxparam{\DUrole{n,n}{dtc}}, \sphinxparam{\DUrole{n,n}{grav}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate warm layer correction following IFS Documentation cy46r1.
 and aerobulk (Brodeau et al., 2016)
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{rho}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} density of air               {[}kg/m\textasciicircum{}3{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rs}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} downward solar radiation    {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rnl}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} net thermal radiation  {[}Wm\sphinxhyphen{}2{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cp}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} specific heat of air at constant pressure {[}J/K/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{lv}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} latent heat of vaporization   {[}J/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{usr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} friction velocity           {[}m/s{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{tsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star temperature              {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qsr}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} star humidity                 {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{sst}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} bulk sst                    {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{skt}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} skin sst from previous step {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{dtc}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} cool skin correction        {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{grav}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} gravity                      {[}ms\textasciicircum{}\sphinxhyphen{}2{]}
 
@@ -2338,15 +2263,16 @@ float
 \label{\detokenize{users_guide:humidity-sub-routines}}
 \sphinxAtStartPar
 This section provides a description of the sub\sphinxhyphen{}routines that can be called from the \sphinxcode{\sphinxupquote{hum\_subs}} module.
-\index{module@\spxentry{module}!AirSeaFluxCode.hum\_subs@\spxentry{AirSeaFluxCode.hum\_subs}}\index{AirSeaFluxCode.hum\_subs@\spxentry{AirSeaFluxCode.hum\_subs}!module@\spxentry{module}}\index{VaporPressure() (in module AirSeaFluxCode.hum\_subs)@\spxentry{VaporPressure()}\spxextra{in module AirSeaFluxCode.hum\_subs}}\phantomsection\label{\detokenize{users_guide:module-AirSeaFluxCode.hum_subs}}
+
+\phantomsection\label{\detokenize{users_guide:module-AirSeaFluxCode.hum_subs}}\index{module@\spxentry{module}!AirSeaFluxCode.hum\_subs@\spxentry{AirSeaFluxCode.hum\_subs}}\index{AirSeaFluxCode.hum\_subs@\spxentry{AirSeaFluxCode.hum\_subs}!module@\spxentry{module}}
+\sphinxAtStartPar
+Humidity Module
+\index{VaporPressure() (in module AirSeaFluxCode.hum\_subs)@\spxentry{VaporPressure()}\spxextra{in module AirSeaFluxCode.hum\_subs}}
 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.hum_subs.VaporPressure}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.hum\_subs.}}\sphinxbfcode{\sphinxupquote{VaporPressure}}}
-{\sphinxparam{\DUrole{n}{temp}}\sphinxparamcomma \sphinxparam{\DUrole{n}{P}}\sphinxparamcomma \sphinxparam{\DUrole{n}{phase}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.hum\_subs.}}\sphinxbfcode{\sphinxupquote{VaporPressure}}}{\sphinxparam{\DUrole{n,n}{temp}}, \sphinxparam{\DUrole{n,n}{P}}, \sphinxparam{\DUrole{n,n}{phase}}, \sphinxparam{\DUrole{n,n}{meth}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate the saturation vapor pressure.
@@ -2360,23 +2286,23 @@ The optional parameter ‘liquid’ changes the calculation to vapor pressure
 over liquid water over the entire temperature range.
 
 \sphinxAtStartPar
-The current default fomulas are Hyland and Wexler for liquid and
+The current default formulas are Hyland and Wexler for liquid and
 Goff Gratch for ice.
 
 \sphinxAtStartPar
 Ported to Python and modified by S. Biri from Holger Voemel’s original
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{temp}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Temperature {[}C{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{phase}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} ‘liquid’ : Calculate vapor pressure over liquid water or
 ‘ice’ : Calculate vapor pressure over ice
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{meth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} formula to be used
 Hardy               : vaporpressure formula from Hardy (1998)
@@ -2413,34 +2339,31 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.hum_subs.gamma}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.hum\_subs.}}\sphinxbfcode{\sphinxupquote{gamma}}}
-{\sphinxparam{\DUrole{n}{opt}}\sphinxparamcomma \sphinxparam{\DUrole{n}{sst}}\sphinxparamcomma \sphinxparam{\DUrole{n}{t}}\sphinxparamcomma \sphinxparam{\DUrole{n}{q}}\sphinxparamcomma \sphinxparam{\DUrole{n}{cp}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.hum\_subs.}}\sphinxbfcode{\sphinxupquote{gamma}}}{\sphinxparam{\DUrole{n,n}{opt}}, \sphinxparam{\DUrole{n,n}{sst}}, \sphinxparam{\DUrole{n,n}{t}}, \sphinxparam{\DUrole{n,n}{q}}, \sphinxparam{\DUrole{n,n}{cp}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Compute the adiabatic lapse\sphinxhyphen{}rate.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{opt}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} type of adiabatic lapse rate dry or “moist”
 dry has options to be constant “dry\_c”, for dry air “dry”, or
 for unsaturated air with water vapor “dry\_v”
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{sst}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sea surface temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{t}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{q}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} specific humidity of air {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cp}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} specific capacity of air at constant Pressure
 
@@ -2463,16 +2386,13 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.hum_subs.get_hum}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.hum\_subs.}}\sphinxbfcode{\sphinxupquote{get\_hum}}}
-{\sphinxparam{\DUrole{n}{hum}}\sphinxparamcomma \sphinxparam{\DUrole{n}{T}}\sphinxparamcomma \sphinxparam{\DUrole{n}{sst}}\sphinxparamcomma \sphinxparam{\DUrole{n}{P}}\sphinxparamcomma \sphinxparam{\DUrole{n}{qmeth}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.hum\_subs.}}\sphinxbfcode{\sphinxupquote{get\_hum}}}{\sphinxparam{\DUrole{n,n}{hum}}, \sphinxparam{\DUrole{n,n}{T}}, \sphinxparam{\DUrole{n,n}{sst}}, \sphinxparam{\DUrole{n,n}{P}}, \sphinxparam{\DUrole{n,n}{qmeth}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Get specific humidity output.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hum}} (\sphinxstyleliteralemphasis{\sphinxupquote{array}}) \textendash{} \begin{description}
 \sphinxlineitem{humidity input switch 2x1 {[}x, values{]} default is relative humidity}
@@ -2484,19 +2404,19 @@ x=’Td’ : dew point temperature {[}K{]}
 \end{description}
 
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{T}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{sst}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sea surface temperature {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{P}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air pressure at sea level {[}hPa{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qmeth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} method to calculate specific humidity from vapor pressure
 
@@ -2505,11 +2425,11 @@ x=’Td’ : dew point temperature {[}K{]}
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
 \begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{qair} (\sphinxstyleemphasis{float}) \textendash{} specific humidity of air {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstylestrong{qsea} (\sphinxstyleemphasis{float}) \textendash{} specific humidity over sea surface {[}g/kg{]}
 
@@ -2525,28 +2445,25 @@ x=’Td’ : dew point temperature {[}K{]}
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.hum_subs.qsat_air}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.hum\_subs.}}\sphinxbfcode{\sphinxupquote{qsat\_air}}}
-{\sphinxparam{\DUrole{n}{T}}\sphinxparamcomma \sphinxparam{\DUrole{n}{P}}\sphinxparamcomma \sphinxparam{\DUrole{n}{rh}}\sphinxparamcomma \sphinxparam{\DUrole{n}{qmeth}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.hum\_subs.}}\sphinxbfcode{\sphinxupquote{qsat\_air}}}{\sphinxparam{\DUrole{n,n}{T}}, \sphinxparam{\DUrole{n,n}{P}}, \sphinxparam{\DUrole{n,n}{rh}}, \sphinxparam{\DUrole{n,n}{qmeth}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Compute saturation specific humidity {[}g/kg{]}.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{T}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} temperature {[}\$\textasciicircum{}circ\$,C{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{P}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} pressure {[}mb{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{rh}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} relative humidity {[}\%{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qmeth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} method to calculate vapor pressure
 
@@ -2569,24 +2486,21 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.hum_subs.qsat_sea}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.hum\_subs.}}\sphinxbfcode{\sphinxupquote{qsat\_sea}}}
-{\sphinxparam{\DUrole{n}{T}}\sphinxparamcomma \sphinxparam{\DUrole{n}{P}}\sphinxparamcomma \sphinxparam{\DUrole{n}{qmeth}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.hum\_subs.}}\sphinxbfcode{\sphinxupquote{qsat\_sea}}}{\sphinxparam{\DUrole{n,n}{T}}, \sphinxparam{\DUrole{n,n}{P}}, \sphinxparam{\DUrole{n,n}{qmeth}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Compute surface saturation specific humidity {[}g/kg{]}.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{T}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} temperature {[}\$\textasciicircum{}circ\$,C{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{P}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} pressure {[}mb{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qmeth}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} method to calculate vapor pressure
 
@@ -2610,25 +2524,26 @@ float
 \label{\detokenize{users_guide:utility-sub-routines}}
 \sphinxAtStartPar
 This section provides a description of the sub\sphinxhyphen{}routines that can be called from the \sphinxcode{\sphinxupquote{util\_subs}} module.
-\index{module@\spxentry{module}!AirSeaFluxCode.util\_subs@\spxentry{AirSeaFluxCode.util\_subs}}\index{AirSeaFluxCode.util\_subs@\spxentry{AirSeaFluxCode.util\_subs}!module@\spxentry{module}}\index{gc() (in module AirSeaFluxCode.util\_subs)@\spxentry{gc()}\spxextra{in module AirSeaFluxCode.util\_subs}}\phantomsection\label{\detokenize{users_guide:module-AirSeaFluxCode.util_subs}}
+
+\phantomsection\label{\detokenize{users_guide:module-AirSeaFluxCode.util_subs}}\index{module@\spxentry{module}!AirSeaFluxCode.util\_subs@\spxentry{AirSeaFluxCode.util\_subs}}\index{AirSeaFluxCode.util\_subs@\spxentry{AirSeaFluxCode.util\_subs}!module@\spxentry{module}}
+\sphinxAtStartPar
+Utility Functions
+\index{gc() (in module AirSeaFluxCode.util\_subs)@\spxentry{gc()}\spxextra{in module AirSeaFluxCode.util\_subs}}
 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.util_subs.gc}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.util\_subs.}}\sphinxbfcode{\sphinxupquote{gc}}}
-{\sphinxparam{\DUrole{n}{lat}}\sphinxparamcomma \sphinxparam{\DUrole{n}{lon}\DUrole{o}{=}\DUrole{default_value}{None}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.util\_subs.}}\sphinxbfcode{\sphinxupquote{gc}}}{\sphinxparam{\DUrole{n,n}{lat}}, \sphinxparam{\DUrole{n,n}{lon}\DUrole{o,o}{=}\DUrole{default_value}{None}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Computes gravity relative to latitude
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{lat}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} latitude {[}\$\textasciicircum{}circ\${]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{lon}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} longitude {[}\$\textasciicircum{}circ\$, optional{]}
 
@@ -2651,20 +2566,17 @@ float
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.util_subs.get_heights}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.util\_subs.}}\sphinxbfcode{\sphinxupquote{get\_heights}}}
-{\sphinxparam{\DUrole{n}{h}}\sphinxparamcomma \sphinxparam{\DUrole{n}{dim\_len}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.util\_subs.}}\sphinxbfcode{\sphinxupquote{get\_heights}}}{\sphinxparam{\DUrole{n,n}{h}}, \sphinxparam{\DUrole{n,n}{dim\_len}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Reads input heights for velocity, temperature and humidity
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{h}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} input heights {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{dim\_len}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} length dimension
 
@@ -2682,15 +2594,30 @@ array
 
 \end{fulllineitems}
 
+\index{get\_outvars() (in module AirSeaFluxCode.util\_subs)@\spxentry{get\_outvars()}\spxextra{in module AirSeaFluxCode.util\_subs}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.util_subs.get_outvars}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.util\_subs.}}\sphinxbfcode{\sphinxupquote{get\_outvars}}}{\sphinxparam{\DUrole{n,n}{out\_var}}, \sphinxparam{\DUrole{n,n}{cskin}}, \sphinxparam{\DUrole{n,n}{gust}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Get output variables
+\begin{quote}\begin{description}
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
+\sphinxcode{\sphinxupquote{List}}{[}\sphinxcode{\sphinxupquote{str}}{]}
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
 \index{rho\_air() (in module AirSeaFluxCode.util\_subs)@\spxentry{rho\_air()}\spxextra{in module AirSeaFluxCode.util\_subs}}
 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.util_subs.rho_air}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.util\_subs.}}\sphinxbfcode{\sphinxupquote{rho\_air}}}
-{\sphinxparam{\DUrole{n}{T}}\sphinxparamcomma \sphinxparam{\DUrole{n}{qair}}\sphinxparamcomma \sphinxparam{\DUrole{n}{p}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.util\_subs.}}\sphinxbfcode{\sphinxupquote{rho\_air}}}{\sphinxparam{\DUrole{n,n}{T}}, \sphinxparam{\DUrole{n,n}{qair}}, \sphinxparam{\DUrole{n,n}{p}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Compute density of (moist) air using the eq. of state of the atmosphere.
@@ -2699,15 +2626,15 @@ Compute density of (moist) air using the eq. of state of the atmosphere.
 as in aerobulk (\sphinxurl{https://github.com/brodeau/aerobulk/}) Brodeau et al. (2016)
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{T}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} absolute air temperature             {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{qair}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air specific humidity   {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{p}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} pressure in                {[}Pa{]}
 
@@ -2730,52 +2657,49 @@ TYPE
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.util_subs.set_flag}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.util\_subs.}}\sphinxbfcode{\sphinxupquote{set\_flag}}}
-{\sphinxparam{\DUrole{n}{miss}}\sphinxparamcomma \sphinxparam{\DUrole{n}{rh}}\sphinxparamcomma \sphinxparam{\DUrole{n}{u10n}}\sphinxparamcomma \sphinxparam{\DUrole{n}{q10n}}\sphinxparamcomma \sphinxparam{\DUrole{n}{t10n}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Rb}}\sphinxparamcomma \sphinxparam{\DUrole{n}{hin}}\sphinxparamcomma \sphinxparam{\DUrole{n}{monob}}\sphinxparamcomma \sphinxparam{\DUrole{n}{itera}}\sphinxparamcomma \sphinxparam{\DUrole{n}{out}\DUrole{o}{=}\DUrole{default_value}{0}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.util\_subs.}}\sphinxbfcode{\sphinxupquote{set\_flag}}}{\sphinxparam{\DUrole{n,n}{miss}}, \sphinxparam{\DUrole{n,n}{rh}}, \sphinxparam{\DUrole{n,n}{u10n}}, \sphinxparam{\DUrole{n,n}{q10n}}, \sphinxparam{\DUrole{n,n}{t10n}}, \sphinxparam{\DUrole{n,n}{Rb}}, \sphinxparam{\DUrole{n,n}{hin}}, \sphinxparam{\DUrole{n,n}{monob}}, \sphinxparam{\DUrole{n,n}{itera}}, \sphinxparam{\DUrole{n,n}{out}\DUrole{o,o}{=}\DUrole{default_value}{0}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Set general flags.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}\begin{itemize}
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{miss}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} mask of missing input points
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{rh}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} relative humidity             {[}\%{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{u10n}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} 10m neutral wind speed        {[}ms\textasciicircum{}\{\sphinxhyphen{}1\}{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{q10n}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} 10m neutral specific humidity {[}g/kg{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{t10n}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} 10m neutral air temperature   {[}K{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Rb}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} bulk Richardson number
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{hin}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} measurement heights           {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{monob}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Monin\sphinxhyphen{}Obukhov length          {[}m{]}
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{itera}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} number of iteration
 
-\item {} 
+\item {}
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{out}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{optional}}) \textendash{} output option for non converged points. The default is 0.
 
@@ -2798,10 +2722,7 @@ str
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.util_subs.visc_air}}
 \pysigstartsignatures
-\pysiglinewithargsret
-{\sphinxcode{\sphinxupquote{AirSeaFluxCode.util\_subs.}}\sphinxbfcode{\sphinxupquote{visc\_air}}}
-{\sphinxparam{\DUrole{n}{T}}}
-{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{AirSeaFluxCode.util\_subs.}}\sphinxbfcode{\sphinxupquote{visc\_air}}}{\sphinxparam{\DUrole{n,n}{T}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Computes the kinematic viscosity of dry air as a function of air temp.
