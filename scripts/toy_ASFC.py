@@ -100,6 +100,25 @@ def toy_ASFC(inF, outF, outS, sst_fl, gustIn, cskinIn, tolIn, meth, qmIn, LIn, s
             maxiter=10,
             out_var=out_var,
         )
+        res = AirSeaFluxCode(
+            spd,
+            t,
+            sst,
+            sst_fl,
+            lat=lat,
+            hum=["rh", rh],
+            P=p,
+            hin=hin,
+            Rs=sw,
+            tol=tolIn,
+            gust=gustIn,
+            cskin=cskinIn,
+            meth=meth,
+            qmeth=qmIn,
+            L=LIn,
+            maxiter=10,
+            out_var=out_var,
+        )
         flg = res["flag"]
 
     elif inF == "era5_r360x180.nc":
