@@ -732,7 +732,7 @@ class S88:
 
     def add_gust(self, gust=None):
         """Add the gust"""
-        if gust is None or np.all(gust is None):
+        if gust is None or np.all(gust == None):  # noqa: E711
             gust = getattr(self, "default_gust", [0, 0, 0, 0])
         elif (np.size(gust) < 3) and np.all(gust == 0):
             gust = [0, 0, 0, 0]
