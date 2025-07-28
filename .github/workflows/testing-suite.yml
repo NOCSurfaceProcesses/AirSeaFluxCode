@@ -1,4 +1,4 @@
-name: geotrees Testing Suite
+name: AirSeaFluxCode Testing Suite
 on:
   push:
     branches:
@@ -54,7 +54,7 @@ jobs:
             uv-${{ runner.os }}-${{runner.arch}}-py${{matrix.python-version}}-${{ hashFiles(env.UV_ENV_FILE) }}
             uv-${{ runner.os }}-${{runner.arch}}-py${{matrix.python-version}}
 
-      - name: Install geotrees
+      - name: Install AirSeaFluxCode
         run: |
           uv sync --extra test
 
