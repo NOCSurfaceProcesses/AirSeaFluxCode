@@ -184,7 +184,7 @@ class S88:
             self.dter, self.dqer, self.dtwl = [
                 dummy_array(x) for x in (0.0, 0.0, 0.0)]
             self.Rnl, self.Qs, self.tkt = [
-                np.empty(self.arr_shp)*self.msk for _ in range(3)]
+                np.zeros(self.arr_shp)*self.msk for _ in range(3)]
         self.skt = np.copy(self.SST)
         self.skq = np.copy(self.qsea)  # [g/kg]
 
@@ -196,9 +196,9 @@ class S88:
         self.cd = cd_calc(self.cd10n, self.h_in[0], self.ref10, self.psim)
         self.usr = np.sqrt(self.cd*np.power(self.wind, 2))
         self.zot, self.zoq, self.tsr, self.qsr = [
-            np.empty(self.arr_shp)*self.msk for _ in range(4)]
+            np.zeros(self.arr_shp)*self.msk for _ in range(4)]
         self.ct10n, self.cq10n, self.ct, self.cq = [
-            np.empty(self.arr_shp)*self.msk for _ in range(4)]
+            np.zeros(self.arr_shp)*self.msk for _ in range(4)]
         self.tv10n = self.zot
 
     def iterate(self, maxiter=10, tol=None):
@@ -457,8 +457,12 @@ class S88:
         # This gets filled into a pd dataframe and so no need to specify
         # dimension of array
         if self.hum[0] == 'no':
-            self.latent, self.qsr, self.q10n = np.empty(3)
-            self.qref, self.qair, self.rh = np.empty(3)
+            self.latent = np.full(self.arr_shp, fill_value=np.nan)
+            self.qsr = np.full(self.arr_shp, fill_value=np.nan)
+            self.q10n = np.full(self.arr_shp, fill_value=np.nan)
+            self.qref = np.full(self.arr_shp, fill_value=np.nan)
+            self.qair = np.full(self.arr_shp, fill_value=np.nan)
+            self.rh = np.full(self.arr_shp, fill_value=np.nan)
 
         # Set the final wind speed values
         # this seems to be gust (was wind_speed)
@@ -533,9 +537,8 @@ class S88:
         self.P = np.full(self.nlen, 1013) if P is None else P
 
         # mask to preserve missing values when initialising variables
-        self.msk = np.empty(SST.shape)
         self.msk = np.where(np.isnan(spd+T+SST), np.nan, 1)
-        self.Rb = np.empty(SST.shape)*self.msk
+        self.Rb = np.zeros(self.arr_shp)*self.msk
 
     def add_gust(self, gust=None):
         if np.all(gust is None):
