@@ -21,7 +21,7 @@ from AirSeaFluxCode.flux_subs import psit_calc, psim_calc
 
 
 def adjust_temperature(
-    theta: np.ndarray | float,
+    temp: np.ndarray | float,
     tsr: np.ndarray | float,
     h_in: np.ndarray | float,
     h_out: np.ndarray | float,
@@ -35,7 +35,7 @@ def adjust_temperature(
 
     Parameters
     ----------
-    theta : numpy.ndarray
+    temp : numpy.ndarray
         The air temperature value at the input height `h_in`. The temperature can be
         provided in either Celsius or Kelvin.
     tsr : numpy.ndarray
@@ -61,7 +61,7 @@ def adjust_temperature(
         the input air temperature value.
     """
     return (
-        theta
+        temp
         + tlapse * (h_in - h_out)
         - (
             tsr
