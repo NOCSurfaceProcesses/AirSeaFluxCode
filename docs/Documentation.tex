@@ -2457,6 +2457,10 @@ Ported to Python and modified by S. Biri from Holger Voemel’s original
 
 \item {}
 \sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{P}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{,}}) \textendash{} Pressure {[}hPa{]}
+
+\item {}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{phase}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} ‘liquid’ : Calculate vapor pressure over liquid water or
 ‘ice’ : Calculate vapor pressure over ice
 
@@ -2764,7 +2768,7 @@ numpy.ndarray
 \pysigstartsignatures
 \pysiglinewithargsret
 {\sphinxcode{\sphinxupquote{AirSeaFluxCode.height\_subs.}}\sphinxbfcode{\sphinxupquote{adjust\_temperature}}}
-{\sphinxparam{\DUrole{n}{theta}}\sphinxparamcomma \sphinxparam{\DUrole{n}{tsr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{h\_in}}\sphinxparamcomma \sphinxparam{\DUrole{n}{h\_out}}\sphinxparamcomma \sphinxparam{\DUrole{n}{monob}}\sphinxparamcomma \sphinxparam{\DUrole{n}{tlapse}\DUrole{o}{=}\DUrole{default_value}{0.0097611}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}S80\textquotesingle{}}}}
+{\sphinxparam{\DUrole{n}{temp}}\sphinxparamcomma \sphinxparam{\DUrole{n}{tsr}}\sphinxparamcomma \sphinxparam{\DUrole{n}{h\_in}}\sphinxparamcomma \sphinxparam{\DUrole{n}{h\_out}}\sphinxparamcomma \sphinxparam{\DUrole{n}{monob}}\sphinxparamcomma \sphinxparam{\DUrole{n}{tlapse}\DUrole{o}{=}\DUrole{default_value}{0.0097611}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}S80\textquotesingle{}}}}
 {}
 \pysigstopsignatures
 \sphinxAtStartPar
@@ -2774,7 +2778,7 @@ known air temperature at a known input height using a Monin\sphinxhyphen{}Obhuko
 \sphinxlineitem{Parameters}\begin{itemize}
 \item {}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{theta}} (\sphinxstyleliteralemphasis{\sphinxupquote{numpy.ndarray}}) \textendash{} The air temperature value at the input height \sphinxtitleref{h\_in}. The temperature can be
+\sphinxstyleliteralstrong{\sphinxupquote{temp}} (\sphinxstyleliteralemphasis{\sphinxupquote{numpy.ndarray}}) \textendash{} The air temperature value at the input height \sphinxtitleref{h\_in}. The temperature can be
 provided in either Celsius or Kelvin.
 
 \item {}
