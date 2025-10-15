@@ -641,7 +641,7 @@ class S88:
         self.usr_gust = np.copy(self.usr)
         # include lapse rate adjustment as theta is well-mixed
         self.tref = adjust_temperature(
-            self.theta,
+            self.T,
             self.tsr,
             self.h_in[1],
             self.h_out[1],
