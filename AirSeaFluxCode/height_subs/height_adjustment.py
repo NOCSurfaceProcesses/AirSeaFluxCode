@@ -21,14 +21,14 @@ from AirSeaFluxCode.flux_subs import psit_calc, psim_calc
 
 
 def adjust_temperature(
-    theta: np.ndarray,
-    tsr: np.ndarray,
+    theta: np.ndarray | float,
+    tsr: np.ndarray | float,
     h_in: np.ndarray | float,
     h_out: np.ndarray | float,
-    monob: np.ndarray,
+    monob: np.ndarray | float,
     tlapse: np.ndarray | float = 0.0097611,
     meth: str = "S80",
-) -> np.ndarray:
+) -> np.ndarray | float:
     """
     Estimate the air temperature at a target output height above the surface from a
     known air temperature at a known input height using a Monin-Obhukov length-scale.
@@ -76,13 +76,13 @@ def adjust_temperature(
 
 
 def adjust_wind_speed(
-    spd: np.ndarray,
-    usr: np.ndarray,
+    spd: np.ndarray | float,
+    usr: np.ndarray | float,
     h_in: np.ndarray | float,
     h_out: np.ndarray | float,
-    monob: np.ndarray,
+    monob: np.ndarray | float,
     meth: str = "S80",
-) -> np.ndarray:
+) -> np.ndarray | float:
     """
     Estimate a wind-speed at a target output height above the surface from a
     known wind-speed at a known input height using a Monin-Obhukov length-scale.
@@ -116,13 +116,13 @@ def adjust_wind_speed(
 
 
 def adjust_humidity(
-    qair: np.ndarray,
-    qsr: np.ndarray,
+    qair: np.ndarray | float,
+    qsr: np.ndarray | float,
     h_in: np.ndarray | float,
     h_out: np.ndarray | float,
-    monob: np.ndarray,
+    monob: np.ndarray | float,
     meth: str = "S80",
-) -> np.ndarray:
+) -> np.ndarray | float:
     """
     Estimate a specific humidity (of air) at a target output height above the surface
     from a known specific humidity (of air) at a known input height using a

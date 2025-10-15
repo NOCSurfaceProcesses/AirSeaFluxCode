@@ -1022,13 +1022,13 @@ def AirSeaFluxCode(
         optional. user can define pandas array of variables to be output.
 
         - the default full pandas array, with cskin=0 gust=0, is
-          out_var = ("tau", "sensible", "latent", "monob", "cd", "cd10n", "ct", "ct10n",
-          "cq", "cq10n", "tsrv", "tsr", "qsr", "usr", "psim", "psit", "psiq",
-          "psim_ref", "psit_ref", "psiq_ref", "u10n", "t10n", "q10n", "zo",
-          "zot", "zoq", "uref", "tref", "qref", "qair", "qsea", "Rb", "rh",
-          "rho", "cp", "lv", "theta", "itera")
+          `out_var = ("tau", "sensible", "latent", "monob", "cd", "cd10n", "ct",
+          "ct10n", "cq", "cq10n", "tsrv", "tsr", "qsr", "usr", "psim", "psit", "psiq",
+          "psim_ref", "psit_ref", "psiq_ref", "u10n", "t10n", "q10n", "zo", "zot",
+          "zoq", "uref", "tref", "qref", "qair", "qsea", "Rb", "rh", "rho", "cp", "lv",
+          "theta", "itera")`
         - the "limited" pandas array is
-          out_var = ("tau", "sensible", "latent", "uref", "tref", "qref")
+          `out_var = ("tau", "sensible", "latent", "uref", "tref", "qref")`
         - the user can define a custom pandas array of variables to output.
     L : str
        Monin-Obukhov length definition options
@@ -1090,15 +1090,16 @@ def AirSeaFluxCode(
         47. potential temperature (theta)
         48. number of iterations until convergence
         49. flag:
-            "n": normal,
-            "o": out of nominal range,
-            "u": u10n<0,
-            "q":q10n<0 or q>40,
-            "m": missing,
-            "l": Rib<-0.5 or Rib>0.2 or z/L>1000,
-            "r" : rh>100%,
-            "t" : t10n<173K or t10n>373K,
-            "i": convergence fail at n.
+
+            - "n": normal,
+            - "o": out of nominal range,
+            - "u": u10n<0,
+            - "q": q10n<0 or q>40,
+            - "m": missing,
+            - "l": Rib<-0.5 or Rib>0.2 or z/L>1000,
+            - "r": rh>100%,
+            - "t": t10n<173K or t10n>373K,
+            - "i": convergence fail at n.
 
     Notes
     -----

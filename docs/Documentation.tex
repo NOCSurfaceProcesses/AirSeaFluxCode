@@ -168,7 +168,7 @@ The available parameterizations in AirSeaFluxCode provided in order to calculate
 \begin{itemize}
 \item {}
 \sphinxAtStartPar
-\sphinxcite{users_guide:smith1980} as S80: the surface drag coefficient is related to 10m wind speed (u$_{\text{10}}$), surface heat and moisture exchange coefficients are constant. The stability parameterizations are based on the Monin\sphinxhyphen{}Obukhov similarity theory for stable and unstable condition which modify the wind, temperature and humidity profiles and derives surface turbulent fluxes in open ocean conditions (valid for wind speeds from 6 to 22 ms$^{\text{\sphinxhyphen{}1}}$).
+\sphinxcite{users_guide:smith1980} as S80: the surface drag coefficient is related to 10m wind speed (\(u_{10}\)), surface heat and moisture exchange coefficients are constant. The stability parameterizations are based on the Monin\sphinxhyphen{}Obukhov similarity theory for stable and unstable condition which modify the wind, temperature and humidity profiles and derives surface turbulent fluxes in open ocean conditions (valid for wind speeds from 6 to 22 ms$^{\text{\sphinxhyphen{}1}}$).
 
 \item {}
 \sphinxAtStartPar
@@ -176,11 +176,11 @@ The available parameterizations in AirSeaFluxCode provided in order to calculate
 
 \item {}
 \sphinxAtStartPar
-\sphinxcite{users_guide:largepond1981}, \sphinxcite{users_guide:largepond1982} as LP82: the surface drag coefficient is computed in relation to u$_{\text{10}}$ and has different parameterization for different ranges of wind speed. The heat and moisture exchange coefficients are constant for wind speeds\textless{}11ms$^{\text{\sphinxhyphen{}1}}$ and a function of u$_{\text{10}}$ for wind speeds between 11 and 25ms$^{\text{\sphinxhyphen{}1}}$. The stability parameterizations are based on the Monin\sphinxhyphen{}Obukhov similarity theory for stable and unstable condition.
+\sphinxcite{users_guide:largepond1981}, \sphinxcite{users_guide:largepond1982} as LP82: the surface drag coefficient is computed in relation to \(u_{10}\) and has different parameterization for different ranges of wind speed. The heat and moisture exchange coefficients are constant for wind speeds\textless{}11ms$^{\text{\sphinxhyphen{}1}}$ and a function of \(u_{10}\) for wind speeds between 11 and 25ms$^{\text{\sphinxhyphen{}1}}$. The stability parameterizations are based on the Monin\sphinxhyphen{}Obukhov similarity theory for stable and unstable condition.
 
 \item {}
 \sphinxAtStartPar
-\sphinxcite{users_guide:yellandtaylor1996}, \sphinxcite{users_guide:yelland1998} as YT96: the surface drag coefficient is a function of u$_{\text{*}}$. The heat and moisture exchange coefficients are considered constant as in the cases of S80 and S88.
+\sphinxcite{users_guide:yellandtaylor1996}, \sphinxcite{users_guide:yelland1998} as YT96: the surface drag coefficient is a function of \(u_{*}\). The heat and moisture exchange coefficients are considered constant as in the cases of S80 and S88.
 
 \item {}
 \sphinxAtStartPar
@@ -188,7 +188,7 @@ The available parameterizations in AirSeaFluxCode provided in order to calculate
 
 \item {}
 \sphinxAtStartPar
-\sphinxcite{users_guide:largeyeager2004}, \sphinxcite{users_guide:largeyeager2009} as NCAR: the surface drag coefficient is computed in relation to wind speed for u$_{\text{10}}$ \textgreater{}0.5 ms$^{\text{\sphinxhyphen{}1}}$. The heat exchange coefficient is given as a function of the drag coefficient (one for stable and one for unstable conditions) and the moisture exchange coefficient is also a function of the drag coefficient.
+\sphinxcite{users_guide:largeyeager2004}, \sphinxcite{users_guide:largeyeager2009} as NCAR: the surface drag coefficient is computed in relation to wind speed for \(u_{10}\) \textgreater{}0.5 ms$^{\text{\sphinxhyphen{}1}}$. The heat exchange coefficient is given as a function of the drag coefficient (one for stable and one for unstable conditions) and the moisture exchange coefficient is also a function of the drag coefficient.
 
 \item {}
 \sphinxAtStartPar
@@ -214,44 +214,42 @@ In AirSeaFluxCode we use a consistent calculation approach across all algorithms
 Additionally, non essential parameters can be given as inputs, such as: downward long/shortwave radiation (Rl, Rs), latitude (lat), reference output height (hout),  cool skin (cskin), cool skin correction method (skin, following either  \sphinxcite{users_guide:fairall1996b} (default for C30, and C35), \sphinxcite{users_guide:zengbeljaars2005} (default for Beljaars), \sphinxcite{users_guide:ecmwf2019} (default for ecmwf)), warm layer correction (wl), gustiness (gust) and boundary layer height (zi), choice of bulk algorithm method (meth), the choice of saturation vapour pressure function (qmeth), tolerance limits (tol), choice of Monin\sphinxhyphen{}Obukhov length function (L), and the maximum number of iterations (maxiter). Note that all input variables need to be loaded as numpy.ndarray.
 
 \sphinxAtStartPar
-The air and sea surface specific humidity are calculated using the functions qsat\_air(T, P, RH, qmeth) and qsat\_sea(SST, P, qmeth) , which call functions contained in VaporPressure.py to calculate saturation vapour pressure following a chosen method (default is \sphinxcite{users_guide:buck2012}).
+The air and sea surface specific humidity are calculated using the functions {\hyperref[\detokenize{users_guide:AirSeaFluxCode.hum_subs.qsat_air}]{\sphinxcrossref{\sphinxcode{\sphinxupquote{AirSeaFluxCode.hum\_subs.qsat\_air()}}}}} and {\hyperref[\detokenize{users_guide:AirSeaFluxCode.hum_subs.qsat_sea}]{\sphinxcrossref{\sphinxcode{\sphinxupquote{AirSeaFluxCode.hum\_subs.qsat\_sea()}}}}}, which call functions contained in {\hyperref[\detokenize{users_guide:AirSeaFluxCode.hum_subs.VaporPressure}]{\sphinxcrossref{\sphinxcode{\sphinxupquote{AirSeaFluxCode.hum\_subs.VaporPressure()}}}}} to calculate saturation vapour pressure following a chosen method (default is \sphinxcite{users_guide:buck2012}).
 \begin{itemize}
 \item {}
 \sphinxAtStartPar
-The air temperature is converted to air temperature for adiabatic expansion following: Ta = T + 273.16 + \(\Gamma \cdot\)hin
+The air temperature is converted to air temperature for adiabatic expansion following: \(T_a = T + 273.16 + \Gamma \cdot h_{in}\)
 
 \item {}
 \sphinxAtStartPar
-The density of air is defined as \(\rho\)= (0.34838\(\cdot\)P)/T$_{\text{v10n}}$
+The density of air is defined as \(\rho= (0.34838 \cdot P)/T_{v10n}\)
 
 \item {}
 \sphinxAtStartPar
-The specific heat at constant pressure is defined  as c$_{\text{p}}$= 1004.67(1 + 0.00084\(\cdot\)q$_{\text{sea}}$)
+The specific heat at constant pressure is defined  as \(c_p = 1004.67 \cdot (1 + 0.00084 \cdot q_{sea})\)
 
 \item {}
 \sphinxAtStartPar
-The latent heat of vapourization is defined as L$_{\text{v}}$= (2.501\sphinxhyphen{}0.00237\(\cdot\)SST)10$^{\text{6}}$ (SST in C)
+The latent heat of vapourization is defined as \(L_{v} = (2.501 - 0.00237 \cdot SST) \cdot 10^{6}\) (SST in C)
 
 \end{itemize}
 
 \sphinxAtStartPar
-Initial values for the exchange coefficients and friction velocity are calculated assuming neutral stability. The program iterates to calculate the temperature and humidity fluxes and the virtual temperature as T$_{\text{v}}$=T$_{\text{a}}$(1+0.61q$_{\text{air}}$) , then the stability parameter z/L either as,
+Initial values for the exchange coefficients and friction velocity are calculated assuming neutral stability. The program iterates to calculate the temperature and humidity fluxes and the virtual temperature as \(T_{v} =T_{a} \cdot (1 + 0.61 \cdot q_{air})\) , then the stability parameter \(z/L\) either as,
 \begin{equation}\label{equation:users_guide:zol}
 \begin{split}\frac{z}{L}=\frac{z(g \cdot k \cdot T_{*v})}{T_{v10n} \cdot u_{*}^{2}}\end{split}
 \end{equation}
 \sphinxAtStartPar
-or  as a function of the Richardson number as described by \sphinxcite{users_guide:ecmwf2019} {[}their equations 3.23\textendash{}3.25{]}; hence a new value for u$_{\text{10n}}$, hence new transfer coefficients, hence new flux values until convergence is obtained (Table 1).  At every iteration step if there are points where the neutral 10 m wind speed (u$_{\text{10n}}$) becomes negative the wind speed value at these points is set to NaN.
-The values for air density, specific heat at constant volume, and the latent heat of vaporisation are used in converting the scaled fluxes u$_{\text{*}}$, T$_{\text{*}}$, and q$_{\text{*}}$(Eq. \ref{equation:users_guide:strs}, for UA we retain their equations 7\sphinxhyphen{}14) to flux values in Nm$^{\text{\sphinxhyphen{}2}}$ and Wm$^{\text{\sphinxhyphen{}2}}$, respectively.
+or  as a function of the Richardson number as described by \sphinxcite{users_guide:ecmwf2019} {[}their equations 3.23\textendash{}3.25{]}; hence a new value for \(u_{10n}\), hence new transfer coefficients, hence new flux values until convergence is obtained (Table 1).  At every iteration step if there are points where the neutral 10 m wind speed (\(u_{10n}\)) becomes negative the wind speed value at these points is set to NaN.
+The values for air density, specific heat at constant volume, and the latent heat of vaporisation are used in converting the scaled fluxes \(u_{*}\), \(T_{*}\), and \(q_{*}\) (Eq. \ref{equation:users_guide:strs}, for UA we retain their equations 7\sphinxhyphen{}14) to flux values in Nm$^{\text{\sphinxhyphen{}2}}$ and Wm$^{\text{\sphinxhyphen{}2}}$, respectively.
 \begin{equation}\label{equation:users_guide:strs}
-\begin{split}\begin{array}{l}
-  u_{\ast} = \frac{k\cdot u_{z}}{\log(\frac{z}{z_{om}})-\Psi_{m}(\frac{z}{L})+\Psi_{m}(\frac{z_{om}}{L})} \\
-  t_{\ast} = \frac{k\cdot (T-SST)}{\log(\frac{z}{z_{oh}})-\Psi_{h}(\frac{z}{L})+\Psi_{h}(\frac{z_{oh}}{L})} \\
-  q_{\ast} = \frac{k\cdot (q_{air}-q_{sea})}{\log(\frac{z}{z_{oq}})-\Psi_{q}(\frac{z}{L})+\Psi_{q}(\frac{z_{oq}}{L})}
-\end{array}\end{split}
+\begin{split}  u_{\ast} &= \frac{k\cdot u_{z}}{\log(\frac{z}{z_{om}})-\Psi_{m}(\frac{z}{L})+\Psi_{m}(\frac{z_{om}}{L})} \\
+  t_{\ast} &= \frac{k\cdot (T-SST)}{\log(\frac{z}{z_{oh}})-\Psi_{h}(\frac{z}{L})+\Psi_{h}(\frac{z_{oh}}{L})} \\
+  q_{\ast} &= \frac{k\cdot (q_{air}-q_{sea})}{\log(\frac{z}{z_{oq}})-\Psi_{q}(\frac{z}{L})+\Psi_{q}(\frac{z_{oq}}{L})}\end{split}
 \end{equation}
 \sphinxAtStartPar
-AirSeaFluxCode is set up to test for convergence between the i$^{\text{th}}$ and (i\sphinxhyphen{}1)$^{\text{th}}$ iteration according to the tolerance limits shown in Table 1 for six variables in total, of which three are relative to the height adjustment (u$_{\text{10}}$, t$_{\text{10}}$, q$_{\text{10}}$) and three to the flux calculation (\(\tau\), shf, lhf) respectively. The tolerance limits are set according to the maximum accuracy that can be feasible for each variable. The user can choose to allow for convergence either only for the fluxes (default), or only for height adjustment or for both (all six variables). Values that have not converged are by default set to missing, but the number of iterations until convergence is provided as an output (this number is set to \sphinxhyphen{}1 for non convergent points).
-A set of flags are provided as an output that signify: “m” where input values are missing; “o” where the wind speed for this point is outside the nominal range for the used parameterization; “u” or “q” for points that produce unphysical values for u$_{\text{10n}}$ or q$_{\text{10n}}$respectively during the iteration loop; “r” where relative humidity is greater than 100\%; “l” where the bulk Richardson number is below \sphinxhyphen{}0.5 or above 0.2 or z/L is greater than 1000; “i” where the value failed to converge after n number of iterations, if the points converged normally they are flagged with “n”. The user should expect NaN values if out is set to zero (namely output only values that have converged) for values that have not converged after the set number of iterations (default is ten) or if they produced unphysical values for u$_{\text{10n}}$ or q$_{\text{10n}}$.
+AirSeaFluxCode is set up to test for convergence between the i$^{\text{th}}$ and (i\sphinxhyphen{}1)$^{\text{th}}$ iteration according to the tolerance limits shown in Table 1 for six variables in total, of which three are relative to the height adjustment (\(u_{10}\), \(T_{10}\), \(q_{10}\)) and three to the flux calculation (\(\tau\), shf, lhf) respectively. The tolerance limits are set according to the maximum accuracy that can be feasible for each variable. The user can choose to allow for convergence either only for the fluxes (default), or only for height adjustment or for both (all six variables). Values that have not converged are by default set to missing, but the number of iterations until convergence is provided as an output (this number is set to \sphinxhyphen{}1 for non convergent points).
+A set of flags are provided as an output that signify: “m” where input values are missing; “o” where the wind speed for this point is outside the nominal range for the used parameterization; “u” or “q” for points that produce unphysical values for \(u_{10n}\)  or \(q_{10n}\) respectively during the iteration loop; “r” where relative humidity is greater than 100\%; “l” where the bulk Richardson number is below \sphinxhyphen{}0.5 or above 0.2 or \(z/L\) is greater than 1000; “i” where the value failed to converge after n number of iterations, if the points converged normally they are flagged with “n”. The user should expect NaN values if out is set to zero (namely output only values that have converged) for values that have not converged after the set number of iterations (default is ten) or if they produced unphysical values for \(u_{10n}\)  or \(q_{10n}\).
 
 
 \begin{savenotes}\sphinxattablestart
@@ -276,7 +274,7 @@ Significance
 \sphinxmidrule
 \sphinxtableatstartofbodyhook
 \sphinxAtStartPar
-u$_{\text{10n}}$ {[}ms$^{\text{\sphinxhyphen{}1}}${]}
+\(u_{10n}\) {[}ms$^{\text{\sphinxhyphen{}1}}${]}
 &
 \sphinxAtStartPar
 0.01
@@ -286,7 +284,7 @@ u$_{\text{10n}}$ {[}ms$^{\text{\sphinxhyphen{}1}}${]}
 \\
 \sphinxhline
 \sphinxAtStartPar
-T$_{\text{10n}}$ {[}K{]}
+\(T_{10n}\) {[}K{]}
 &
 \sphinxAtStartPar
 0.01
@@ -296,7 +294,7 @@ T$_{\text{10n}}$ {[}K{]}
 \\
 \sphinxhline
 \sphinxAtStartPar
-q$_{\text{10n}}$ {[}g/kg{]}
+\(q_{10n}\) {[}g/kg{]}
 &
 \sphinxAtStartPar
 10$^{\text{\sphinxhyphen{}2}}$
@@ -524,16 +522,16 @@ optional. user can define pandas array of variables to be output.
 \item {}
 \sphinxAtStartPar
 the default full pandas array, with cskin=0 gust=0, is
-out\_var = (“tau”, “sensible”, “latent”, “monob”, “cd”, “cd10n”, “ct”, “ct10n”,
-“cq”, “cq10n”, “tsrv”, “tsr”, “qsr”, “usr”, “psim”, “psit”, “psiq”,
-“psim\_ref”, “psit\_ref”, “psiq\_ref”, “u10n”, “t10n”, “q10n”, “zo”,
-“zot”, “zoq”, “uref”, “tref”, “qref”, “qair”, “qsea”, “Rb”, “rh”,
-“rho”, “cp”, “lv”, “theta”, “itera”)
+\sphinxtitleref{out\_var = (“tau”, “sensible”, “latent”, “monob”, “cd”, “cd10n”, “ct”,
+“ct10n”, “cq”, “cq10n”, “tsrv”, “tsr”, “qsr”, “usr”, “psim”, “psit”, “psiq”,
+“psim\_ref”, “psit\_ref”, “psiq\_ref”, “u10n”, “t10n”, “q10n”, “zo”, “zot”,
+“zoq”, “uref”, “tref”, “qref”, “qair”, “qsea”, “Rb”, “rh”, “rho”, “cp”, “lv”,
+“theta”, “itera”)}
 
 \item {}
 \sphinxAtStartPar
 the “limited” pandas array is
-out\_var = (“tau”, “sensible”, “latent”, “uref”, “tref”, “qref”)
+\sphinxtitleref{out\_var = (“tau”, “sensible”, “latent”, “uref”, “tref”, “qref”)}
 
 \item {}
 \sphinxAtStartPar
@@ -763,15 +761,44 @@ number of iterations until convergence
 \item {}
 \sphinxAtStartPar
 flag:
-“n”: normal,
-“o”: out of nominal range,
-“u”: u10n\textless{}0,
-“q”:q10n\textless{}0 or q\textgreater{}40,
-“m”: missing,
-“l”: Rib\textless{}\sphinxhyphen{}0.5 or Rib\textgreater{}0.2 or z/L\textgreater{}1000,
-“r” : rh\textgreater{}100\%,
-“t” : t10n\textless{}173K or t10n\textgreater{}373K,
-“i”: convergence fail at n.
+\begin{itemize}
+\item {}
+\sphinxAtStartPar
+”n”: normal,
+
+\item {}
+\sphinxAtStartPar
+”o”: out of nominal range,
+
+\item {}
+\sphinxAtStartPar
+”u”: u10n\textless{}0,
+
+\item {}
+\sphinxAtStartPar
+”q”: q10n\textless{}0 or q\textgreater{}40,
+
+\item {}
+\sphinxAtStartPar
+”m”: missing,
+
+\item {}
+\sphinxAtStartPar
+”l”: Rib\textless{}\sphinxhyphen{}0.5 or Rib\textgreater{}0.2 or z/L\textgreater{}1000,
+
+\item {}
+\sphinxAtStartPar
+”r”: rh\textgreater{}100\%,
+
+\item {}
+\sphinxAtStartPar
+”t”: t10n\textless{}173K or t10n\textgreater{}373K,
+
+\item {}
+\sphinxAtStartPar
+”i”: convergence fail at n.
+
+\end{itemize}
 
 \end{enumerate}
 

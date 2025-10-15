@@ -19,17 +19,17 @@ Differences in the calculations between different methods can be found in:
 
 The available parameterizations in AirSeaFluxCode provided in order to calculate the momentum, sensible heat and latent heat fluxes are implemented following:
 
-- [Smith1980]_ as S80: the surface drag coefficient is related to 10m wind speed (u\ :sub:`10`\), surface heat and moisture exchange coefficients are constant. The stability parameterizations are based on the Monin-Obukhov similarity theory for stable and unstable condition which modify the wind, temperature and humidity profiles and derives surface turbulent fluxes in open ocean conditions (valid for wind speeds from 6 to 22 ms\ :sup:`-1`).
+- [Smith1980]_ as S80: the surface drag coefficient is related to 10m wind speed (:math:`u_{10}`\), surface heat and moisture exchange coefficients are constant. The stability parameterizations are based on the Monin-Obukhov similarity theory for stable and unstable condition which modify the wind, temperature and humidity profiles and derives surface turbulent fluxes in open ocean conditions (valid for wind speeds from 6 to 22 ms\ :sup:`-1`).
 
 - [Smith1988]_ as S88: is an improvement of the S80 parameterization in the sense that it provides the surface drag coefficient in relation to surface roughness over smooth and viscous surface and otherwise derives surface turbulent fluxes in open ocean conditions as described for S80.
 
-- [LargePond1981]_, [LargePond1982]_ as LP82: the surface drag coefficient is computed in relation to u\ :sub:`10` and has different parameterization for different ranges of wind speed. The heat and moisture exchange coefficients are constant for wind speeds<11ms\ :sup:`-1` and a function of u\ :sub:`10` for wind speeds between 11 and 25ms\ :sup:`-1`. The stability parameterizations are based on the Monin-Obukhov similarity theory for stable and unstable condition.
+- [LargePond1981]_, [LargePond1982]_ as LP82: the surface drag coefficient is computed in relation to :math:`u_{10}` and has different parameterization for different ranges of wind speed. The heat and moisture exchange coefficients are constant for wind speeds<11ms\ :sup:`-1` and a function of :math:`u_{10}` for wind speeds between 11 and 25ms\ :sup:`-1`. The stability parameterizations are based on the Monin-Obukhov similarity theory for stable and unstable condition.
 
-- [YellandTaylor1996]_, [Yelland1998]_ as YT96: the surface drag coefficient is a function of u\ :sub:`*`\. The heat and moisture exchange coefficients are considered constant as in the cases of S80 and S88.
+- [YellandTaylor1996]_, [Yelland1998]_ as YT96: the surface drag coefficient is a function of :math:`u_{*}`\. The heat and moisture exchange coefficients are considered constant as in the cases of S80 and S88.
 
 - [Zeng1998]_ as UA: the drag coefficient is given as a function of roughness length over smooth and viscous surface. The parameterization includes the effect of gustiness. The heat and moisture exchange coefficients are a function of heat and moisture roughness lengths and are valid in the range of 0.5 and 18 ms\ :sup:`-1`.
 
-- [LargeYeager2004]_, [LargeYeager2009]_ as NCAR: the surface drag coefficient is computed in relation to wind speed for u\ :sub:`10` \>0.5 ms\ :sup:`-1`. The heat exchange coefficient is given as a function of the drag coefficient (one for stable and one for unstable conditions) and the moisture exchange coefficient is also a function of the drag coefficient.
+- [LargeYeager2004]_, [LargeYeager2009]_ as NCAR: the surface drag coefficient is computed in relation to wind speed for :math:`u_{10}` \>0.5 ms\ :sup:`-1`. The heat exchange coefficient is given as a function of the drag coefficient (one for stable and one for unstable conditions) and the moisture exchange coefficient is also a function of the drag coefficient.
 
 - [Fairall1996]_, [Fairall2003]_, [Edson2013]_ as C30, and C35: is based on data collected from four expeditions in order to improve the drag and exchange coefficients parameterizations relative to surface roughness. It includes the effects of "cool skin", and gustiness. The effects of waves and sea state are neglected in order to keep the software as simple as possible, without compromising the integrity of the outputs though.
 
@@ -47,53 +47,51 @@ In AirSeaFluxCode we use a consistent calculation approach across all algorithms
 
 Additionally, non essential parameters can be given as inputs, such as: downward long/shortwave radiation (Rl, Rs), latitude (lat), reference output height (hout),  cool skin (cskin), cool skin correction method (skin, following either  [Fairall1996b]_ (default for C30, and C35), [ZengBeljaars2005]_ (default for Beljaars), [ECMWF2019]_ (default for ecmwf)), warm layer correction (wl), gustiness (gust) and boundary layer height (zi), choice of bulk algorithm method (meth), the choice of saturation vapour pressure function (qmeth), tolerance limits (tol), choice of Monin-Obukhov length function (L), and the maximum number of iterations (maxiter). Note that all input variables need to be loaded as numpy.ndarray.
 
-The air and sea surface specific humidity are calculated using the functions qsat\_air(T, P, RH, qmeth) and qsat\_sea(SST, P, qmeth) , which call functions contained in VaporPressure.py to calculate saturation vapour pressure following a chosen method (default is [Buck2012]_).
+The air and sea surface specific humidity are calculated using the functions :py:func:`AirSeaFluxCode.hum_subs.qsat_air` and :py:func:`AirSeaFluxCode.hum_subs.qsat_sea`, which call functions contained in :py:func:`AirSeaFluxCode.hum_subs.VaporPressure` to calculate saturation vapour pressure following a chosen method (default is [Buck2012]_).
 
-- The air temperature is converted to air temperature for adiabatic expansion following: Ta = T + 273.16 + :math:`\Gamma \cdot`\hin
+- The air temperature is converted to air temperature for adiabatic expansion following: :math:`T_a = T + 273.16 + \Gamma \cdot h_{in}`
 
-- The density of air is defined as :math:`\rho`\= (0.34838\ :math:`\cdot`\P)/T\ :sub:`v10n`
+- The density of air is defined as :math:`\rho= (0.34838 \cdot P)/T_{v10n}`
 
-- The specific heat at constant pressure is defined  as c\ :sub:`p`\= 1004.67(1 + 0.00084\ :math:`\cdot`\q\ :sub:`sea`\)
+- The specific heat at constant pressure is defined  as :math:`c_p = 1004.67 \cdot (1 + 0.00084 \cdot q_{sea})`
 
-- The latent heat of vapourization is defined as L\ :sub:`v`\ = (2.501-0.00237\ :math:`\cdot`\SST)\ :raw-html:`&#183;`\10\ :sup:`6` (SST in \ :raw-html:`&deg;`\C)
+- The latent heat of vapourization is defined as :math:`L_{v} = (2.501 - 0.00237 \cdot SST) \cdot 10^{6}` (SST in \ :raw-html:`&deg;`\C)
 
-Initial values for the exchange coefficients and friction velocity are calculated assuming neutral stability. The program iterates to calculate the temperature and humidity fluxes and the virtual temperature as T\ :sub:`v`\=T\ :sub:`a`\(1+0.61q\ :sub:`air`\) , then the stability parameter z/L either as,
+Initial values for the exchange coefficients and friction velocity are calculated assuming neutral stability. The program iterates to calculate the temperature and humidity fluxes and the virtual temperature as :math:`T_{v} =T_{a} \cdot (1 + 0.61 \cdot q_{air})` , then the stability parameter :math:`z/L` either as,
 
 .. math::
    :label: zol
 
    \frac{z}{L}=\frac{z(g \cdot k \cdot T_{*v})}{T_{v10n} \cdot u_{*}^{2}}
 
-or  as a function of the Richardson number as described by [ECMWF2019]_ [their equations 3.23--3.25]; hence a new value for u\ :sub:`10n`\, hence new transfer coefficients, hence new flux values until convergence is obtained (Table 1).  At every iteration step if there are points where the neutral 10 m wind speed (u\ :sub:`10n`\) becomes negative the wind speed value at these points is set to NaN.
-The values for air density, specific heat at constant volume, and the latent heat of vaporisation are used in converting the scaled fluxes u\ :sub:`*`\, T\ :sub:`*`\, and q\ :sub:`*`\ (:eq:`strs`, for UA we retain their equations 7-14) to flux values in Nm\ :sup:`-2` and Wm\ :sup:`-2`, respectively.
+or  as a function of the Richardson number as described by [ECMWF2019]_ [their equations 3.23--3.25]; hence a new value for :math:`u_{10n}`, hence new transfer coefficients, hence new flux values until convergence is obtained (Table 1).  At every iteration step if there are points where the neutral 10 m wind speed (:math:`u_{10n}`) becomes negative the wind speed value at these points is set to NaN.
+The values for air density, specific heat at constant volume, and the latent heat of vaporisation are used in converting the scaled fluxes :math:`u_{*}`, :math:`T_{*}`, and :math:`q_{*}` (:eq:`strs`, for UA we retain their equations 7-14) to flux values in Nm\ :sup:`-2` and Wm\ :sup:`-2`, respectively.
 
 .. math::
    :label: strs
 
-   \begin{array}{l}
-     u_{\ast} = \frac{k\cdot u_{z}}{\log(\frac{z}{z_{om}})-\Psi_{m}(\frac{z}{L})+\Psi_{m}(\frac{z_{om}}{L})} \\
-     t_{\ast} = \frac{k\cdot (T-SST)}{\log(\frac{z}{z_{oh}})-\Psi_{h}(\frac{z}{L})+\Psi_{h}(\frac{z_{oh}}{L})} \\
-     q_{\ast} = \frac{k\cdot (q_{air}-q_{sea})}{\log(\frac{z}{z_{oq}})-\Psi_{q}(\frac{z}{L})+\Psi_{q}(\frac{z_{oq}}{L})}
-   \end{array}
+     u_{\ast} &= \frac{k\cdot u_{z}}{\log(\frac{z}{z_{om}})-\Psi_{m}(\frac{z}{L})+\Psi_{m}(\frac{z_{om}}{L})} \\
+     t_{\ast} &= \frac{k\cdot (T-SST)}{\log(\frac{z}{z_{oh}})-\Psi_{h}(\frac{z}{L})+\Psi_{h}(\frac{z_{oh}}{L})} \\
+     q_{\ast} &= \frac{k\cdot (q_{air}-q_{sea})}{\log(\frac{z}{z_{oq}})-\Psi_{q}(\frac{z}{L})+\Psi_{q}(\frac{z_{oq}}{L})}
 
 
 
-AirSeaFluxCode is set up to test for convergence between the i\ :sup:`th` and (i-1)\ :sup:`th` iteration according to the tolerance limits shown in Table 1 for six variables in total, of which three are relative to the height adjustment (u\ :sub:`10`\, t\ :sub:`10`\, q\ :sub:`10`\) and three to the flux calculation (:math:`\tau`, shf, lhf) respectively. The tolerance limits are set according to the maximum accuracy that can be feasible for each variable. The user can choose to allow for convergence either only for the fluxes (default), or only for height adjustment or for both (all six variables). Values that have not converged are by default set to missing, but the number of iterations until convergence is provided as an output (this number is set to -1 for non convergent points).
-A set of flags are provided as an output that signify: "m" where input values are missing; "o" where the wind speed for this point is outside the nominal range for the used parameterization; "u" or "q" for points that produce unphysical values for u\ :sub:`10n` \ or q\ :sub:`10n`\ respectively during the iteration loop; "r" where relative humidity is greater than 100%; "l" where the bulk Richardson number is below -0.5 or above 0.2 or z/L is greater than 1000; "i" where the value failed to converge after n number of iterations, if the points converged normally they are flagged with "n". The user should expect NaN values if out is set to zero (namely output only values that have converged) for values that have not converged after the set number of iterations (default is ten) or if they produced unphysical values for u\ :sub:`10n` \ or q\ :sub:`10n`\.
+AirSeaFluxCode is set up to test for convergence between the i\ :sup:`th` and (i-1)\ :sup:`th` iteration according to the tolerance limits shown in Table 1 for six variables in total, of which three are relative to the height adjustment (:math:`u_{10}`, :math:`T_{10}`, :math:`q_{10}`) and three to the flux calculation (:math:`\tau`, shf, lhf) respectively. The tolerance limits are set according to the maximum accuracy that can be feasible for each variable. The user can choose to allow for convergence either only for the fluxes (default), or only for height adjustment or for both (all six variables). Values that have not converged are by default set to missing, but the number of iterations until convergence is provided as an output (this number is set to -1 for non convergent points).
+A set of flags are provided as an output that signify: "m" where input values are missing; "o" where the wind speed for this point is outside the nominal range for the used parameterization; "u" or "q" for points that produce unphysical values for :math:`u_{10n}`  or :math:`q_{10n}` respectively during the iteration loop; "r" where relative humidity is greater than 100%; "l" where the bulk Richardson number is below -0.5 or above 0.2 or :math:`z/L` is greater than 1000; "i" where the value failed to converge after n number of iterations, if the points converged normally they are flagged with "n". The user should expect NaN values if out is set to zero (namely output only values that have converged) for values that have not converged after the set number of iterations (default is ten) or if they produced unphysical values for :math:`u_{10n}`  or :math:`q_{10n}`.
 
 .. table:: Table 1: Tolerance and significance limits
    :widths: auto
 
-   =============================  =============  =============
-   Variable                       Tolerance      Significance
-   =============================  =============  =============
-   u\ :sub:`10n` [ms\ :sup:`-1`]  0.01           0.1
-   T\ :sub:`10n` [K]              0.01           0.1
-   q\ :sub:`10n` [g/kg]           10\ :sup:`-2`  10\ :sup:`-1`
-   :math:`\tau` [Nm\ :sup:`-2`]   10\ :sup:`-3`  10\ :sup:`-2`
-   shf [Wm\ :sup:`-2`]            0.1            2
-   lhf [Wm\ :sup:`-2`]            0.1            2
-   =============================  =============  =============
+   ===============================  =============  =============
+   Variable                         Tolerance      Significance
+   ===============================  =============  =============
+   :math:`u_{10n}` [ms\ :sup:`-1`]  0.01           0.1
+   :math:`T_{10n}` [K]              0.01           0.1
+   :math:`q_{10n}` [g/kg]           10\ :sup:`-2`  10\ :sup:`-1`
+   :math:`\tau` [Nm\ :sup:`-2`]     10\ :sup:`-3`  10\ :sup:`-2`
+   shf [Wm\ :sup:`-2`]              0.1            2
+   lhf [Wm\ :sup:`-2`]              0.1            2
+   ===============================  =============  =============
 
 AirSeaFluxCode module
 =====================
