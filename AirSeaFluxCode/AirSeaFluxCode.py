@@ -961,15 +961,16 @@ def AirSeaFluxCode(
         provides information on the type of the input SST; "bulk" or
         "skin"
     meth : str
-        "S80", "S88", "LP82", "YT96", "UA", "NCAR", "C30", "C35",
-        "ecmwf", "Beljaars"
+        "S80", "S88", "LP82", "YT96", "UA", "NCAR", "C30", "C35", "ecmwf", "Beljaars"
     lat : float
         latitude [deg], default 45deg
     hum : float
         humidity input switch 2x1 [x, values] default is relative humidity
-        x='rh' : relative humidity [%]
-        x='q' : specific humidity [g/kg]
-        x='Td' : dew point temperature [K]
+
+        - x='rh' : relative humidity [%]
+        - x='q' : specific humidity [g/kg]
+        - x='Td' : dew point temperature [K]
+
     P : float
         air pressure [hPa], default 1013hPa
     hin : float
@@ -981,61 +982,65 @@ def AirSeaFluxCode(
     Rs : float
         downward shortwave radiation [W/m^2]
     cskin : int
-        0 switch cool skin adjustment off, else 1
-        default is 0
+        0 switch cool skin adjustment off, else 1. Default is 0.
     skin : str
         cool skin method option "C35", "ecmwf" or "Beljaars"
     wl : int
         warm layer correction default is 0, to switch on set to 1
     gust : int
         4x1 [x, beta, zi, ustb] x=0 gustiness is OFF, x=1-5 gustiness is ON
-        and use gustiness factor: 1. Fairall et al. 2003, 2. GF is removed
-        from TSFs u10n, uref, 3. GF=1, 4. following ECMWF,
-        4. following Zeng et al. 1998, 6. following C35 matlab code;
-        beta gustiness parameter, default is 1.2,
-        zi PBL height [m] default is 600,
-        min is the value for gust speed in stable conditions [m/s],
-        default is 0.01 m/s
+        and use gustiness factor:
+
+        - 1 = Fairall et al. 2003,
+        - 2 = GF is removed from TSFs u10n, uref,
+        - 3 = GF=1 following ECMWF,
+        - 4 = following Zeng et al. 1998,
+        - 5 = following C35 matlab code;
+
+        'beta' gustiness parameter, default is 1.2. 'zi' is PBL height [m] default is
+        600. 'min' is the value for gust speed in stable conditions [m/s], default is
+        0.01 m/s.
     qmeth : str
-        is the saturation evaporation method to use amongst [
-            "HylandWexler", "Hardy", "Preining", "Wexler",
-            "GoffGratch", "WMO", "MagnusTetens", "Buck",
-            "Buck2", "WMO2018", "Sonntag", "Bolton",
-            "IAPWS", "MurphyKoop"]
-        default is Buck2
+        is the saturation evaporation method to use. One of HylandWexler", "Hardy",
+        "Preining", "Wexler", "GoffGratch", "WMO", "MagnusTetens", "Buck", "Buck2",
+        "WMO2018", "Sonntag", "Bolton", "IAPWS", "MurphyKoop". Default is Buck2
     tol : float
-       4x1 or 7x1 [option, lim1-3 or lim1-6]
-       option : 'flux' to set tolerance limits for fluxes only lim1-3
-       option : 'ref' to set tolerance limits for height adjustment lim-1-3
-       option : 'all' to set tolerance limits for both fluxes and height
-                adjustment lim1-6
-       default is tol=['all', 0.01, 0.01, 1e-2, 1e-3, 0.1, 0.1]
+        4x1 or 7x1 [option, lim1-3 or lim1-6]. Option takes one of the following:
+
+        - option : 'flux' to set tolerance limits for fluxes only lim1-3
+        - option : 'ref' to set tolerance limits for height adjustment lim-1-3
+        - option : 'all' to set tolerance limits for both fluxes and height adjustment
+          lim1-6
+
+        Default is tol=['all', 0.01, 0.01, 1e-2, 1e-3, 0.1, 0.1]
     maxiter : int
         number of iterations (default = 10)
     out : int
-        set 0 to set points that have not converged, negative values of
-              u10n, q10n or T10n out of limits to missing (default)
-        set 1 to keep points
+        Set 0 to set points that have not converged, negative values of 'u10n', 'q10n'
+        or 'T10n' out of limits to missing (default). Set 1 to keep points
     out_var : str
         optional. user can define pandas array of variables to be output.
-        the default full pandas array, with cskin=0 gust=0, is :
-            out_var = ("tau", "sensible", "latent", "monob", "cd", "cd10n",
-                       "ct", "ct10n", "cq", "cq10n", "tsrv", "tsr", "qsr",
-                       "usr", "psim", "psit", "psiq", "psim_ref", "psit_ref",
-                       "psiq_ref", "u10n", "t10n", "q10n", "zo", "zot", "zoq",
-                       "uref", "tref", "qref", "qair", "qsea", "Rb", "rh",
-                       "rho", "cp", "lv", "theta", "itera")
-        the "limited" pandas array is:
-            out_var = ("tau", "sensible", "latent", "uref", "tref", "qref")
-        the user can define a custom pandas array of variables to  output.
+
+        - the default full pandas array, with cskin=0 gust=0, is
+          out_var = ("tau", "sensible", "latent", "monob", "cd", "cd10n", "ct", "ct10n",
+          "cq", "cq10n", "tsrv", "tsr", "qsr", "usr", "psim", "psit", "psiq",
+          "psim_ref", "psit_ref", "psiq_ref", "u10n", "t10n", "q10n", "zo",
+          "zot", "zoq", "uref", "tref", "qref", "qair", "qsea", "Rb", "rh",
+          "rho", "cp", "lv", "theta", "itera")
+        - the "limited" pandas array is
+          out_var = ("tau", "sensible", "latent", "uref", "tref", "qref")
+        - the user can define a custom pandas array of variables to output.
     L : str
        Monin-Obukhov length definition options
-       "tsrv"  : default
-       "Rb" : following ecmwf (IFS Documentation cy46r1)
+
+       - "tsrv"  : default
+       - "Rb" : following ecmwf (IFS Documentation cy46r1)
 
     Returns
     -------
-    res : array that contains
+    res : pandas.DataFrame
+        Containing the following columns
+
         1. momentum flux       [N/m^2]
         2. sensible heat       [W/m^2]
         3. latent heat         [W/m^2]

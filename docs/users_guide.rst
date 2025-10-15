@@ -146,6 +146,15 @@ This section provides a description of the sub-routines that can be called from 
 .. automodule:: AirSeaFluxCode.hum_subs
    :members:
 
+Height Sub-Routines
+=====================
+
+This section provides a description of the sub-routines that can be called from the
+:code:`height_subs` module.
+
+.. automodule:: AirSeaFluxCode.height_subs
+   :members:
+
 Utility Sub-Routines
 ====================
 
