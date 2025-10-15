@@ -63,7 +63,7 @@ from .util_subs import (
     get_outvars,
     rho_air,
 )
-from height_subs import adjust_humidity, adjust_temperature, adjust_wind_speed
+from .height_subs import adjust_humidity, adjust_temperature, adjust_wind_speed
 
 __all__ = [
     "AirSeaFluxCode",
