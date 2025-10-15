@@ -14,6 +14,7 @@
 
 """Humidity Sub-routines"""
 
+from typing import Tuple
 import numpy as np
 import warnings
 
@@ -21,7 +22,7 @@ from .qsat import qsat_air, qsat_sea
 from ..util_subs import CtoK
 
 
-def get_hum(hum, T, sst, P, qmeth):
+def get_hum(hum, T, sst, P, qmeth) -> Tuple[np.ndarray, np.ndarray]:
     """
     Get specific humidity output.
 

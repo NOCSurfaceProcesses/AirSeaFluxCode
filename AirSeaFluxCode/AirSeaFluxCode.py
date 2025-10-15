@@ -41,6 +41,7 @@ from .flux_subs import (
     psim_calc,
     psit_calc,
 )
+from .height_subs import adjust_humidity, adjust_temperature, adjust_wind_speed
 from .hum_subs import get_hum, gamma
 from .util_subs import get_outvars, get_heights, gc, set_flag, kappa, CtoK
 
@@ -603,48 +604,58 @@ class S88:
             self.u10n = self.wind - self.usr / kappa * (
                 np.log(self.h_in[0] / self.ref10) - self.psim
             )
-            self.uref = self.wind - self.usr / kappa * (
-                np.log(self.h_in[0] / self.h_out[0])
-                - self.psim
-                + psim_calc(self.h_out[0] / self.monob, self.meth)
+            self.uref = adjust_wind_speed(
+                self.wind,
+                self.usr,
+                self.h_in[0],
+                self.h_out[0],
+                self.monob,
+                self.meth,
             )
         elif self.gust[0] == 5:
             self.u10n = self.spd - self.usr / kappa * (
                 np.log(self.h_in[0] / self.ref10) - self.psim
             )
-            self.uref = self.spd - self.usr / kappa * (
-                np.log(self.h_in[0] / self.h_out[0])
-                - self.psim
-                + psim_calc(self.h_out[0] / self.monob, self.meth)
+            self.uref = adjust_wind_speed(
+                self.spd,
+                self.usr,
+                self.h_in[0],
+                self.h_out[0],
+                self.monob,
+                self.meth,
             )
         else:
             self.u10n = self.spd - self.usr / kappa / self.GFo * (
                 np.log(self.h_in[0] / self.ref10) - self.psim
             )  # C.4-7
-            self.uref = self.spd - self.usr / kappa / self.GFo * (
-                np.log(self.h_in[0] / self.h_out[0])
-                - self.psim
-                + psim_calc(self.h_out[0] / self.monob, self.meth)
+            self.uref = adjust_wind_speed(
+                self.spd,
+                self.usr / self.GFo,
+                self.h_in[0],
+                self.h_out[0],
+                self.monob,
+                self.meth,
             )
 
         self.GustFact = self.wind / self.spd
         self.usr_gust = np.copy(self.usr)
         # include lapse rate adjustment as theta is well-mixed
-        self.tref = (
-            self.theta
-            - self.tlapse * self.h_out[1]
-            - self.tsr
-            / kappa
-            * (
-                np.log(self.h_in[1] / self.h_out[1])
-                - self.psit
-                + psit_calc(self.h_out[1] / self.monob, self.meth)
-            )
+        self.tref = adjust_temperature(
+            self.theta,
+            self.tsr,
+            self.h_in[1],
+            self.h_out[1],
+            self.monob,
+            self.tlapse,
+            self.meth,
         )
-        self.qref = self.qair - self.qsr / kappa * (
-            np.log(self.h_in[2] / self.h_out[2])
-            - self.psiq
-            + psit_calc(self.h_out[2] / self.monob, self.meth)
+        self.qref = adjust_humidity(
+            self.qair,
+            self.qsr,
+            self.h_in[2],
+            self.h_out[2],
+            self.monob,
+            self.meth,
         )
         self.psim_ref = psim_calc(self.h_out[0] / self.monob, self.meth)
         self.psit_ref = psit_calc(self.h_out[1] / self.monob, self.meth)
