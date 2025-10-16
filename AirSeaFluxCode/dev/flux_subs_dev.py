@@ -725,7 +725,7 @@ def apply_GF(gust, spd, wind, step):
         # remove effect of gustiness  from TSFs
         # here it is a 3xspd.shape array
         GustFact = np.ones([3, spd.shape[0]], dtype=float)
-        # GustFact = np.empty([3, spd.shape[0]], dtype=float)*np.nan
+        # GustFact = np.full([3, spd.shape[0]], fill_value=np.nan, dtype=float)
         GustFact[0, :] = wind/spd
         GustFact[1:3, :] = wind*0+1
         # following Fairall et al. (2003)
