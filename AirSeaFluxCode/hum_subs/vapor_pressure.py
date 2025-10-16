@@ -17,7 +17,12 @@
 import numpy as np
 
 
-def VaporPressure(temp: np.ndarray, P, phase, meth):
+def VaporPressure(
+    temp: np.ndarray,
+    P: np.ndarray,
+    phase: str,
+    meth: str,
+):
     """
     Calculate the saturation vapor pressure.
 
@@ -36,6 +41,8 @@ def VaporPressure(temp: np.ndarray, P, phase, meth):
     ----------
     temp : float
         Temperature [C]
+    P : float,
+        Pressure [hPa]
     phase : str
         'liquid' : Calculate vapor pressure over liquid water or
         'ice' : Calculate vapor pressure over ice
@@ -61,7 +68,6 @@ def VaporPressure(temp: np.ndarray, P, phase, meth):
     P : float
         Saturation vapor pressure [hPa]
     """
-    Psat = np.zeros(temp.size) * np.nan
     if np.nanmin(temp) > 200:  # if Ta in Kelvin convert to Celsius
         temp = temp - 273.16
     T = np.copy(temp) + 273.16  # Most formulas use T in [K]
@@ -72,8 +78,8 @@ def VaporPressure(temp: np.ndarray, P, phase, meth):
     elif phase == "ice":
         # Calculate saturation pressure over ice ----------------------------------
         return _vp_ice(meth, T, temp, P)
-
-    return Psat
+    else:
+        raise ValueError("Unknown phase, expected one of 'liquid', 'ice'")
 
 
 def _vp_liquid(meth, T, temp, P):  # noqa: C901
