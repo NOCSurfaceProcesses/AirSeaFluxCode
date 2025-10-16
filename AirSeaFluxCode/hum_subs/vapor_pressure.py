@@ -14,8 +14,10 @@
 
 import numpy as np
 
+from ..util_subs.utils import CtoK
 
-def VaporPressure(temp, P, phase, meth):
+
+def VaporPressure(T, P, phase, meth):
     """
     Calculate the saturation vapor pressure.
 
@@ -32,8 +34,8 @@ def VaporPressure(temp, P, phase, meth):
 
     Parameters
     ----------
-    temp : float
-        Temperature [C]
+    T : float
+        Temperature [K]
     phase : str
         'liquid' : Calculate vapor pressure over liquid water or
         'ice' : Calculate vapor pressure over ice
@@ -59,10 +61,9 @@ def VaporPressure(temp, P, phase, meth):
     P : float
         Saturation vapor pressure [hPa]
     """
-    Psat = np.zeros(temp.size)*np.nan
-    if np.nanmin(temp) > 200:  # if Ta in Kelvin convert to Celsius
-        temp = temp-273.16
-    T = np.copy(temp)+273.16  # Most formulas use T in [K]
+    Psat = np.zeros(T.size)*np.nan
+    # Some methods require Celsius
+    T_c = T-CtoK
     #  Formulas using [C] use the variable temp
     #  Calculate saturation pressure over liquid water
     if phase == 'liquid':
@@ -122,21 +123,21 @@ def VaporPressure(temp, P, phase, meth):
             """Source: Murray, F. W., On the computation of \
                          saturation vapor pressure, J. Appl. Meteorol., \
                          6, 203-204, 1967."""
-            Psat = np.power(10, 7.5*(temp)/(temp+237.5)+0.7858)
+            Psat = np.power(10, 7.5*(T_c)/(T_c+237.5)+0.7858)
             # Murray quotes this as the original formula and
-            Psat = 6.1078*np.exp(17.269388*temp/(temp+237.3))
+            Psat = 6.1078*np.exp(17.269388*T_c/(T_c+237.3))
             # this as the mathematical aquivalent in the form of base e.
         elif meth == 'Buck':
             """Bucks vapor pressure formulation based on Tetens formula.
             Source: Buck, A. L., New equations for computing vapor pressure and
             enhancement factor, J. Appl. Meteorol., 20, 1527-1532, 1981."""
-            Psat = (6.1121*np.exp(17.502*temp/(240.97+temp)) *
+            Psat = (6.1121*np.exp(17.502*T_c/(240.97+T_c)) *
                     (1.0007+(3.46e-6*P)))
         elif meth == 'Buck2':
             """Bucks vapor pressure formulation based on Tetens formula.
             Source: Buck Research, Model CR-1A Hygrometer Operating Manual,
             May 2012"""
-            Psat = (6.1121*np.exp((18.678-(temp)/234.5)*(temp)/(257.14+temp)) *
+            Psat = (6.1121*np.exp((18.678-(T_c)/234.5)*(T_c)/(257.14+T_c)) *
                     (1+1e-4*(7.2+P*(0.0320)+5.9e-6*np.power(T, 2))))
         elif meth == 'WMO':
             """Intended WMO formulation, originally published by Goff (1957)
@@ -153,7 +154,7 @@ def VaporPressure(temp, P, phase, meth):
                             0.78614)
         elif meth == 'WMO2018':
             """WMO 2018 edition. Annex 4.B, eq. 4.B.1, 4.B.2, 4.B.5 """
-            Psat = 6.112*np.exp(17.62*temp/(243.12+temp))*(1.0016+3.15e-6*P -
+            Psat = 6.112*np.exp(17.62*T_c/(243.12+T_c))*(1.0016+3.15e-6*P -
                                                            0.074/P)
         elif meth == 'Sonntag':
             """Source: Sonntag, D., Advancements in the field of hygrometry,
@@ -165,7 +166,7 @@ def VaporPressure(temp, P, phase, meth):
             """Source: Bolton, D., The computation of equivalent potential
             temperature, Monthly Weather Report, 108, 1046-1053, 1980.
             equation (10)"""
-            Psat = 6.112*np.exp(17.67*temp/(temp+243.5))
+            Psat = 6.112*np.exp(17.67*T_c/(T_c+243.5))
         elif meth == 'IAPWS':
             """Source: Wagner W. and A. Pruss (2002), The IAPWS formulation
             1995 for the thermodynamic properties of ordinary water substance
@@ -238,7 +239,7 @@ def VaporPressure(temp, P, phase, meth):
         elif meth == 'MagnusTetens':
             """Source: Murray, F. W., On the computation of saturation vapor
             pressure, J. Appl. Meteorol., 6, 203-204, 1967."""
-            Psat = np.power(10, 9.5*temp/(265.5+temp)+0.7858)
+            Psat = np.power(10, 9.5*T_c/(265.5+T_c)+0.7858)
             #  Murray quotes this as the original formula and
             Psat = 6.1078*np.exp(21.8745584*(T-273.16)/(T-7.66))
             # this as the mathematical aquivalent in the form of base e.
@@ -246,19 +247,19 @@ def VaporPressure(temp, P, phase, meth):
             """Bucks vapor pressure formulation based on Tetens formula.
             Source: Buck, A. L., New equations for computing vapor pressure and
             enhancement factor, J. Appl. Meteorol., 20, 1527-1532, 1981."""
-            Psat = (6.1115*np.exp(22.452*temp/(272.55+temp)) *
+            Psat = (6.1115*np.exp(22.452*T_c/(272.55+T_c)) *
                     (1.0003+(4.18e-6*P)))
         elif meth == 'Buck2':
             """Bucks vapor pressure formulation based on Tetens formula.
             Source: Buck Research, Model CR-1A Hygrometer Operating Manual,
             Sep 2001"""
-            Psat = (6.1115*np.exp((23.036-temp/333.7)*temp/(279.82+temp)) *
+            Psat = (6.1115*np.exp((23.036-T_c/333.7)*T_c/(279.82+T_c)) *
                     (1+1e-4*(2.2+P*(0.0383+6.4e-6*np.power(T, 2)))))
         elif meth == 'CIMO':
             """Source: Annex 4B, Guide to Meteorological Instruments and
             Methods of Observation, WMO Publication No 8, 7th edition, Geneva,
             2008. (CIMO Guide)"""
-            Psat = (6.112*np.exp(22.46*temp/(272.62+temp)) *
+            Psat = (6.112*np.exp(22.46*T_c/(272.62+T_c)) *
                     (1.0016+3.15e-6*P-0.074/P))
         elif meth in ('WMO', 'WMO2000'):
             """There is no typo issue in the WMO formulations for ice.
@@ -282,7 +283,7 @@ def VaporPressure(temp, P, phase, meth):
                           0.00728332*T)/100
 
         # s = np.where(temp > 0)
-        if np.where(temp > 0).size[0] >= 1:
+        if np.where(T_c > 0).size[0] >= 1:
             """Independent of the formula used for ice, use Hyland Wexler
             (water) for temperatures above freezing (see above).
             Source Hyland, R. W. and A. Wexler, Formulations for the
@@ -292,6 +293,6 @@ def VaporPressure(temp, P, phase, meth):
                             0.41764768e-4*np.power(T, 2) -
                             0.14452093e-7*np.power(T, 3) +
                             0.65459673e1*np.log(T))/100
-            Psat[np.where(temp > 0)] = Psat_w[np.where(temp > 0)]
+            Psat[np.where(T_c > 0)] = Psat_w[np.where(T_c > 0)]
 
     return Psat

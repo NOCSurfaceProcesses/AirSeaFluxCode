@@ -410,11 +410,9 @@ class S88:
             self.rh = self.hum[1]
         elif self.hum[0] == 'Td':
             Td = self.hum[1]  # dew point temperature (K)
-            Td = np.where(Td < 200, np.copy(Td)+CtoK, np.copy(Td))
-            T = np.where(self.T < 200, np.copy(self.T)+CtoK, np.copy(self.T))
             # T = np.copy(self.T)
             esd = 611.21*np.exp(17.502*((Td-CtoK)/(Td-32.19)))
-            es = 611.21*np.exp(17.502*((T-CtoK)/(T-32.19)))
+            es = 611.21*np.exp(17.502*((self.T-CtoK)/(self.T-32.19)))
             self.rh = 100*esd/es
         elif self.hum[0] == "q":
             es = 611.21*np.exp(17.502*((self.T-CtoK)/(self.T-32.19)))
@@ -572,16 +570,16 @@ class S88:
             else:
                 assert SST_fl == "skin", "input SST should be skin for method "+self.meth
         self.L = "tsrv" if L is None else L
+        self.T = T
+        self.SST = SST
         self.arr_shp = spd.shape
         self.nlen = len(spd)
         self.spd = spd
         if self.meth == "NCAR":
             self.spd = np.maximum(np.copy(self.spd), 0.5)
-        self.T = np.where(T < 200, np.copy(T)+CtoK, np.copy(T))
         # if self.meth in ["NCAR", "ecmwf"]:
         #     self.T = np.maximum(self.T, 180)
         self.hum = ['no', np.full(SST.shape, 80)] if hum is None else hum
-        self.SST = np.where(SST < 200, np.copy(SST)+CtoK, np.copy(SST))
         self.lat = np.full(self.arr_shp, 45) if lat is None else lat
         self.grav = gc(self.lat)
         self.P = np.full(self.nlen, 1013) if P is None else P
@@ -683,7 +681,7 @@ class ecmwf(C30):
 def AirSeaFluxCode_dev(spd, T, SST, SST_fl, meth, lat=None, hum=None, P=None,
                        hin=18, hout=10, Rl=None, Rs=None, cskin=0, skin=None,
                        wl=0, gust=None, qmeth="Buck2", tol=None, maxiter=10,
-                       out=0, out_var=None, L=None):
+                       out=0, out_var=None, L=None, force_kelvin: bool = True):
     """
     Calculate turbulent surface fluxes using different parameterizations.
 
@@ -774,6 +772,8 @@ def AirSeaFluxCode_dev(spd, T, SST, SST_fl, meth, lat=None, hum=None, P=None,
            Monin-Obukhov length definition options
            "tsrv"  : default
            "Rb" : following ecmwf (IFS Documentation cy46r1)
+        force_kelvin : bool
+            Force temperature conversion to Kelvin if SST or T values are < 200
 
     Returns
     -------
@@ -839,6 +839,12 @@ def AirSeaFluxCode_dev(spd, T, SST, SST_fl, meth, lat=None, hum=None, P=None,
     2021 / Simplified by E. Kent
     2024 / Units corrected by J. Siddons
     """
+    if force_kelvin:
+        SST = np.where(SST < 200, SST + CtoK, SST)
+        T = np.where(T < 200, T + CtoK, T)
+        if hum is not None and hum[0] == "Td":
+            hum[1] = np.where(hum[1] < 200, hum[1] + CtoK, hum[1])
+
     logging.basicConfig(filename='flux_calc.log', filemode="w",
                         format='%(asctime)s %(message)s', level=logging.INFO)
     logging.captureWarnings(True)

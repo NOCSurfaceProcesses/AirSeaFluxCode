@@ -68,10 +68,8 @@ def get_hum(hum, T, sst, P, qmeth):
         qsea = qsat_sea(sst, P, qmeth)  # surface water q [g/kg]
     elif hum[0] == 'Td':
         Td = hum[1]  # dew point temperature (K)
-        Td = np.where(Td < 200, np.copy(Td)+CtoK, np.copy(Td))
-        T = np.where(T < 200, np.copy(T)+CtoK, np.copy(T))
-        esd = 611.21*np.exp(17.502*((Td-273.16)/(Td-32.19)))
-        es = 611.21*np.exp(17.502*((T-273.16)/(T-32.19)))
+        esd = 611.21*np.exp(17.502*((Td-CtoK)/(Td-32.19)))
+        es = 611.21*np.exp(17.502*((T-CtoK)/(T-32.19)))
         RH = 100*esd/es
         qair = qsat_air(T, P, RH, qmeth)  # q of air [g/kg]
         qsea = qsat_sea(sst, P, qmeth)    # surface water q [g/kg]
@@ -107,10 +105,6 @@ def gamma(opt, sst, t, q, cp):
 
     """
     q = np.copy(q) / 1000  # convert to [kg/kg]
-    if np.nanmin(sst) < 200:  # if sst in Celsius convert to Kelvin
-        sst = sst+CtoK
-    if np.nanmin(t) < 200:  # if t in Celsius convert to Kelvin
-        t = t+CtoK
     if opt == "moist":
         t = np.maximum(t, 180)
         q = np.maximum(q,  1e-6)

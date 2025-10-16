@@ -54,8 +54,6 @@ def wl_ecmwf(rho, Rs, Rnl, cp, lv, usr, tsr, qsr, sst, skt, dtc, grav):
         warm layer correction       [K]
 
     """
-    if np.nanmin(sst) < 200:  # if sst in Celsius convert to Kelvin
-        sst = sst+CtoK
     rhow, cpw, visw, rd0 = 1025, 4190, 1e-6, 3
     Rns = 0.945*Rs
     #  Previous value of dT / warm-layer, adapted to depth:

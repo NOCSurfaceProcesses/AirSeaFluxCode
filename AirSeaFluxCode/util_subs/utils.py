@@ -95,7 +95,7 @@ def visc_air(T):
     Parameters
     ----------
     Ta : float
-        air temperature [$^\circ$\,C]
+        air temperature [K]
 
     Returns
     -------
@@ -103,10 +103,9 @@ def visc_air(T):
         kinematic viscosity [m^2/s]
     """
     T = np.asarray(T)
-    if (np.nanmin(T) > 200):  # if Ta in Kelvin convert to Celsius
-        T = T-273.16
-    visa = 1.326e-5*(1+6.542e-3*T+8.301e-6*np.power(T, 2) -
-                     4.84e-9*np.power(T, 3))
+    T_c = T-CtoK  # Need Celsius (note this was -273.16)
+    visa = 1.326e-5*(1+6.542e-3*T_c+8.301e-6*np.power(T_c, 2) -
+                     4.84e-9*np.power(T_c, 3))
     return visa
 # ---------------------------------------------------------------------
 

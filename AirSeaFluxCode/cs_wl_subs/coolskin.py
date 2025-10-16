@@ -57,8 +57,8 @@ def cs(sst, d, rho, Rs, Rnl, cp, lv, usr, tsr, qsr, grav, opt):
         cool skin thickness           [m]
     """
     # coded following Saunders (1967) with lambda = 6
-    if (np.nanmin(sst) > 200):  # if sst in Kelvin convert to Celsius
-        sst = sst-CtoK
+    # Need temperature in Celsius
+    sst_c = sst-CtoK
     # ************  cool skin constants  *******
     # density of water, specific heat capacity of water, water viscosity,
     # thermal conductivity of water
@@ -69,7 +69,7 @@ def cs(sst, d, rho, Rs, Rnl, cp, lv, usr, tsr, qsr, grav, opt):
     Qnsol = shf+lhf+Rnl
     if opt == "C35":
         cpw = 4000
-        aw = 2.1e-5*np.power(sst+3.2, 0.79)
+        aw = 2.1e-5*np.power(sst_c+3.2, 0.79)
         # d = delta(aw, Qnsol, usr, grav, rho, opt)
         fs = 0.065+11*d-6.6e-5/d*(1-np.exp(-d/8.0e-4))  # eq. 17 F96
         # in F96 first term in eq. 17 is 0.137 insted of 0.065
@@ -77,7 +77,8 @@ def cs(sst, d, rho, Rs, Rnl, cp, lv, usr, tsr, qsr, grav, opt):
         Qb = aw*Q+0.026*np.minimum(lhf, 0)*cpw/lv  # eq. 8 F96
         d = delta(aw, Qb, usr, grav)
     elif opt == "ecmwf":
-        aw = np.maximum(1e-5, 1e-5*(sst-CtoK))
+        # aw = np.maximum(1e-5, 1e-5*(sst-CtoK))
+        aw = np.maximum(1e-5, 1e-5*sst_c)
         # d = delta(aw, Qnsol, usr, grav, rho, opt)
         for jc in range(4):
             # fraction of the solar radiation absorbed in layer delta eq. 8.153
@@ -131,13 +132,13 @@ def cs_C35(sst, rho, Rs, Rnl, cp, lv, delta, usr, tsr, qsr, grav):
         cool skin thickness           [m]
     """
     # coded following Saunders (1967) with lambda = 6
-    if np.nanmin(sst) > 200:  # if sst in Kelvin convert to Celsius
-        sst = sst-CtoK
+    # Need sst in Celsius
+    sst_c = sst-CtoK
     # ************  cool skin constants  *******
     # density of water, specific heat capacity of water, water viscosity,
     # thermal conductivity of water
     rhow, cpw, visw, tcw = 1022, 4000, 1e-6, 0.6
-    aw = 2.1e-5*np.power(np.maximum(sst+3.2, 0), 0.79)
+    aw = 2.1e-5*np.power(np.maximum(sst_c+3.2, 0), 0.79)
     bigc = 16*grav*cpw*np.power(rhow*visw, 3)/(np.power(tcw, 2)*np.power(
         rho, 2))
     Rns = 0.945*Rs  # albedo correction
@@ -147,7 +148,7 @@ def cs_C35(sst, rho, Rs, Rnl, cp, lv, delta, usr, tsr, qsr, grav):
     fs = 0.065+11*delta-6.6e-5/delta*(1-np.exp(-delta/8.0e-4))
     Q = Qnsol+Rns*fs
     Qb = aw*Q+0.026*np.minimum(lhf, 0)*cpw/lv
-    xlamx = 6*np.ones(sst.shape)
+    xlamx = 6*np.ones(sst_c.shape)
     xlamx = np.where(Qb > 0, 6, 6/(1+(bigc*np.abs(Qb)/usr**4)**0.75)**0.333)
     delta = np.where(
         Qb > 0, np.minimum(xlamx*visw/(np.sqrt(rho/rhow)*usr), 0.01),
@@ -190,8 +191,6 @@ def cs_ecmwf(rho, Rs, Rnl, cp, lv, usr, tsr, qsr, sst, grav):
         cool skin temperature correction [K]
 
     """
-    if np.nanmin(sst) < 200:  # if sst in Celsius convert to Kelvin
-        sst = sst+CtoK
     aw = np.maximum(1e-5, 1e-5*(sst-CtoK))
     Rns = 0.945*Rs  # (net solar radiation (albedo correction)
     shf = rho*cp*usr*tsr
