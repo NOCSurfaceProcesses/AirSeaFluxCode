@@ -11,9 +11,8 @@ def test_toy_asfc() -> None:
     # TEST: Simple test to check that the main process runs
     data_path = os.path.join(asfc.__base__, "..", "Test_Data", "data_all.csv")
     inDt = pd.read_csv(data_path)
+    n = len(inDt)
 
-    date = np.asarray(inDt["Date"])
-    # lon = np.asarray(inDt["Longitude"])
     lat = np.asarray(inDt["Latitude"])
     spd = np.asarray(inDt["Wind speed"])
     t = np.asarray(inDt["Air temperature"])
@@ -45,4 +44,4 @@ def test_toy_asfc() -> None:
     )
 
     assert isinstance(res, pd.DataFrame)
-    assert res.shape[0] == len(date)
+    assert res.shape[0] == n

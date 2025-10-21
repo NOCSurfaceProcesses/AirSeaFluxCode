@@ -15,7 +15,7 @@ from AirSeaFluxCode.height_subs import (
 def test_height_adjustment() -> None:
     # TEST: Simple test to check that the main process runs
     data_path = os.path.join(asfc.__base__, "..", "Test_Data", "data_all.csv")
-    inDt = pd.read_csv(data_path, nrows=10)
+    inDt = pd.read_csv(data_path, nrows=100)
 
     hin = 5
     hout = 25
@@ -29,9 +29,7 @@ def test_height_adjustment() -> None:
     rh = np.asarray(inDt["RH"])
     p = np.asarray(inDt["P"])
     sw = np.asarray(inDt["Rs"])
-    hu = np.asarray(inDt["zu"])
-    ht = np.asarray(inDt["zt"])
-    del hu, ht, inDt
+    del inDt
     outvar = (
         "tau",
         "sensible",
@@ -71,16 +69,18 @@ def test_height_adjustment() -> None:
     q_in = res.loc[:, "qref"]
 
     # Adjust to 5m
-    t5 = adjust_temperature(t_in, monob=monob, tsr=tstr, h_in=hout, h_out=hin)
-    u5 = adjust_wind_speed(u_in, monob=monob, usr=ustr, h_in=hout, h_out=hin)
-    q5 = adjust_humidity(q_in, monob=monob, qsr=qstr, h_in=hout, h_out=hin)
+    t5 = adjust_temperature(
+        t_in, monob=monob, tsr=tstr, h_in=hout, h_out=hin, meth="UA"
+    )
+    u5 = adjust_wind_speed(u_in, monob=monob, usr=ustr, h_in=hout, h_out=hin, meth="UA")
+    q5 = adjust_humidity(q_in, monob=monob, qsr=qstr, h_in=hout, h_out=hin, meth="UA")
 
     # Readjust to 25m
-    t25 = adjust_temperature(t5, monob=monob, tsr=tstr, h_in=hin, h_out=hout)
-    u25 = adjust_wind_speed(u5, monob=monob, usr=ustr, h_in=hin, h_out=hout)
-    q25 = adjust_humidity(q5, monob=monob, qsr=qstr, h_in=hin, h_out=hout)
+    t25 = adjust_temperature(t5, monob=monob, tsr=tstr, h_in=hin, h_out=hout, meth="UA")
+    u25 = adjust_wind_speed(u5, monob=monob, usr=ustr, h_in=hin, h_out=hout, meth="UA")
+    q25 = adjust_humidity(q5, monob=monob, qsr=qstr, h_in=hin, h_out=hout, meth="UA")
 
-    # Test is original
+    # TEST: is same as generated test input
     assert np.allclose(t25, t_in)
     assert np.allclose(u25, u_in)
     assert np.allclose(q25, q_in)
