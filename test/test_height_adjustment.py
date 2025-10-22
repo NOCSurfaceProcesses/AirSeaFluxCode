@@ -12,75 +12,100 @@ from AirSeaFluxCode.height_subs import (
 )
 
 
-def test_height_adjustment() -> None:
+DATA_PATH = os.path.join(asfc.__base__, "..", "Test_Data", "data_all.csv")
+DF = pd.read_csv(DATA_PATH, nrows=100)
+N = len(DF)
+OUTVAR = ("tau", "sensible", "latent", "u10n", "t10n", "q10n")
+LAT = np.asarray(DF["Latitude"])
+SPD = np.asarray(DF["Wind speed"])
+AT = np.asarray(DF["Air temperature"])
+SST = np.asarray(DF["SST"])
+RH = np.asarray(DF["RH"])
+P = np.asarray(DF["P"])
+SW = np.asarray(DF["Rs"])
+HU = np.asarray(DF["zu"])
+HT = np.asarray(DF["zt"])
+H_IN = np.array([HU, HT, HT])
+OUTVAR = (
+    "tau",
+    "sensible",
+    "latent",
+    "uref",
+    "tref",
+    "qref",
+    "tsr",
+    "usr",
+    "qsr",
+    "monob",
+)
+del HU, HT
+
+
+@pytest.mark.parametrize(
+    "hin, hout",
+    [
+        (5, 25),
+        (2, 100),
+        (15, 10),
+        (25, 2),
+    ],
+)
+def test_height_adjustment(hin, hout) -> None:
     # TEST: Simple test to check that the main process runs
-    data_path = os.path.join(asfc.__base__, "..", "Test_Data", "data_all.csv")
-    inDt = pd.read_csv(data_path, nrows=100)
 
-    hin = 5
-    hout = 25
+    # INFO: Generate an initial set of temperatures, speed, humidity with Monob and
+    #       Stars
 
-    # INFO: Generate an initial set of temperatures, speed, humidity at 25m
-    #       with Monob and Stars
-    lat = np.asarray(inDt["Latitude"])
-    spd = np.asarray(inDt["Wind speed"])
-    t = np.asarray(inDt["Air temperature"])
-    sst = np.asarray(inDt["SST"])
-    rh = np.asarray(inDt["RH"])
-    p = np.asarray(inDt["P"])
-    sw = np.asarray(inDt["Rs"])
-    del inDt
-    outvar = (
-        "tau",
-        "sensible",
-        "latent",
-        "uref",
-        "tref",
-        "qref",
-        "tsr",
-        "usr",
-        "qsr",
-        "monob",
-    )
     # run AirSeaFluxCode
     res = asfc.AirSeaFluxCode(
-        spd,
-        t,
-        sst,
+        SPD,
+        AT,
+        SST,
         "bulk",
         meth="UA",
-        lat=lat,
-        hin=hin,
-        hum=["rh", rh],
-        P=p,
+        lat=LAT,
+        hin=H_IN,
+        hout=hin,
+        hum=["rh", RH],
+        P=P,
         cskin=0,
-        Rs=sw,
+        Rs=SW,
         tol=["all", 0.01, 0.01, 1e-5, 1e-3, 0.1, 0.1],
         L="tsrv",
-        out_var=outvar,
+        out_var=OUTVAR,
     )
 
     monob = res.loc[:, "monob"]
-    ustr = res.loc[:, "usr"]
     tstr = res.loc[:, "tsr"]
+    ustr = res.loc[:, "usr"]
     qstr = res.loc[:, "qsr"]
-    u_in = res.loc[:, "uref"]
     t_in = res.loc[:, "tref"]
+    u_in = res.loc[:, "uref"]
     q_in = res.loc[:, "qref"]
 
-    # Adjust to 5m
-    t5 = adjust_temperature(
-        t_in, monob=monob, tsr=tstr, h_in=hout, h_out=hin, meth="UA"
+    # Adjust to h-out
+    t_out = adjust_temperature(
+        t_in, monob=monob, tsr=tstr, h_in=hin, h_out=hout, meth="UA"
     )
-    u5 = adjust_wind_speed(u_in, monob=monob, usr=ustr, h_in=hout, h_out=hin, meth="UA")
-    q5 = adjust_humidity(q_in, monob=monob, qsr=qstr, h_in=hout, h_out=hin, meth="UA")
+    u_out = adjust_wind_speed(
+        u_in, monob=monob, usr=ustr, h_in=hin, h_out=hout, meth="UA"
+    )
+    q_out = adjust_humidity(
+        q_in, monob=monob, qsr=qstr, h_in=hin, h_out=hout, meth="UA"
+    )
 
-    # Readjust to 25m
-    t25 = adjust_temperature(t5, monob=monob, tsr=tstr, h_in=hin, h_out=hout, meth="UA")
-    u25 = adjust_wind_speed(u5, monob=monob, usr=ustr, h_in=hin, h_out=hout, meth="UA")
-    q25 = adjust_humidity(q5, monob=monob, qsr=qstr, h_in=hin, h_out=hout, meth="UA")
+    # Readjust to h-in
+    t_test = adjust_temperature(
+        t_out, monob=monob, tsr=tstr, h_in=hout, h_out=hin, meth="UA"
+    )
+    u_test = adjust_wind_speed(
+        u_out, monob=monob, usr=ustr, h_in=hout, h_out=hin, meth="UA"
+    )
+    q_test = adjust_humidity(
+        q_out, monob=monob, qsr=qstr, h_in=hout, h_out=hin, meth="UA"
+    )
 
     # TEST: is same as generated test input
-    assert np.allclose(t25, t_in)
-    assert np.allclose(u25, u_in)
-    assert np.allclose(q25, q_in)
+    assert np.allclose(t_test, t_in)
+    assert np.allclose(u_test, u_in)
+    assert np.allclose(q_test, q_in)
