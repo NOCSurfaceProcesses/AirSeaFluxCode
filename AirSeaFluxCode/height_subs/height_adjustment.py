@@ -15,20 +15,21 @@
 """Height Adjustment functions."""
 
 import numpy as np
+from typing import Union
 
 from AirSeaFluxCode.util_subs import kappa
 from AirSeaFluxCode.flux_subs import psit_calc, psim_calc
 
 
 def adjust_temperature(
-    temp: np.ndarray | float,
-    tsr: np.ndarray | float,
-    h_in: np.ndarray | float,
-    h_out: np.ndarray | float,
-    monob: np.ndarray | float,
-    tlapse: np.ndarray | float = 0.0097611,
+    temp: Union[np.ndarray, float],
+    tsr: Union[np.ndarray, float],
+    h_in: Union[np.ndarray, float],
+    h_out: Union[np.ndarray, float],
+    monob: Union[np.ndarray, float],
+    tlapse: Union[np.ndarray, float] = 0.0097611,
     meth: str = "S80",
-) -> np.ndarray | float:
+) -> Union[np.ndarray, float]:
     """
     Estimate the air temperature at a target output height above the surface from a
     known air temperature at a known input height using a Monin-Obhukov length-scale.
@@ -76,13 +77,13 @@ def adjust_temperature(
 
 
 def adjust_wind_speed(
-    spd: np.ndarray | float,
-    usr: np.ndarray | float,
-    h_in: np.ndarray | float,
-    h_out: np.ndarray | float,
-    monob: np.ndarray | float,
+    spd: Union[np.ndarray, float],
+    usr: Union[np.ndarray, float],
+    h_in: Union[np.ndarray, float],
+    h_out: Union[np.ndarray, float],
+    monob: Union[np.ndarray, float],
     meth: str = "S80",
-) -> np.ndarray | float:
+) -> Union[np.ndarray, float]:
     """
     Estimate a wind-speed at a target output height above the surface from a
     known wind-speed at a known input height using a Monin-Obhukov length-scale.
@@ -116,13 +117,13 @@ def adjust_wind_speed(
 
 
 def adjust_humidity(
-    qair: np.ndarray | float,
-    qsr: np.ndarray | float,
-    h_in: np.ndarray | float,
-    h_out: np.ndarray | float,
-    monob: np.ndarray | float,
+    qair: Union[np.ndarray, float],
+    qsr: Union[np.ndarray, float],
+    h_in: Union[np.ndarray, float],
+    h_out: Union[np.ndarray, float],
+    monob: Union[np.ndarray, float],
     meth: str = "S80",
-) -> np.ndarray | float:
+) -> Union[np.ndarray, float]:
     """
     Estimate a specific humidity (of air) at a target output height above the surface
     from a known specific humidity (of air) at a known input height using a
