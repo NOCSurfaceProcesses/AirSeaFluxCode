@@ -12,11 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Humidity Module"""
+"""Height Adjustments"""
 
-from .vapor_pressure import VaporPressure
-from .qsat import qsat_air, qsat_sea
-from .humidity import gamma, get_hum
+from .height_adjustment import adjust_humidity, adjust_temperature, adjust_wind_speed
 
-
-__all__ = ["VaporPressure", "gamma", "get_hum", "qsat_air", "qsat_sea"]
+__all__ = [
+    "adjust_humidity",
+    "adjust_temperature",
+    "adjust_wind_speed",
+]

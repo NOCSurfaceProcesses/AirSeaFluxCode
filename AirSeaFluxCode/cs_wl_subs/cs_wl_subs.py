@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Coolskin and Warmlayer Subroutines"""
+
 import numpy as np
 from ..util_subs import CtoK
 
@@ -42,12 +44,11 @@ def delta(aw, Q, usr, grav):
     """
     rhow, visw, tcw = 1025, 1e-6, 0.6
     # u* in the water
-    usr_w = np.maximum(usr, 1e-4)*np.sqrt(1.2/rhow)  # rhoa=1.2
-    rcst_cs = 16*grav*np.power(visw, 3)/np.power(tcw, 2)
-    lm = 6*(1+(np.abs(Q)*aw*rcst_cs/np.power(usr_w, 4))**0.75)**(-1/3)
-    ztmp = visw/usr_w
-    delta = np.where(Q > 0, np.minimum(6*ztmp, 0.007),
-                     np.minimum(lm*ztmp, 0.007))
+    usr_w = np.maximum(usr, 1e-4) * np.sqrt(1.2 / rhow)  # rhoa=1.2
+    rcst_cs = 16 * grav * np.power(visw, 3) / np.power(tcw, 2)
+    lm = 6 * (1 + (np.abs(Q) * aw * rcst_cs / np.power(usr_w, 4)) ** 0.75) ** (-1 / 3)
+    ztmp = visw / usr_w
+    delta = np.where(Q > 0, np.minimum(6 * ztmp, 0.007), np.minimum(lm * ztmp, 0.007))
     return delta
 
 
@@ -73,7 +74,7 @@ def get_dqer(dter, sst, qsea, lv):
 
     """
     if np.nanmin(sst) < 200:  # if sst in Celsius convert to Kelvin
-        sst = sst+CtoK
-    wetc = 0.622*lv*qsea/(287.1*np.power(sst, 2))
-    dqer = wetc*dter
+        sst = sst + CtoK
+    wetc = 0.622 * lv * qsea / (287.1 * np.power(sst, 2))
+    dqer = wetc * dter
     return dqer

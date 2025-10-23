@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Gust Sub-routines"""
+
 import numpy as np
 
 
@@ -41,12 +43,14 @@ def get_gust(beta, zi, ustb, Ta, usr, tsrv, grav):
     ug : float        [m/s]
     """
     if np.nanmax(Ta) < 200:  # convert to K if in Celsius
-        Ta = Ta+273.16
+        Ta = Ta + 273.16
     # minus sign to allow cube root
-    Bf = (-grav/Ta)*usr*tsrv
-    ug = np.ones(np.shape(Ta))*ustb
-    ug = np.where(Bf > 0, np.maximum(beta*np.power(Bf*zi, 1/3), ustb), ustb)
+    Bf = (-grav / Ta) * usr * tsrv
+    ug = np.ones(np.shape(Ta)) * ustb
+    ug = np.where(Bf > 0, np.maximum(beta * np.power(Bf * zi, 1 / 3), ustb), ustb)
     return ug
+
+
 # ---------------------------------------------------------------------
 
 
@@ -85,24 +89,28 @@ def apply_GF(gust, spd, wind, step):
     # 3. GF=1, 4. UA,  5. C35 code 6. ecmwf aerobulk)
     # ratio of gusty to horizontal wind; gustiness factor
     if step in ["u"]:
-        GustFact = wind*0+1
+        GustFact = wind * 0 + 1
         if gust[0] in [1, 2]:
-            GustFact = np.sqrt(wind/spd)
+            GustFact = np.sqrt(wind / spd)
         elif gust[0] == 6:
             # as in C35 matlab code
-            GustFact = wind/spd
+            GustFact = wind / spd
     elif step == "TSF":
         # remove effect of gustiness  from TSFs
         # here it is a 3xspd.shape array
         GustFact = np.ones([3, spd.shape[0]], dtype=float)
-        GustFact[0, :] = wind/spd
-        GustFact[1:3, :] = wind*0+1
+        GustFact[0, :] = wind / spd
+        GustFact[1:3, :] = wind * 0 + 1
         # following Fairall et al. (2003)
         if gust[0] == 2:
             # usr is divided by (GustFact)^0.5 (here applied to sensible and
             # latent as well as tau)
-            GustFact[1:3, :] = np.sqrt(wind/spd)
+            GustFact[1:3, :] = np.sqrt(wind / spd)
         elif gust[0] == 3:
-            GustFact[0, :] = wind*0+1
+            GustFact[0, :] = wind * 0 + 1
+    else:
+        raise NotImplementedError(f"Gust not available for {step = }")
     return GustFact
+
+
 # ---------------------------------------------------------------------

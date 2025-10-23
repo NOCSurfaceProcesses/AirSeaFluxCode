@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Saturation Specific Humidity Sub-routines"""
+
 import numpy as np
 
 from .vapor_pressure import VaporPressure
@@ -38,11 +40,13 @@ def qsat_sea(T, P, qmeth):
     """
     T = np.asarray(T)
     if np.nanmin(T) > 200:  # if Ta in Kelvin convert to Celsius
-        T = T-CtoK
-    ex = VaporPressure(T, P, 'liquid', qmeth)
-    es = 0.98*ex  # reduction at sea surface
-    qs = 622*es/(P-0.378*es)
+        T = T - CtoK
+    ex = VaporPressure(T, P, "liquid", qmeth)
+    es = 0.98 * ex  # reduction at sea surface
+    qs = 622 * es / (P - 0.378 * es)
     return qs  # [g/kg]
+
+
 # -----------------------------------------------------------------------------
 
 
@@ -68,9 +72,11 @@ def qsat_air(T, P, rh, qmeth):
     """
     T = np.asarray(T)
     if np.nanmin(T) > 200:  # if Ta in Kelvin convert to Celsius
-        T = T-CtoK
-    es = VaporPressure(T, P, 'liquid', qmeth)
-    em = 0.01*rh*es
-    q = 622*em/(P-0.378*em)
+        T = T - CtoK
+    es = VaporPressure(T, P, "liquid", qmeth)
+    em = 0.01 * rh * es
+    q = 622 * em / (P - 0.378 * em)
     return q  # [g/kg]
+
+
 # -----------------------------------------------------------------------------
