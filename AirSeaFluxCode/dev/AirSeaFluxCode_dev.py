@@ -594,11 +594,8 @@ class S88:
             self.rh = self.hum[1]
         elif self.hum[0] == "Td":
             Td = self.hum[1]  # dew point temperature (K)
-            Td = np.where(Td < 200, np.copy(Td) + CtoK, np.copy(Td))
-            T = np.where(self.T < 200, np.copy(self.T) + CtoK, np.copy(self.T))
-            # T = np.copy(self.T)
             esd = 611.21 * np.exp(17.502 * ((Td - CtoK) / (Td - 32.19)))
-            es = 611.21 * np.exp(17.502 * ((T - CtoK) / (T - 32.19)))
+            es = 611.21 * np.exp(17.502 * ((self.T - CtoK) / (self.T - 32.19)))
             self.rh = 100 * esd / es
         elif self.hum[0] == "q":
             es = 611.21 * np.exp(17.502 * ((self.T - CtoK) / (self.T - 32.19)))
@@ -807,7 +804,17 @@ class S88:
             self.u10n = self.usr / kappa * np.log(self.ref10 / self.zo)
 
     def add_variables(
-        self, spd, T, SST, SST_fl, cskin=0, lat=None, hum=None, P=None, L=None
+        self,
+        spd,
+        T,
+        SST,
+        SST_fl,
+        cskin=0,
+        lat=None,
+        hum=None,
+        P=None,
+        L=None,
+        convert=True,
     ):
         """Add the mandatory variables"""
         if not all(isinstance(var, np.ndarray) for var in [spd, T, SST]):
@@ -820,11 +827,14 @@ class S88:
         self.spd = spd
         if self.meth == "NCAR":
             self.spd = np.maximum(np.copy(self.spd), 0.5)
-        self.T = np.where(T < 200, np.copy(T) + CtoK, np.copy(T))
-        # if self.meth in ["NCAR", "ecmwf"]:
-        #     self.T = np.maximum(self.T, 180)
+
+        self.T = T
+        self.SST = SST
         self.hum = ["no", np.full(SST.shape, 80)] if hum is None else hum
-        self.SST = np.where(SST < 200, np.copy(SST) + CtoK, np.copy(SST))
+
+        if convert:
+            self._convert_temperatures()
+
         self.lat = np.full(self.arr_shp, 45) if lat is None else lat
         self.grav = gc(self.lat)
         self.P = np.full(self.nlen, 1013) if P is None else P
@@ -833,6 +843,24 @@ class S88:
         self.msk = np.empty(SST.shape)
         self.msk = np.where(np.isnan(spd + T + SST), np.nan, 1)
         self.Rb = np.empty(SST.shape) * self.msk
+
+    def _convert_temperatures(self):
+        if np.nanmax(self.T) < 200:
+            warnings.warn("Maximum Air Temperature is < 200. Converting to Kelvin.")
+            self.T += CtoK
+
+        if np.nanmax(self.SST) < 200:
+            warnings.warn(
+                "Maximum Sea Surface Temperature is < 200. Converting to Kelvin."
+            )
+            self.SST += CtoK
+
+        if self.hum[0] == "Td" and np.nanmax(self.hum[1]) < 200:
+            warnings.warn(
+                "Maximum Dew Point Temperature is < 200. Converting to Kelvin."
+            )
+            # Convert Dew Point
+            self.hum[1] += CtoK
 
     def _validate_sst_fl(self, SST_fl, cskin):
         if self.meth in ["S80", "S88", "LP82", "YT96", "UA", "NCAR"]:
@@ -980,6 +1008,7 @@ def AirSeaFluxCode_dev(
     out=0,
     out_var=None,
     L=None,
+    convert=True,
 ):
     """
     Calculate turbulent surface fluxes using different parameterizations.
@@ -1054,9 +1083,9 @@ def AirSeaFluxCode_dev(
                   u10n, q10n or T10n out of limits to missing (default)
             set 1 to keep points
         out_var : str
-           optional. user can define pandas array of variables to be output.
-           the default full pandas array is :
-               out_var = ("tau", "sensible", "latent", "monob", "cd", "cd10n",
+            optional. user can define pandas array of variables to be output.
+            the default full pandas array is :
+                out_var = ("tau", "sensible", "latent", "monob", "cd", "cd10n",
                            "ct", "ct10n", "cq", "cq10n", "tsrv", "tsr", "qsr",
                            "usr", "psim", "psit", "psiq", "psim_ref", "psit_ref",
                            "psiq_ref", "u10n", "t10n", "q10n", "zo", "zot", "zoq",
@@ -1068,9 +1097,15 @@ def AirSeaFluxCode_dev(
                 out_var = ("tau", "sensible", "latent", "uref", "tref", "qref")
             the user can define a custom pandas array of variables to  output.
         L : str
-           Monin-Obukhov length definition options
-           "tsrv"  : default
-           "Rb" : following ecmwf (IFS Documentation cy46r1)
+            Monin-Obukhov length definition options
+            "tsrv"  : default
+            "Rb" : following ecmwf (IFS Documentation cy46r1)
+        convert : bool
+            Force conversion of temperatures to Kelvin. This conversion will
+            apply to T, SST, and hum inputs (if hum[0] is "Dt" indicating
+            dew-point temperature). Conversion will occur if the maximum value
+            in the arrays is < 200. Set to False to prevent conversion, it
+            will be assumed that all temperature input values are Kelvin.
 
     Returns
     -------
@@ -1146,7 +1181,18 @@ def AirSeaFluxCode_dev(
 
     iclass = globals()[meth]()
     iclass.add_gust(gust=gust)
-    iclass.add_variables(spd, T, SST, SST_fl, cskin=cskin, lat=lat, hum=hum, P=P, L=L)
+    iclass.add_variables(
+        spd,
+        T,
+        SST,
+        SST_fl,
+        cskin=cskin,
+        lat=lat,
+        hum=hum,
+        P=P,
+        L=L,
+        convert=convert,
+    )
     iclass.get_heights(hin, hout)
     iclass.get_specHumidity(qmeth=qmeth)
     iclass.set_coolskin_warmlayer(wl=wl, cskin=cskin, skin=skin, Rl=Rl, Rs=Rs)

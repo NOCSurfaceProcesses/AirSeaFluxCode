@@ -15,10 +15,11 @@
 """Vapor Pressure Sub-routines"""
 
 import numpy as np
+from ..util_subs import CtoK
 
 
 def VaporPressure(
-    temp: np.ndarray,
+    T: np.ndarray,
     P: np.ndarray,
     phase: str,
     meth: str,
@@ -39,8 +40,8 @@ def VaporPressure(
 
     Parameters
     ----------
-    temp : float
-        Temperature [C]
+    T : float
+        Temperature [K]
     P : float,
         Pressure [hPa]
     phase : str
@@ -68,21 +69,20 @@ def VaporPressure(
     P : float
         Saturation vapor pressure [hPa]
     """
-    if np.nanmin(temp) > 200:  # if Ta in Kelvin convert to Celsius
-        temp = temp - 273.16
-    T = np.copy(temp) + 273.16  # Most formulas use T in [K]
-    #  Formulas using [C] use the variable temp
+    # T is in Kelvin
+    T_Celsius = T - CtoK  # Some functions require Celsius
+    #  Formulas using [C] use the variable T_Celsius
     if phase == "liquid":
         #  Calculate saturation pressure over liquid water
-        return _vp_liquid(meth, T, temp, P)
+        return _vp_liquid(meth, T, T_Celsius, P)
     elif phase == "ice":
         # Calculate saturation pressure over ice ----------------------------------
-        return _vp_ice(meth, T, temp, P)
+        return _vp_ice(meth, T, T_Celsius, P)
     else:
         raise ValueError("Unknown phase, expected one of 'liquid', 'ice'")
 
 
-def _vp_liquid(meth, T, temp, P):  # noqa: C901
+def _vp_liquid(meth, T, T_Celsius, P):  # noqa: C901
     if meth in (["HylandWexler", ""]):
         """
         Source Hyland, R. W. and A. Wexler, Formulations for the
@@ -176,9 +176,9 @@ def _vp_liquid(meth, T, temp, P):  # noqa: C901
         Source: Murray, F. W., On the computation of saturation vapor pressure,
         J. Appl. Meteorol., 6, 203-204, 1967.
         """
-        Psat = np.power(10, 7.5 * (temp) / (temp + 237.5) + 0.7858)
+        Psat = np.power(10, 7.5 * (T_Celsius) / (T_Celsius + 237.5) + 0.7858)
         # Murray quotes this as the original formula and
-        Psat = 6.1078 * np.exp(17.269388 * temp / (temp + 237.3))
+        Psat = 6.1078 * np.exp(17.269388 * T_Celsius / (T_Celsius + 237.3))
         # this as the mathematical aquivalent in the form of base e.
     elif meth == "Buck":
         """
@@ -187,7 +187,9 @@ def _vp_liquid(meth, T, temp, P):  # noqa: C901
         enhancement factor, J. Appl. Meteorol., 20, 1527-1532, 1981.
         """
         Psat = (
-            6.1121 * np.exp(17.502 * temp / (240.97 + temp)) * (1.0007 + (3.46e-6 * P))
+            6.1121
+            * np.exp(17.502 * T_Celsius / (240.97 + T_Celsius))
+            * (1.0007 + (3.46e-6 * P))
         )
     elif meth == "Buck2":
         """
@@ -197,7 +199,9 @@ def _vp_liquid(meth, T, temp, P):  # noqa: C901
         """
         Psat = (
             6.1121
-            * np.exp((18.678 - (temp) / 234.5) * (temp) / (257.14 + temp))
+            * np.exp(
+                (18.678 - (T_Celsius) / 234.5) * (T_Celsius) / (257.14 + T_Celsius)
+            )
             * (1 + 1e-4 * (7.2 + P * (0.0320) + 5.9e-6 * np.power(T, 2)))
         )
     elif meth == "WMO":
@@ -224,7 +228,7 @@ def _vp_liquid(meth, T, temp, P):  # noqa: C901
         """WMO 2018 edition. Annex 4.B, eq. 4.B.1, 4.B.2, 4.B.5 """
         Psat = (
             6.112
-            * np.exp(17.62 * temp / (243.12 + temp))
+            * np.exp(17.62 * T_Celsius / (243.12 + T_Celsius))
             * (1.0016 + 3.15e-6 * P - 0.074 / P)
         )
     elif meth == "Sonntag":
@@ -245,7 +249,7 @@ def _vp_liquid(meth, T, temp, P):  # noqa: C901
         temperature, Monthly Weather Report, 108, 1046-1053, 1980.
         equation (10)
         """
-        Psat = 6.112 * np.exp(17.67 * temp / (temp + 243.5))
+        Psat = 6.112 * np.exp(17.67 * T_Celsius / (T_Celsius + 243.5))
     elif meth == "IAPWS":
         """
         Source: Wagner W. and A. Pruss (2002), The IAPWS formulation
@@ -295,7 +299,7 @@ def _vp_liquid(meth, T, temp, P):  # noqa: C901
     return Psat
 
 
-def _vp_ice(meth, T, temp: np.ndarray, P):  # noqa: C901
+def _vp_ice(meth, T, T_Celsius: np.ndarray, P):  # noqa: C901
     """
     Default uses Goff Gratch over ice. There is little ambiguity in the
     ice saturation curve. Goff Gratch is widely used.
@@ -383,9 +387,9 @@ def _vp_ice(meth, T, temp: np.ndarray, P):  # noqa: C901
         Source: Murray, F. W., On the computation of saturation vapor
         pressure, J. Appl. Meteorol., 6, 203-204, 1967.
         """
-        Psat = np.power(10, 9.5 * temp / (265.5 + temp) + 0.7858)
+        Psat = np.power(10, 9.5 * T_Celsius / (265.5 + T_Celsius) + 0.7858)
         #  Murray quotes this as the original formula and
-        Psat = 6.1078 * np.exp(21.8745584 * (T - 273.16) / (T - 7.66))
+        Psat = 6.1078 * np.exp(21.8745584 * (T - CtoK) / (T - 7.66))
         # this as the mathematical aquivalent in the form of base e.
     elif meth == "Buck":
         """
@@ -394,7 +398,9 @@ def _vp_ice(meth, T, temp: np.ndarray, P):  # noqa: C901
         enhancement factor, J. Appl. Meteorol., 20, 1527-1532, 1981.
         """
         Psat = (
-            6.1115 * np.exp(22.452 * temp / (272.55 + temp)) * (1.0003 + (4.18e-6 * P))
+            6.1115
+            * np.exp(22.452 * T_Celsius / (272.55 + T_Celsius))
+            * (1.0003 + (4.18e-6 * P))
         )
     elif meth == "Buck2":
         """
@@ -404,7 +410,7 @@ def _vp_ice(meth, T, temp: np.ndarray, P):  # noqa: C901
         """
         Psat = (
             6.1115
-            * np.exp((23.036 - temp / 333.7) * temp / (279.82 + temp))
+            * np.exp((23.036 - T_Celsius / 333.7) * T_Celsius / (279.82 + T_Celsius))
             * (1 + 1e-4 * (2.2 + P * (0.0383 + 6.4e-6 * np.power(T, 2))))
         )
     elif meth == "CIMO":
@@ -415,7 +421,7 @@ def _vp_ice(meth, T, temp: np.ndarray, P):  # noqa: C901
         """
         Psat = (
             6.112
-            * np.exp(22.46 * temp / (272.62 + temp))
+            * np.exp(22.46 * T_Celsius / (272.62 + T_Celsius))
             * (1.0016 + 3.15e-6 * P - 0.074 / P)
         )
     elif meth in ("WMO", "WMO2000"):
@@ -459,7 +465,7 @@ def _vp_ice(meth, T, temp: np.ndarray, P):  # noqa: C901
         raise ValueError("Invalid method for ice phase vaporpressure: {meth}")
 
     # s = np.where(temp > 0)
-    if np.where(temp > 0)[0].size >= 1:
+    if np.where(T_Celsius > 0)[0].size >= 1:
         """Independent of the formula used for ice, use Hyland Wexler
             (water) for temperatures above freezing (see above).
             Source Hyland, R. W. and A. Wexler, Formulations for the
@@ -476,6 +482,6 @@ def _vp_ice(meth, T, temp: np.ndarray, P):  # noqa: C901
             )
             / 100
         )
-        Psat[np.where(temp > 0)] = Psat_w[np.where(temp > 0)]
+        Psat[np.where(T_Celsius > 0)] = Psat_w[np.where(T_Celsius > 0)]
 
     return Psat

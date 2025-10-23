@@ -713,8 +713,6 @@ def get_gust_old(beta, Ta, usr, tsrv, zi, grav):
     -------
     ug : float        [m/s]
     """
-    if np.nanmax(Ta) < 200:  # convert to K if in Celsius
-        Ta = Ta + 273.16
     # minus sign to allow cube root
     Bf = (-grav / Ta) * usr * tsrv
     ug = np.ones(np.shape(Ta)) * 0.2
@@ -751,8 +749,6 @@ def get_gust(beta, zi, ustb, Ta, usr, tsrv, grav):
     -------
     ug : float        [m/s]
     """
-    if np.nanmax(Ta) < 200:  # convert to K if in Celsius
-        Ta = Ta + 273.16
     # minus sign to allow cube root
     Bf = (-grav / Ta) * usr * tsrv
     ug = np.ones(np.shape(Ta)) * ustb
