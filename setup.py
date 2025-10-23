@@ -1,39 +1,41 @@
+"""Setup"""
+
 from setuptools import setup, find_packages
 import pathlib
 
 here = pathlib.Path(__file__).parent.resolve()
 # Get the long description from the README file
-long_description = (here / 'README.md').read_text(encoding='utf-8')
+long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
-    name='AirSeaFluxCode',
-    version='1.2.0',
-    description='A package to compute turbulent surface fluxes',
+    name="AirSeaFluxCode",
+    version="1.2.0",
+    description="A package to compute turbulent surface fluxes",
     long_description=long_description,  # Optional
-    url='https://github.com/NOCSurfaceProcesses/AirSeaFluxCode',
-    author='Stavroula Biri',
-    author_email='sbiri@noc.ac.uk',
-    license='CCBY',
-    packages=find_packages(where=''),  # ['AirSeaFluxCode'],
-    install_requires=['pandas',
-                      'numpy',
-                      ],
-
+    url="https://github.com/NOCSurfaceProcesses/AirSeaFluxCode",
+    author="Stavroula Biri",
+    author_email="sbiri@noc.ac.uk",
+    license="CCBY",
+    packages=find_packages(where=""),  # ['AirSeaFluxCode'],
+    install_requires=[
+        "pandas",
+        "numpy",
+    ],
     classifiers=[
         # How mature is this project? Common values are
         #   3 - Alpha
         #   4 - Beta
         #   5 - Production/Stable
-        'Development Status :: 5 - Production/Stable',
-        'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: CCBY License',
-        'Operating System :: POSIX :: Linux',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
-        'Programming Language :: Python :: 3.12',
-        'Programming Language :: Python :: 3.13',
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: CCBY License",
+        "Operating System :: POSIX :: Linux",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
     ],
 )
 

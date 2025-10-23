@@ -1,0 +1,8 @@
+[codespell]
+# Ignore long base64 - e.g. images in notebooks
+ignore-words-list=fram,sentinal,pheonix,asii,sme,bu,ot,missings,buid,outputing,hel
+ignore-regex = [A-Za-z0-9+/]{100,}
+ignore-multiline-regex=codespell:ignore-begin.*codespell:ignore-end
+skip = ./docs/_build,./test/data
+count = true
+quiet-level = 3

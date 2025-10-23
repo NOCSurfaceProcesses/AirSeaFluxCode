@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Scales"""
+
 import numpy as np
 
 from .stratification import psim_calc, psit_calc
@@ -54,10 +56,14 @@ def get_Rb(grav, usr, hin_u, hin_t, tv, dtv, wind, monob, meth):
     # tvs = sst*(1+0.6077*qsea) # virtual SST
     # dtv = tv - tvs          # virtual air - sea temp. diff
     # adjust wind to t measurement height
-    uz = (wind-usr/kappa*(np.log(hin_u/hin_t)-psim_calc(hin_u/monob, meth) +
-                          psim_calc(hin_t/monob, meth)))
-    Rb = grav*dtv*hin_t/(tv*uz*uz)
+    uz = wind - usr / kappa * (
+        np.log(hin_u / hin_t)
+        - psim_calc(hin_u / monob, meth)
+        + psim_calc(hin_t / monob, meth)
+    )
+    Rb = grav * dtv * hin_t / (tv * uz * uz)
     return Rb
+
 
 # ---------------------------------------------------------------------
 
@@ -90,13 +96,22 @@ def get_LRb(Rb, hin_t, monob, zo, zot, meth):
         M-O length [m]
 
     """
-    zol = Rb*(np.power(
-        np.log((hin_t+zo)/zo)-psim_calc((hin_t+zo)/monob, meth) +
-        psim_calc(zo/monob, meth), 2)/(np.log((hin_t+zo)/zot) -
-                                       psit_calc((hin_t+zo)/monob, meth) +
-                                       psit_calc(zot/monob, meth)))
-    monob = hin_t/zol
+    zol = Rb * (
+        np.power(
+            np.log((hin_t + zo) / zo)
+            - psim_calc((hin_t + zo) / monob, meth)
+            + psim_calc(zo / monob, meth),
+            2,
+        )
+        / (
+            np.log((hin_t + zo) / zot)
+            - psit_calc((hin_t + zo) / monob, meth)
+            + psit_calc(zot / monob, meth)
+        )
+    )
+    monob = hin_t / zol
     return monob
+
 
 # ---------------------------------------------------------------------
 
@@ -122,8 +137,9 @@ def get_Ltsrv(tsrv, grav, tv, usr):
         M-O length [m]
 
     """
-    tsrv = np.maximum(np.abs(tsrv), 1e-9)*np.sign(tsrv)
-    monob = (np.power(usr, 2)*tv)/(grav*kappa*tsrv)
+    tsrv = np.maximum(np.abs(tsrv), 1e-9) * np.sign(tsrv)
+    monob = (np.power(usr, 2) * tv) / (grav * kappa * tsrv)
     return monob
+
 
 # ---------------------------------------------------------------------

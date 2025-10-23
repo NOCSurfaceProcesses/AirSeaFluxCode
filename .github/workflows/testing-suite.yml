@@ -1,0 +1,75 @@
+name: AirSeaFluxCode Testing Suite
+on:
+  push:
+    branches:
+      - "master"
+  pull_request:
+    branches:
+      - "*"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  test:
+    name: py${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash -l {0}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-latest"]
+        # Bookend python versions
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 1 # Fetch only current version
+      - name: Set environment variables
+        run: |
+          echo "UV_ENV_FILE=pyproject.toml" >> $GITHUB_ENV
+          echo "PYTHON_VERSION=${{ matrix.python-version }}" >> $GITHUB_ENV
+          echo "UV_CACHE_DIR=/tmp/.uv-cache" >> $GITHUB_ENV
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+          cache-local-path: ${{ env.UV_CACHE_DIR }}
+
+      - name: Restore uv cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.UV_CACHE_DIR }}
+          key: uv-${{ runner.os }}-${{runner.arch}}-py${{matrix.python-version}}-${{ hashFiles(env.UV_ENV_FILE) }}
+          restore-keys: |
+            uv-${{ runner.os }}-${{runner.arch}}-py${{matrix.python-version}}-${{ hashFiles(env.UV_ENV_FILE) }}
+            uv-${{ runner.os }}-${{runner.arch}}-py${{matrix.python-version}}
+
+      - name: Install AirSeaFluxCode
+        run: |
+          uv sync --extra test
+
+      - name: Version info
+        run: |
+          uv version
+          uv pip list
+
+      - name: Import AirSeaFluxCode toolbox
+        run: |
+          uv run python -c "import AirSeaFluxCode"
+
+      - name: Run tests
+        timeout-minutes: 10
+        run: uv run pytest test
+
+      - name: Minimise uv cache
+        run: uv cache prune --ci
