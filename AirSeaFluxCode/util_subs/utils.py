@@ -14,8 +14,16 @@
 
 """Utility Functions"""
 
+from warnings import warn
 import numpy as np
 from typing import List, Optional, Union
+
+
+class PossibleCelsiusWarning(Warning):
+    """A warning that some temperatures may be Celsius"""
+
+    pass
+
 
 CtoK = 273.16  # 273.15
 r""" Conversion factor for $^\circ\,$C to K """
@@ -106,7 +114,7 @@ def visc_air(T):
 
     Parameters
     ----------
-    Ta : float
+    T : float
         air temperature [K]
 
     Returns
@@ -115,6 +123,11 @@ def visc_air(T):
         kinematic viscosity [m^2/s]
     """
     # Ta is in Kelvin, convert to Celsius
+    if np.nanmin(T) < 200:
+        warn(
+            "(visc_air) - T assumed to be Kelvin, values < 200 detected.",
+            PossibleCelsiusWarning,
+        )
     T_C = np.asarray(T - CtoK)
     visa = 1.326e-5 * (
         1 + 6.542e-3 * T_C + 8.301e-6 * np.power(T_C, 2) - 4.84e-9 * np.power(T_C, 3)

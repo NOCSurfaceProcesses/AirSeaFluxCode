@@ -14,8 +14,9 @@
 
 """Coolskin Sub-routines"""
 
+from warnings import warn
 import numpy as np
-from ..util_subs import CtoK
+from ..util_subs import CtoK, PossibleCelsiusWarning
 from .cs_wl_subs import delta
 
 
@@ -59,6 +60,11 @@ def cs(sst, d, rho, Rs, Rnl, cp, lv, usr, tsr, qsr, grav, opt):
     delta : float
         cool skin thickness           [m]
     """
+    if np.nanmin(sst) < 200:
+        warn(
+            "(cs) - sst assumed to be in Kelvin, sst values below 200 detected",
+            PossibleCelsiusWarning,
+        )
     # coded following Saunders (1967) with lambda = 6
     # sst is in Kelvin, convert to Celsius
     sst_c = sst - CtoK
@@ -139,6 +145,11 @@ def cs_C35(sst, rho, Rs, Rnl, cp, lv, delta, usr, tsr, qsr, grav):
     delta : float
         cool skin thickness           [m]
     """
+    if np.nanmin(sst) < 200:
+        warn(
+            "(cs_C35) - sst assumed to be in Kelvin, sst values below 200 detected",
+            PossibleCelsiusWarning,
+        )
     # coded following Saunders (1967) with lambda = 6
     # sst is in Kelvin, convert to Celsius
     sst_c = sst - CtoK
@@ -208,6 +219,11 @@ def cs_ecmwf(rho, Rs, Rnl, cp, lv, usr, tsr, qsr, sst, grav):
         cool skin temperature correction [K]
 
     """
+    if np.nanmin(sst) < 200:
+        warn(
+            "(cs_ecmwf) - sst assumed to be in Kelvin, sst values below 200 detected",
+            PossibleCelsiusWarning,
+        )
     aw = np.maximum(1e-5, 1e-5 * (sst - CtoK))
     Rns = 0.945 * Rs  # (net solar radiation (albedo correction)
     shf = rho * cp * usr * tsr

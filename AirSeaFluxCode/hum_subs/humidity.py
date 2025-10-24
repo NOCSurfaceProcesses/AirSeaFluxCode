@@ -19,7 +19,7 @@ import numpy as np
 import warnings
 
 from .qsat import qsat_air, qsat_sea
-from ..util_subs import CtoK
+from ..util_subs import CtoK, PossibleCelsiusWarning
 
 
 def get_hum(hum, T, sst, P, qmeth) -> Tuple[np.ndarray, np.ndarray]:
@@ -109,6 +109,16 @@ def gamma(opt, sst, t, q, cp):
         lapse rate [K/m]
 
     """
+    if np.nanmin(sst) < 200:
+        warnings.warn(
+            "(gamma) - sst assumed to be Kelvin, values < 200 detected.",
+            PossibleCelsiusWarning,
+        )
+    if np.nanmin(t) < 200:
+        warnings.warn(
+            "(gamma) - t assumed to be Kelvin, values < 200 detected.",
+            PossibleCelsiusWarning,
+        )
     q = np.copy(q) / 1000  # convert to [kg/kg]
     if opt == "moist":
         t = np.maximum(t, 180)

@@ -15,6 +15,8 @@
 """Coolskin and Warmlayer Subroutines"""
 
 import numpy as np
+from warnings import warn
+from ..util_subs import PossibleCelsiusWarning
 
 
 def delta(aw, Q, usr, grav):
@@ -72,6 +74,11 @@ def get_dqer(dter, sst, qsea, lv):
        humidity correction            [g/kg]
 
     """
+    if np.nanmin(sst) < 200:
+        warn(
+            "(get_dqer) - sst assumed to be Kelvin, values < 200 detected.",
+            PossibleCelsiusWarning,
+        )
     wetc = 0.622 * lv * qsea / (287.1 * np.power(sst, 2))
     dqer = wetc * dter
     return dqer

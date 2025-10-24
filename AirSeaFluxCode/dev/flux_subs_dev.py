@@ -15,7 +15,8 @@
 """Development Flux Sub-routines"""
 
 import numpy as np
-from ..util_subs import kappa, visc_air
+from warnings import warn
+from ..util_subs import PossibleCelsiusWarning, kappa, visc_air
 
 
 def cdn_calc(u10n, usr, Ta, grav, meth):
@@ -713,6 +714,11 @@ def get_gust_old(beta, Ta, usr, tsrv, zi, grav):
     -------
     ug : float        [m/s]
     """
+    if np.nanmin(Ta) < 200:
+        warn(
+            "(get_gust_old) - Ta assumed to be Kelvin, values < 200 detected.",
+            PossibleCelsiusWarning,
+        )
     # minus sign to allow cube root
     Bf = (-grav / Ta) * usr * tsrv
     ug = np.ones(np.shape(Ta)) * 0.2
@@ -749,6 +755,11 @@ def get_gust(beta, zi, ustb, Ta, usr, tsrv, grav):
     -------
     ug : float        [m/s]
     """
+    if np.nanmin(Ta) < 200:
+        warn(
+            "(get_gust) - Ta assumed to be Kelvin, values < 200 detected.",
+            PossibleCelsiusWarning,
+        )
     # minus sign to allow cube root
     Bf = (-grav / Ta) * usr * tsrv
     ug = np.ones(np.shape(Ta)) * ustb

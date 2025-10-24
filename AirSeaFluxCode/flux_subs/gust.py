@@ -14,7 +14,9 @@
 
 """Gust Sub-routines"""
 
+from warnings import warn
 import numpy as np
+from ..util_subs import PossibleCelsiusWarning
 
 
 def get_gust(beta, zi, ustb, Ta, usr, tsrv, grav):
@@ -42,6 +44,11 @@ def get_gust(beta, zi, ustb, Ta, usr, tsrv, grav):
     -------
     ug : float        [m/s]
     """
+    if np.nanmin(Ta) < 200:
+        warn(
+            "(get_gust) - Ta assumed to be Kelvin, values < 200 detected.",
+            PossibleCelsiusWarning,
+        )
     # minus sign to allow cube root
     Bf = (-grav / Ta) * usr * tsrv
     ug = np.ones(np.shape(Ta)) * ustb

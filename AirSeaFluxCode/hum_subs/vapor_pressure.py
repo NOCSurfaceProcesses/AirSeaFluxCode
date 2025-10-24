@@ -14,8 +14,9 @@
 
 """Vapor Pressure Sub-routines"""
 
+from warnings import warn
 import numpy as np
-from ..util_subs import CtoK
+from ..util_subs import CtoK, PossibleCelsiusWarning
 
 
 def VaporPressure(
@@ -69,6 +70,11 @@ def VaporPressure(
     P : float
         Saturation vapor pressure [hPa]
     """
+    if np.nanmin(T) < 200:
+        warn(
+            "(VaporPressure) - T assumed to be Kelvin, values < 200 detected.",
+            PossibleCelsiusWarning,
+        )
     # T is in Kelvin
     T_Celsius = T - CtoK  # Some functions require Celsius
     #  Formulas using [C] use the variable T_Celsius

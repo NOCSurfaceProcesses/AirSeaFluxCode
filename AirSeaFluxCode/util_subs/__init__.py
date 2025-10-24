@@ -16,6 +16,7 @@
 
 from .utils import (
     CtoK,
+    PossibleCelsiusWarning,
     kappa,
     get_heights,
     gc,
@@ -28,6 +29,7 @@ from .utils import (
 
 __all__ = [
     "CtoK",
+    "PossibleCelsiusWarning",
     "gc",
     "get_heights",
     "get_outvars",
