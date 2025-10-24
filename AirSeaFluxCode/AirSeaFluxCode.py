@@ -43,7 +43,15 @@ from .flux_subs import (
 )
 from .height_subs import adjust_humidity, adjust_temperature, adjust_wind_speed
 from .hum_subs import get_hum, gamma
-from .util_subs import get_outvars, get_heights, gc, set_flag, kappa, CtoK
+from .util_subs import (
+    get_outvars,
+    get_heights,
+    gc,
+    set_flag,
+    kappa,
+    CtoK,
+    PossibleCelsiusWarning,
+)
 
 
 class S88:
@@ -769,18 +777,23 @@ class S88:
 
     def _convert_temperatures(self):
         if np.nanmax(self.T) < 200:
-            warnings.warn("Maximum Air Temperature is < 200. Converting to Kelvin.")
+            warnings.warn(
+                "Maximum Air Temperature is < 200. Converting to Kelvin.",
+                PossibleCelsiusWarning,
+            )
             self.T += CtoK
 
         if np.nanmax(self.SST) < 200:
             warnings.warn(
-                "Maximum Sea Surface Temperature is < 200. Converting to Kelvin."
+                "Maximum Sea Surface Temperature is < 200. Converting to Kelvin.",
+                PossibleCelsiusWarning,
             )
             self.SST += CtoK
 
         if self.hum[0] == "Td" and np.nanmax(self.hum[1]) < 200:
             warnings.warn(
-                "Maximum Dew Point Temperature is < 200. Converting to Kelvin."
+                "Maximum Dew Point Temperature is < 200. Converting to Kelvin.",
+                PossibleCelsiusWarning,
             )
             # Convert Dew Point
             self.hum[1] += CtoK
