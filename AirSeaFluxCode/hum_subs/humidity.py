@@ -71,6 +71,12 @@ def get_hum(hum, T, sst, P, qmeth) -> Tuple[np.ndarray, np.ndarray]:
         qsea = qsat_sea(sst, P, qmeth)  # surface water q [g/kg]
     elif hum[0] == "Td":
         Td = hum[1]  # dew point temperature (K)
+        if np.nanmin(Td) < 200:
+            warnings.warn(
+                "(get_hum) - Dew-point temperature assumed to be in Kelvin, "
+                + "values below 200 detected",
+                PossibleCelsiusWarning,
+            )
         esd = 611.21 * np.exp(17.502 * ((Td - CtoK) / (Td - 32.19)))
         es = 611.21 * np.exp(17.502 * ((T - CtoK) / (T - 32.19)))
         RH = 100 * esd / es
