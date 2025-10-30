@@ -15,8 +15,7 @@
 """Warmlayer Sub-routines"""
 
 import numpy as np
-from warnings import warn
-from ..util_subs import CtoK, PossibleCelsiusWarning, kappa
+from ..util_subs import CtoK, kappa, validate_kelvin
 
 
 def wl_ecmwf(rho, Rs, Rnl, cp, lv, usr, tsr, qsr, sst, skt, dtc, grav):
@@ -57,11 +56,7 @@ def wl_ecmwf(rho, Rs, Rnl, cp, lv, usr, tsr, qsr, sst, skt, dtc, grav):
         warm layer correction       [K]
 
     """
-    if np.nanmin(sst) < 200:
-        warn(
-            "(wl_ecmwf) - sst assumed to be Kelvin, values < 200 detected.",
-            PossibleCelsiusWarning,
-        )
+    sst = validate_kelvin(sst, "sst")
     rhow, cpw, visw, rd0 = 1025, 4190, 1e-6, 3
     Rns = 0.945 * Rs
     #  Previous value of dT / warm-layer, adapted to depth:

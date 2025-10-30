@@ -16,7 +16,7 @@
 
 from .utils import (
     CtoK,
-    PossibleCelsiusWarning,
+    validate_kelvin,
     kappa,
     get_heights,
     gc,
@@ -29,12 +29,12 @@ from .utils import (
 
 __all__ = [
     "CtoK",
-    "PossibleCelsiusWarning",
     "gc",
     "get_heights",
     "get_outvars",
     "kappa",
     "rho_air",
     "set_flag",
+    "validate_kelvin",
     "visc_air",
 ]

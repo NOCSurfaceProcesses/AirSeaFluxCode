@@ -19,7 +19,7 @@ import numpy as np
 import warnings
 
 from .qsat import qsat_air, qsat_sea
-from ..util_subs import CtoK, PossibleCelsiusWarning
+from ..util_subs import CtoK, validate_kelvin
 
 
 def get_hum(hum, T, sst, P, qmeth) -> Tuple[np.ndarray, np.ndarray]:
@@ -70,13 +70,8 @@ def get_hum(hum, T, sst, P, qmeth) -> Tuple[np.ndarray, np.ndarray]:
             )
         qsea = qsat_sea(sst, P, qmeth)  # surface water q [g/kg]
     elif hum[0] == "Td":
-        Td = hum[1]  # dew point temperature (K)
-        if np.nanmin(Td) < 200:
-            warnings.warn(
-                "(get_hum) - Dew-point temperature assumed to be in Kelvin, "
-                + "values below 200 detected",
-                PossibleCelsiusWarning,
-            )
+        # dew point temperature (K)
+        Td = validate_kelvin(hum[1], "Dew-point temperature")
         esd = 611.21 * np.exp(17.502 * ((Td - CtoK) / (Td - 32.19)))
         es = 611.21 * np.exp(17.502 * ((T - CtoK) / (T - 32.19)))
         RH = 100 * esd / es
@@ -115,16 +110,8 @@ def gamma(opt, sst, t, q, cp):
         lapse rate [K/m]
 
     """
-    if np.nanmin(sst) < 200:
-        warnings.warn(
-            "(gamma) - sst assumed to be Kelvin, values < 200 detected.",
-            PossibleCelsiusWarning,
-        )
-    if np.nanmin(t) < 200:
-        warnings.warn(
-            "(gamma) - t assumed to be Kelvin, values < 200 detected.",
-            PossibleCelsiusWarning,
-        )
+    sst = validate_kelvin(sst, "sst")
+    t = validate_kelvin(t, "t")
     q = np.copy(q) / 1000  # convert to [kg/kg]
     if opt == "moist":
         t = np.maximum(t, 180)

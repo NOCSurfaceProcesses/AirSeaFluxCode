@@ -50,7 +50,7 @@ from ..util_subs import (
     kappa,
     CtoK,
     rho_air,
-    PossibleCelsiusWarning,
+    validate_kelvin,
 )
 
 
@@ -841,8 +841,7 @@ class S88:
         self.SST = SST
         self.hum = ["no", np.full(SST.shape, 80)] if hum is None else hum
 
-        if convert:
-            self._convert_temperatures()
+        self._convert_temperatures(convert=convert)
 
         self.lat = np.full(self.arr_shp, 45) if lat is None else lat
         self.grav = gc(self.lat)
@@ -853,28 +852,28 @@ class S88:
         self.msk = np.where(np.isnan(spd + T + SST), np.nan, 1)
         self.Rb = np.empty(SST.shape) * self.msk
 
-    def _convert_temperatures(self):
-        if np.nanmax(self.T) < 200:
-            warnings.warn(
-                "Maximum Air Temperature is < 200. Converting to Kelvin.",
-                PossibleCelsiusWarning,
+    def _convert_temperatures(self, convert: bool) -> None:
+        self.T = validate_kelvin(
+            self.T,
+            "Air Temperature",
+            convert=convert,
+            use_max=True,
+        )
+        self.SST = validate_kelvin(
+            self.T,
+            "Sea Surface Temperature",
+            convert=convert,
+            use_max=True,
+        )
+        if self.hum[0] == "Td":
+            self.hum[1] = validate_kelvin(
+                self.hum[1],
+                "Dew Point Temperature",
+                convert=convert,
+                use_max=True,
             )
-            self.T += CtoK
 
-        if np.nanmax(self.SST) < 200:
-            warnings.warn(
-                "Maximum Sea Surface Temperature is < 200. Converting to Kelvin.",
-                PossibleCelsiusWarning,
-            )
-            self.SST += CtoK
-
-        if self.hum[0] == "Td" and np.nanmax(self.hum[1]) < 200:
-            warnings.warn(
-                "Maximum Dew Point Temperature is < 200. Converting to Kelvin.",
-                PossibleCelsiusWarning,
-            )
-            # Convert Dew Point
-            self.hum[1] += CtoK
+        return None
 
     def _validate_sst_fl(self, SST_fl, cskin):
         if self.meth in ["S80", "S88", "LP82", "YT96", "UA", "NCAR"]:
