@@ -17,7 +17,7 @@
 import numpy as np
 
 from .vapor_pressure import VaporPressure
-from ..util_subs import CtoK
+from ..util_subs import validate_kelvin
 
 
 def qsat_sea(T, P, qmeth):
@@ -27,7 +27,7 @@ def qsat_sea(T, P, qmeth):
     Parameters
     ----------
     T : float
-        temperature [$^\circ$\,C]
+        temperature [K]
     P : float
         pressure [mb]
     qmeth : str
@@ -39,8 +39,7 @@ def qsat_sea(T, P, qmeth):
         surface saturation specific humidity [g/kg]
     """
     T = np.asarray(T)
-    if np.nanmin(T) > 200:  # if Ta in Kelvin convert to Celsius
-        T = T - CtoK
+    T = validate_kelvin(T, "T")
     ex = VaporPressure(T, P, "liquid", qmeth)
     es = 0.98 * ex  # reduction at sea surface
     qs = 622 * es / (P - 0.378 * es)
@@ -57,7 +56,7 @@ def qsat_air(T, P, rh, qmeth):
     Parameters
     ----------
     T : float
-        temperature [$^\circ$\,C]
+        temperature [K]
     P : float
         pressure [mb]
     rh : float
@@ -71,8 +70,8 @@ def qsat_air(T, P, rh, qmeth):
         specific humidity [g/kg]
     """
     T = np.asarray(T)
-    if np.nanmin(T) > 200:  # if Ta in Kelvin convert to Celsius
-        T = T - CtoK
+    T = validate_kelvin(T, "T")
+
     es = VaporPressure(T, P, "liquid", qmeth)
     em = 0.01 * rh * es
     q = 622 * em / (P - 0.378 * em)

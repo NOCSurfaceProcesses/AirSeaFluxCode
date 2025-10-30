@@ -16,6 +16,7 @@
 
 from .utils import (
     CtoK,
+    validate_kelvin,
     kappa,
     get_heights,
     gc,
@@ -34,5 +35,6 @@ __all__ = [
     "kappa",
     "rho_air",
     "set_flag",
+    "validate_kelvin",
     "visc_air",
 ]

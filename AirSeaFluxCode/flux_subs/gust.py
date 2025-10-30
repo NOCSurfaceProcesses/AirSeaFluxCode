@@ -15,6 +15,7 @@
 """Gust Sub-routines"""
 
 import numpy as np
+from ..util_subs import validate_kelvin
 
 
 def get_gust(beta, zi, ustb, Ta, usr, tsrv, grav):
@@ -42,8 +43,7 @@ def get_gust(beta, zi, ustb, Ta, usr, tsrv, grav):
     -------
     ug : float        [m/s]
     """
-    if np.nanmax(Ta) < 200:  # convert to K if in Celsius
-        Ta = Ta + 273.16
+    Ta = validate_kelvin(Ta, "Ta")
     # minus sign to allow cube root
     Bf = (-grav / Ta) * usr * tsrv
     ug = np.ones(np.shape(Ta)) * ustb

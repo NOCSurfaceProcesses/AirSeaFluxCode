@@ -15,7 +15,7 @@
 """Coolskin and Warmlayer Subroutines"""
 
 import numpy as np
-from ..util_subs import CtoK
+from ..util_subs import validate_kelvin
 
 
 def delta(aw, Q, usr, grav):
@@ -73,8 +73,7 @@ def get_dqer(dter, sst, qsea, lv):
        humidity correction            [g/kg]
 
     """
-    if np.nanmin(sst) < 200:  # if sst in Celsius convert to Kelvin
-        sst = sst + CtoK
+    sst = validate_kelvin(sst, "sst")
     wetc = 0.622 * lv * qsea / (287.1 * np.power(sst, 2))
     dqer = wetc * dter
     return dqer

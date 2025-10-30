@@ -14,8 +14,18 @@
 
 """Utility Functions"""
 
-import numpy as np
+import inspect
 from typing import List, Optional, Union
+from warnings import warn
+
+import numpy as np
+
+
+class PossibleCelsiusWarning(Warning):
+    """A warning that some temperatures may be Celsius"""
+
+    pass
+
 
 CtoK = 273.16  # 273.15
 r""" Conversion factor for $^\circ\,$C to K """
@@ -23,6 +33,61 @@ r""" Conversion factor for $^\circ\,$C to K """
 kappa = 0.4  # NOTE: 0.41
 """ von Karman's constant """
 # -----------------------------------------------------------------------------
+
+
+def validate_kelvin(
+    temp: np.ndarray,
+    var_name: str = "Temperatures",
+    threshold_temp: float = 200.0,
+    use_max: bool = False,
+    convert: bool = False,
+) -> np.ndarray:
+    """
+    Determine if any temperature values may be Celsius when inputs are expected
+    to be in Kelvin. Display a warning if possible Celsius values are detected,
+    optionally convert.
+
+    The warning message includes the name of the calling function.
+
+    Parameters
+    ----------
+    temp : numpy.ndarray
+        Temperature Values [K]
+    var_name : str
+        Name of the variable, used in the warning message for context.
+    threshold_temp : float
+        Critical value in Kelvin indicating likely Celsius.
+    use_max : bool
+        Use the maximum value to test for Celsius values. If True, if the
+        maximum value is below the 'threshold_temp' value then the warning
+        is displayed. If set to False, the minimum value is used.
+    convert : bool
+        Optionally convert the whole array if possible Celsius values are
+        detected. Updates the warning to indicate conversion has taken place.
+
+    Returns
+    -------
+    temp : numpy.ndarry
+        The input temperatures, possibly converted.
+    """
+    calling_func = inspect.stack()[1][3]
+    warn_msg = (
+        f"({calling_func}) - {var_name} assumed to be Kelvin,"
+        + f"values < {threshold_temp} detected."
+    )
+    cond_func = np.nanmin
+    if use_max:
+        cond_func = np.nanmax
+
+    if cond_func(temp) < threshold_temp:
+        if convert:
+            warn_msg = warn_msg + " Converting."
+        warn(
+            warn_msg,
+            PossibleCelsiusWarning,
+        )
+        temp += CtoK
+    return temp
 
 
 def get_heights(h, dim_len):
@@ -106,19 +171,19 @@ def visc_air(T):
 
     Parameters
     ----------
-    Ta : float
-        air temperature [$^\circ$\,C]
+    T : float
+        air temperature [K]
 
     Returns
     -------
     visa : float
         kinematic viscosity [m^2/s]
     """
-    T = np.asarray(T)
-    if np.nanmin(T) > 200:  # if Ta in Kelvin convert to Celsius
-        T = T - 273.16
+    # Ta is in Kelvin, convert to Celsius
+    T = validate_kelvin(T, "T")
+    T_C = np.asarray(T - CtoK)
     visa = 1.326e-5 * (
-        1 + 6.542e-3 * T + 8.301e-6 * np.power(T, 2) - 4.84e-9 * np.power(T, 3)
+        1 + 6.542e-3 * T_C + 8.301e-6 * np.power(T_C, 2) - 4.84e-9 * np.power(T_C, 3)
     )
     return visa
 
