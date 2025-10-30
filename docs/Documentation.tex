@@ -64,8 +64,8 @@
 
 
 \title{AirSeaFluxCode}
-\date{Oct 15, 2025}
-\release{1.2.0}
+\date{Oct 30, 2025}
+\release{1.3.0}
 \author{Stavroula Biri}
 \newcommand{\sphinxlogo}{\vbox{}}
 \renewcommand{\releasename}{Release}
@@ -349,7 +349,7 @@ AirSeaFluxCode
 \pysigstartsignatures
 \pysiglinewithargsret
 {\sphinxcode{\sphinxupquote{AirSeaFluxCode.}}\sphinxbfcode{\sphinxupquote{AirSeaFluxCode}}}
-{\sphinxparam{\DUrole{n}{spd}}\sphinxparamcomma \sphinxparam{\DUrole{n}{T}}\sphinxparamcomma \sphinxparam{\DUrole{n}{SST}}\sphinxparamcomma \sphinxparam{\DUrole{n}{SST\_fl}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}}\sphinxparamcomma \sphinxparam{\DUrole{n}{lat}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{hum}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{P}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{hin}\DUrole{o}{=}\DUrole{default_value}{18}}\sphinxparamcomma \sphinxparam{\DUrole{n}{hout}\DUrole{o}{=}\DUrole{default_value}{10}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Rl}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Rs}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{cskin}\DUrole{o}{=}\DUrole{default_value}{0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{skin}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{wl}\DUrole{o}{=}\DUrole{default_value}{0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{gust}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{qmeth}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}Buck2\textquotesingle{}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{tol}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{maxiter}\DUrole{o}{=}\DUrole{default_value}{30}}\sphinxparamcomma \sphinxparam{\DUrole{n}{out}\DUrole{o}{=}\DUrole{default_value}{0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{out\_var}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{L}\DUrole{o}{=}\DUrole{default_value}{None}}}
+{\sphinxparam{\DUrole{n}{spd}}\sphinxparamcomma \sphinxparam{\DUrole{n}{T}}\sphinxparamcomma \sphinxparam{\DUrole{n}{SST}}\sphinxparamcomma \sphinxparam{\DUrole{n}{SST\_fl}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}}\sphinxparamcomma \sphinxparam{\DUrole{n}{lat}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{hum}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{P}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{hin}\DUrole{o}{=}\DUrole{default_value}{18}}\sphinxparamcomma \sphinxparam{\DUrole{n}{hout}\DUrole{o}{=}\DUrole{default_value}{10}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Rl}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{Rs}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{cskin}\DUrole{o}{=}\DUrole{default_value}{0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{skin}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{wl}\DUrole{o}{=}\DUrole{default_value}{0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{gust}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{qmeth}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}Buck2\textquotesingle{}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{tol}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{maxiter}\DUrole{o}{=}\DUrole{default_value}{30}}\sphinxparamcomma \sphinxparam{\DUrole{n}{out}\DUrole{o}{=}\DUrole{default_value}{0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{out\_var}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{L}\DUrole{o}{=}\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{convert}\DUrole{o}{=}\DUrole{default_value}{True}}}
 {}
 \pysigstopsignatures
 \sphinxAtStartPar
@@ -366,16 +366,15 @@ between wind and surface current vectors)
 
 \item {}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{T}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature {[}K{]} (will convert if \textless{} 200)
+\sphinxstyleliteralstrong{\sphinxupquote{T}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature {[}K{]} (will convert if \textless{} 200 and ‘convert’ is True)
 
 \item {}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{SST}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sea surface temperature {[}K{]} (will convert if \textless{} 200)
+\sphinxstyleliteralstrong{\sphinxupquote{SST}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} sea surface temperature {[}K{]} (will convert if \textless{} 200 and ‘convert’ is True)
 
 \item {}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{SST\_fl}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} provides information on the type of the input SST; “bulk” or
-“skin”
+\sphinxstyleliteralstrong{\sphinxupquote{SST\_fl}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} provides information on the type of the input SST; “bulk” or “skin”
 
 \item {}
 \sphinxAtStartPar
@@ -401,7 +400,8 @@ x=’q’ : specific humidity {[}g/kg{]}
 
 \item {}
 \sphinxAtStartPar
-x=’Td’ : dew point temperature {[}K{]}
+x=’Td’ : dew point temperature {[}K{]} (will convert if \textless{} 200 and ‘convert’ is
+True)
 
 \end{itemize}
 
@@ -556,6 +556,14 @@ Monin\sphinxhyphen{}Obukhov length definition options
 
 \end{itemize}
 
+
+\item {}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{convert}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Force conversion of temperatures to Kelvin. This conversion will
+apply to T, SST, and hum inputs (if hum{[}0{]} is “Dt” indicating
+dew\sphinxhyphen{}point temperature). Conversion will occur if the maximum value
+in the arrays is \textless{} 200. Set to False to prevent conversion, it
+will be assumed that all temperature input values are Kelvin.
 
 \end{itemize}
 
@@ -2429,7 +2437,7 @@ Humidity Module
 \pysigstartsignatures
 \pysiglinewithargsret
 {\sphinxcode{\sphinxupquote{AirSeaFluxCode.hum\_subs.}}\sphinxbfcode{\sphinxupquote{VaporPressure}}}
-{\sphinxparam{\DUrole{n}{temp}}\sphinxparamcomma \sphinxparam{\DUrole{n}{P}}\sphinxparamcomma \sphinxparam{\DUrole{n}{phase}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}}}
+{\sphinxparam{\DUrole{n}{T}}\sphinxparamcomma \sphinxparam{\DUrole{n}{P}}\sphinxparamcomma \sphinxparam{\DUrole{n}{phase}}\sphinxparamcomma \sphinxparam{\DUrole{n}{meth}}}
 {}
 \pysigstopsignatures
 \sphinxAtStartPar
@@ -2453,7 +2461,7 @@ Ported to Python and modified by S. Biri from Holger Voemel’s original
 \sphinxlineitem{Parameters}\begin{itemize}
 \item {}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{temp}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Temperature {[}C{]}
+\sphinxstyleliteralstrong{\sphinxupquote{T}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Temperature {[}K{]}
 
 \item {}
 \sphinxAtStartPar
@@ -2628,7 +2636,7 @@ Compute saturation specific humidity {[}g/kg{]}.
 \sphinxlineitem{Parameters}\begin{itemize}
 \item {}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{T}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} temperature {[}\$\textasciicircum{}circ\$,C{]}
+\sphinxstyleliteralstrong{\sphinxupquote{T}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} temperature {[}K{]}
 
 \item {}
 \sphinxAtStartPar
@@ -2672,7 +2680,7 @@ Compute surface saturation specific humidity {[}g/kg{]}.
 \sphinxlineitem{Parameters}\begin{itemize}
 \item {}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{T}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} temperature {[}\$\textasciicircum{}circ\$,C{]}
+\sphinxstyleliteralstrong{\sphinxupquote{T}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} temperature {[}K{]}
 
 \item {}
 \sphinxAtStartPar
@@ -3090,6 +3098,62 @@ str
 
 \end{fulllineitems}
 
+\index{validate\_kelvin() (in module AirSeaFluxCode.util\_subs)@\spxentry{validate\_kelvin()}\spxextra{in module AirSeaFluxCode.util\_subs}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{users_guide:AirSeaFluxCode.util_subs.validate_kelvin}}
+\pysigstartsignatures
+\pysiglinewithargsret
+{\sphinxcode{\sphinxupquote{AirSeaFluxCode.util\_subs.}}\sphinxbfcode{\sphinxupquote{validate\_kelvin}}}
+{\sphinxparam{\DUrole{n}{temp}}\sphinxparamcomma \sphinxparam{\DUrole{n}{var\_name}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}Temperatures\textquotesingle{}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{threshold\_temp}\DUrole{o}{=}\DUrole{default_value}{200.0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{use\_max}\DUrole{o}{=}\DUrole{default_value}{False}}\sphinxparamcomma \sphinxparam{\DUrole{n}{convert}\DUrole{o}{=}\DUrole{default_value}{False}}}
+{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Determine if any temperature values may be Celsius when inputs are expected
+to be in Kelvin. Display a warning if possible Celsius values are detected,
+optionally convert.
+
+\sphinxAtStartPar
+The warning message includes the name of the calling function.
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}\begin{itemize}
+\item {}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{temp}} (\sphinxstyleliteralemphasis{\sphinxupquote{numpy.ndarray}}) \textendash{} Temperature Values {[}K{]}
+
+\item {}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{var\_name}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} Name of the variable, used in the warning message for context.
+
+\item {}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{threshold\_temp}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Critical value in Kelvin indicating likely Celsius.
+
+\item {}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{use\_max}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Use the maximum value to test for Celsius values. If True, if the
+maximum value is below the ‘threshold\_temp’ value then the warning
+is displayed. If set to False, the minimum value is used.
+
+\item {}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{convert}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Optionally convert the whole array if possible Celsius values are
+detected. Updates the warning to indicate conversion has taken place.
+
+\end{itemize}
+
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+\sphinxstylestrong{temp} \textendash{} The input temperatures, possibly converted.
+
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
+numpy.ndarry
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
 \index{visc\_air() (in module AirSeaFluxCode.util\_subs)@\spxentry{visc\_air()}\spxextra{in module AirSeaFluxCode.util\_subs}}
 
 \begin{fulllineitems}
@@ -3106,7 +3170,7 @@ following Andreas (1989), CRREL Report 89\sphinxhyphen{}11.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{Ta}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature {[}\$\textasciicircum{}circ\$,C{]}
+\sphinxstyleliteralstrong{\sphinxupquote{T}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} air temperature {[}K{]}
 
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
