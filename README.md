@@ -16,6 +16,16 @@ Please see subdirectories for code and data licenses
 
 ## Installation
 
+### From PyPI
+
+```bash
+pip install AirSeaFluxCode
+```
+
+This will automatically install the package and dependencies (`numpy`, `pandas`).
+
+### From Source
+
 Clone the repository:
 
 ```bash
@@ -30,15 +40,14 @@ cd AirSeaFluxCode
 pip install .
 ```
 
-### Installation Directly with `pip`
+#### Developer
 
-This package is not yet available on PyPi, however it can be installed using `pip` and `git`:
+Install after cloning in _editable_ mode.
 
 ```bash
-pip install git+https://github.com/NOCSurfaceProcesses/AirSeaFluxCode/
+cd AirSeaFluxCode
+pip install -e .
 ```
-
-This will automatically install the package and dependencies (`numpy`, `pandas`).
 
 ## Documentation
 
