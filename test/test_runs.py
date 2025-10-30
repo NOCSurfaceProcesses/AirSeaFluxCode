@@ -68,3 +68,39 @@ def test_toy_asfc(meth, qmeth, ssfl, cskin, L, wl, gust) -> None:
 
     assert isinstance(res, pd.DataFrame)
     assert res.shape[0] == N
+
+
+@pytest.mark.parametrize(
+    "meth, qmeth, ssfl, cskin, L, wl, gust",
+    [
+        ("UA", "Buck2", "bulk", 0, "tsrv", 0, None),
+    ],
+)
+def test_toy_asfc_no_hum(meth, qmeth, ssfl, cskin, L, wl, gust) -> None:
+    # TEST: Simple test to check that the main process runs
+
+    # run AirSeaFluxCode
+    res = asfc.AirSeaFluxCode(
+        SPD,
+        AT,
+        SST,
+        ssfl,
+        meth=meth,
+        lat=LAT,
+        hin=H_IN,
+        hum=None,
+        P=P,
+        cskin=cskin,
+        qmeth=qmeth,
+        Rs=SW,
+        tol=["all", 0.01, 0.01, 1e-05, 1e-3, 0.1, 0.1],
+        L=L,
+        out_var=OUTVAR,
+        wl=wl,
+        gust=gust,
+    )
+
+    assert isinstance(res, pd.DataFrame)
+    assert res.shape[0] == N
+    assert np.isnan(res["latent"]).all()
+    assert np.isnan(res["q10n"]).all()

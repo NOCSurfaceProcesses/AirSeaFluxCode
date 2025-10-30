@@ -819,6 +819,8 @@ def apply_GF(gust, spd, wind, step):
             GustFact[1:3, :] = np.sqrt(wind / spd)
         elif gust[0] == 3:
             GustFact[0, :] = wind * 0 + 1
+    else:
+        raise ValueError("Unknown 'step' value, expected one of 'u' or 'TSF'")
     return GustFact
 
 

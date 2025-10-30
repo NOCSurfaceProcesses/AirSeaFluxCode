@@ -677,8 +677,12 @@ class S88:
         # This gets filled into a pd dataframe and so no need to specify
         # dimension of array
         if self.hum[0] == "no":
-            self.latent, self.qsr, self.q10n = np.empty(3)
-            self.qref, self.qair, self.rh = np.empty(3)
+            self.latent = np.full(self.arr_shp, fill_value=np.nan)
+            self.qsr = np.full(self.arr_shp, fill_value=np.nan)
+            self.q10n = np.full(self.arr_shp, fill_value=np.nan)
+            self.qref = np.full(self.arr_shp, fill_value=np.nan)
+            self.qair = np.full(self.arr_shp, fill_value=np.nan)
+            self.rh = np.full(self.arr_shp, fill_value=np.nan)
 
         # Set the final wind speed values
         # this seems to be gust (was wind_speed)
@@ -830,7 +834,6 @@ class S88:
         self.P = np.full(self.nlen, 1013) if P is None else P
 
         # mask to preserve missing values when initialising variables
-        self.msk = np.empty(SST.shape)
         self.msk = np.where(np.isnan(spd + T + SST), np.nan, 1)
         self.Rb = np.empty(SST.shape) * self.msk
 
