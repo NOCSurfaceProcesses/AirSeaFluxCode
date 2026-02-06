@@ -86,7 +86,7 @@ def validate_kelvin(
             warn_msg,
             PossibleCelsiusWarning,
         )
-        temp += CtoK
+        temp = temp + CtoK
     return temp
 
 
