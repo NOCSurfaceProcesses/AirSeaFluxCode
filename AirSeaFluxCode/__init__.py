@@ -1,4 +1,4 @@
-# Copyright 2023-2025, Stavroula Biri
+# Copyright 2023-2026, Stavroula Biri
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -118,4 +118,4 @@ __all__ = [
 
 __base__ = os.path.dirname(__file__)
 
-__version__ = "1.3.1"
+__version__ = "1.3.2"

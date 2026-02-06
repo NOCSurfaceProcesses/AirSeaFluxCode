@@ -1,6 +1,6 @@
 # Changes
 
-## 1.3.2 (Unreleased)
+## 1.3.2 (2026-02-06)
 
 Contributors to this release: Joseph Siddons (@jtsiddons).
 
@@ -8,6 +8,10 @@ Contributors to this release: Joseph Siddons (@jtsiddons).
 
 * Account for immutability of `pandas>=3.0.0` objects when converted to `numpy` in
   `util_subs.validate_kelvin` (#27)
+
+### Internal Changes
+
+* Update License to include 2026 (#28)
 
 ## 1.3.1 (2025-10-30)
 
