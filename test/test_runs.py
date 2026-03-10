@@ -121,3 +121,4 @@ def test_temp_conv():
     )
     assert all(flux["T"] > 200.0)
     assert all(flux["SST"] > 200.0)
+    assert all(flux["SST"] != flux["T"])
