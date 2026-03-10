@@ -1,6 +1,6 @@
 # Changes
 
-## 1.3.3 (Unreleased)
+## 1.3.3 (2026-03-10)
 
 Contributors to this release: Joseph Siddons (@jtsiddons).
 
