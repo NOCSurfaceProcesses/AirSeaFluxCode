@@ -118,4 +118,4 @@ __all__ = [
 
 __base__ = os.path.dirname(__file__)
 
-__version__ = "1.3.2"
+__version__ = "1.3.3"
