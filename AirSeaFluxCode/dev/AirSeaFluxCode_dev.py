@@ -863,7 +863,7 @@ class S88:
             use_max=True,
         )
         self.SST = validate_kelvin(
-            self.T,
+            self.SST,
             "Sea Surface Temperature",
             convert=convert,
             use_max=True,
