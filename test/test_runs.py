@@ -104,3 +104,20 @@ def test_toy_asfc_no_hum(meth, qmeth, ssfl, cskin, L, wl, gust) -> None:
     assert res.shape[0] == N
     assert np.isnan(res["latent"]).all()
     assert np.isnan(res["q10n"]).all()
+
+
+def test_temp_conv():
+    flux = asfc.AirSeaFluxCode(
+        spd=np.array([1.7]),
+        T=np.array([27.6]),
+        SST=np.array([28.219999]),
+        SST_fl="skin",
+        meth="C35",
+        lat=np.array([0]),
+        hum=["rh", np.array([80.4])],
+        out_var=["sensible", "latent", "SST", "T"],
+        hin=np.array([4, 3, 3]),
+        convert=True,
+    )
+    assert all(flux["T"] > 200.0)
+    assert all(flux["SST"] > 200.0)
