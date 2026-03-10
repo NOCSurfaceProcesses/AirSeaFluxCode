@@ -360,6 +360,7 @@ class S88:
         tol_vals = list([float(tt) for tt in tvals])
 
         ind = np.where(self.spd > 0)
+        self.ind = np.copy(ind)
         it = 0
 
         # Setup empty arrays
@@ -863,7 +864,7 @@ class S88:
             use_max=True,
         )
         self.SST = validate_kelvin(
-            self.T,
+            self.SST,
             "Sea Surface Temperature",
             convert=convert,
             use_max=True,

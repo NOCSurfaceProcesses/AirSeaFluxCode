@@ -1,5 +1,13 @@
 # Changes
 
+## 1.3.3 (Unreleased)
+
+Contributors to this release: Joseph Siddons (@jtsiddons).
+
+### Bug Fixes
+
+* Correct conversion of SST to Kelvin, use correct variable (#29).
+
 ## 1.3.2 (2026-02-06)
 
 Contributors to this release: Joseph Siddons (@jtsiddons).
