@@ -110,9 +110,23 @@ class S88:
         self.dq_full = self.qair - self.qsea  # [g/kg]
 
         # Set lapse rate and Potential Temperature (now we have humdity)
-        self.cp = 1004.67 * (1 + 0.84 * self.qsea * 0.001)  # qsea [g/kg]
+        # Specific capacity (moist air, computed from dry cp)
+        if self.meth == "C35":
+            self.cp = 1004.67 * np.ones(self.SST.shape)
+        elif self.meth in ["NCAR", "ecmwf"]:
+            self.cp = 1005 + 1.860 * self.qair  # qair [g/kg]
+        else:
+            self.cp = 1004.67 * (1 + 0.84 * self.qsea * 0.001)  # qsea [g/kg]
+
         # gamma takes q in units [g/kg]
-        self.tlapse = gamma("dry", self.SST, self.T, self.qair, self.cp)
+        # self.tlapse = gamma("dry", self.SST, self.T, self.qair, self.cp)
+        self.tlapse = gamma(
+            "dry",
+            self.SST,
+            self.T,
+            self.qair,
+            self.cp,
+        )
         self.theta = np.copy(self.T) + self.tlapse * self.h_in[1]
         self.dt_in = self.theta - self.SST
         self.dt_full = self.theta - self.SST
