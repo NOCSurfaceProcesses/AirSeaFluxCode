@@ -110,11 +110,6 @@ def test_height_adjustment(hin, hout) -> None:
         q_out, monob=monob, qsr=qstr, h_in=hout, h_out=hin, meth="UA"
     )
 
-    print(f"{q_in = }")
-    print(f"{q_test = }")
-
-    print(np.max(np.abs(u_test - u_in)))
-
     # TEST: is same as generated test input
     assert np.allclose(u_test, u_in), "u different"
     assert np.allclose(t_test, t_in), "t different"
