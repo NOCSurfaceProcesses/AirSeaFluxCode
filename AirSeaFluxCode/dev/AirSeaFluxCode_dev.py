@@ -277,7 +277,9 @@ class S88:
         self.lv = (2.501 - 0.00237 * (self.SST - CtoK)) * 1e6  # J/kg
 
         #  Zeng et al. 1998
-        self.tv = self.theta * (1 + 0.6077 * self.qair)  # virtual potential T
+        self.tv = self.theta * (
+            1 + 0.6077 * self.qair * 0.001
+        )  # virtual potential T, qair [g/kg]
         self.dtv = (
             self.dt_in * (1 + 0.6077 * self.qair * 0.001)
             + 0.6077 * self.theta * self.dq_in * 0.001

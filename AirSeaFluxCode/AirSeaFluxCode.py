@@ -249,10 +249,13 @@ class S88:
         self.rho = (
             self.P * 100 / (287.1 * self.t10n * (1 + 0.6077 * self.q10n * 0.001))
         )  # q [g/kg]
+
         self.lv = (2.501 - 0.00237 * (self.SST - CtoK)) * 1e6  # J/kg
 
         #  Zeng et al. 1998
-        self.tv = self.theta * (1 + 0.6077 * self.qair)  # virtual potential T
+        self.tv = self.theta * (
+            1 + 0.6077 * self.qair * 0.001
+        )  # virtual potential T, qair [g/kg]
         self.dtv = (
             self.dt_in * (1 + 0.6077 * self.qair * 0.001)
             + 0.6077 * self.theta * self.dq_in * 0.001
@@ -489,6 +492,7 @@ class S88:
             )  # [g/kg]
 
             # update stability info
+
             self.tsrv[ind] = get_tsrv(
                 self.tsr[ind], self.qsr[ind], self.theta[ind], self.qair[ind]
             )
