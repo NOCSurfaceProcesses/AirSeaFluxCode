@@ -169,6 +169,6 @@ def test_vs_coare():
     assert np.allclose(test_result["latent"], -res_df["hlb"], rtol=1e-2), (
         "latent incorrect"
     )
-    assert np.allclose(test_result["sensible"], -res_df["hsb"], rtol=1e-2), (
+    assert np.allclose(test_result["sensible"], -res_df["hsb"], atol=5e-2), (
         "sensible incorrect"
     )
