@@ -297,7 +297,7 @@ def _vp_liquid(meth, T, T_Celsius, P):  # noqa: C901
             / 100
         )
     else:
-        raise ValueError("Invalid method for liquid phase vaporpressure: {meth}")
+        raise ValueError(f"Invalid method for liquid phase vaporpressure: {meth}")
     return Psat
 
 

@@ -57,7 +57,7 @@ def test_height_adjustment(hin, hout) -> None:
     #       Stars
 
     # run AirSeaFluxCode
-    res = asfc.AirSeaFluxCode(
+    res: pd.DataFrame = asfc.AirSeaFluxCode(
         SPD,
         AT,
         SST,
@@ -74,6 +74,9 @@ def test_height_adjustment(hin, hout) -> None:
         L="tsrv",
         out_var=OUTVAR,
     )
+    res = res.dropna(inplace=False)
+    assert len(res) > 0, "Got all NA"
+    assert len(res) > 90, "Only a few rows"
 
     monob = res.loc[:, "monob"]
     tstr = res.loc[:, "tsr"]
@@ -82,6 +85,8 @@ def test_height_adjustment(hin, hout) -> None:
     t_in = res.loc[:, "tref"]
     u_in = res.loc[:, "uref"]
     q_in = res.loc[:, "qref"]
+
+    assert not np.any(np.isnan(u_in)), "Some nans"
 
     # Adjust to h-out
     t_out = adjust_temperature(
@@ -106,6 +111,6 @@ def test_height_adjustment(hin, hout) -> None:
     )
 
     # TEST: is same as generated test input
-    assert np.allclose(t_test, t_in)
-    assert np.allclose(u_test, u_in)
-    assert np.allclose(q_test, q_in)
+    assert np.allclose(u_test, u_in), "u different"
+    assert np.allclose(t_test, t_in), "t different"
+    assert np.allclose(q_test, q_in), "q different"

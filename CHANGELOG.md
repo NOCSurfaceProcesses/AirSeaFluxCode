@@ -1,5 +1,18 @@
 # Changes
 
+## 1.3.4 (Unreleased)
+
+Contributors to this release: Joseph Siddons (@jtsiddons).
+
+### New features and enhancements
+
+* Apply different calculation of `cp` depending on method used (e.g. `C35` uses `cp = 1004.67`)
+  (#31).
+
+### Bug Fixes
+
+* Correct units of `qair` in computation of virtual temperature `tv` (#31).
+
 ## 1.3.3 (2026-03-10)
 
 Contributors to this release: Joseph Siddons (@jtsiddons).

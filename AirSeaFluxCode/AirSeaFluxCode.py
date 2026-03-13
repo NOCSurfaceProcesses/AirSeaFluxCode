@@ -110,9 +110,23 @@ class S88:
         self.dq_full = self.qair - self.qsea  # [g/kg]
 
         # Set lapse rate and Potential Temperature (now we have humdity)
-        self.cp = 1004.67 * (1 + 0.84 * self.qsea * 0.001)  # qsea [g/kg]
+        # Specific capacity (moist air, computed from dry cp)
+        if self.meth == "C35":
+            self.cp = 1004.67 * np.ones(self.SST.shape)
+        elif self.meth in ["NCAR", "ecmwf"]:
+            self.cp = 1005 + 1.860 * self.qair  # qair [g/kg]
+        else:
+            self.cp = 1004.67 * (1 + 0.84 * self.qsea * 0.001)  # qsea [g/kg]
+
         # gamma takes q in units [g/kg]
-        self.tlapse = gamma("dry", self.SST, self.T, self.qair, self.cp)
+        # self.tlapse = gamma("dry", self.SST, self.T, self.qair, self.cp)
+        self.tlapse = gamma(
+            "dry",
+            self.SST,
+            self.T,
+            self.qair,
+            self.cp,
+        )
         self.theta = np.copy(self.T) + self.tlapse * self.h_in[1]
         self.dt_in = self.theta - self.SST
         self.dt_full = self.theta - self.SST
@@ -249,10 +263,13 @@ class S88:
         self.rho = (
             self.P * 100 / (287.1 * self.t10n * (1 + 0.6077 * self.q10n * 0.001))
         )  # q [g/kg]
+
         self.lv = (2.501 - 0.00237 * (self.SST - CtoK)) * 1e6  # J/kg
 
         #  Zeng et al. 1998
-        self.tv = self.theta * (1 + 0.6077 * self.qair)  # virtual potential T
+        self.tv = self.theta * (
+            1 + 0.6077 * self.qair * 0.001
+        )  # virtual potential T, qair [g/kg]
         self.dtv = (
             self.dt_in * (1 + 0.6077 * self.qair * 0.001)
             + 0.6077 * self.theta * self.dq_in * 0.001
@@ -489,6 +506,7 @@ class S88:
             )  # [g/kg]
 
             # update stability info
+
             self.tsrv[ind] = get_tsrv(
                 self.tsr[ind], self.qsr[ind], self.theta[ind], self.qair[ind]
             )

@@ -1,5 +1,6 @@
 import pytest  # noqa: F401
 
+from pathlib import Path
 import os
 import numpy as np
 import pandas as pd
@@ -122,3 +123,52 @@ def test_temp_conv():
     assert all(flux["T"] > 200.0)
     assert all(flux["SST"] > 200.0)
     assert all(flux["SST"] != flux["T"])
+
+
+def test_vs_coare():
+    # TEST: against a test-file from COARE 3.5: https://github.com/NOAA-PSL/COARE-algorithm
+    in_path = Path(os.path.dirname(__file__)) / "data"
+    in_file = in_path / "test_35_data.txt"
+    res_file = in_path / "test_35_output_py_082020.txt"
+    assert in_file.exists() and res_file.exists(), "Missing input files"
+
+    in_df = pd.read_csv(in_file, delimiter="\t")
+    res_df = pd.read_csv(res_file, delimiter="\t")
+
+    q = ["rh", np.asarray(in_df["rh"])]
+    hgts = np.asarray(in_df[["zu", "zt", "zq"]]).T
+
+    test_result = asfc.AirSeaFluxCode(
+        spd=np.asarray(in_df["u"]),
+        T=np.asarray(in_df["t"]),
+        SST=np.asarray(in_df["ts"]),
+        SST_fl="bulk",
+        meth="C35",
+        qmeth="Buck",
+        lat=np.asarray(in_df["lat"]),
+        hum=q,
+        P=np.asarray(in_df["P"]),
+        hin=hgts,
+        hout=10,
+        Rl=np.asarray(in_df["Rl"]),
+        Rs=np.asarray(in_df["Rs"]),
+        cskin=1,
+        # skin="C35",
+        gust=[5, 1.2, 600, 0.2],
+        out_var=["usr", "tau", "sensible", "latent", "tsr", "qsr", "monob"],
+        # maxiter=10,
+    )
+
+    assert np.allclose(test_result["usr"], res_df["# usr"], rtol=1e-2), "usr incorrect"
+    assert np.allclose(test_result["tsr"], res_df["tsr"], atol=5e-4), (
+        "tsr incorrect (0.0005)"
+    )
+    assert np.allclose(test_result["qsr"], res_df["qsr"], rtol=1e-2), "qsr incorrect"
+
+    assert np.allclose(test_result["tau"], res_df["tau"], rtol=1e-2), "tau incorrect"
+    assert np.allclose(test_result["latent"], -res_df["hlb"], rtol=1e-2), (
+        "latent incorrect"
+    )
+    assert np.allclose(test_result["sensible"], -res_df["hsb"], atol=5e-2), (
+        "sensible incorrect"
+    )
