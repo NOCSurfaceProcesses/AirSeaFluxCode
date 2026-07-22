@@ -141,8 +141,8 @@ def _vp_liquid(meth, T, T_Celsius, P):  # noqa: C901
         """
         Psat = (
             np.exp(
-                -0.29912729e4 * np.power(T, -2)
-                - 0.60170128e4 * np.power(T, -1)
+                -0.29912729e4 * np.power(T.astype(float), -2)
+                - 0.60170128e4 * np.power(T.astype(float), -1)
                 + 0.1887643854e2
                 - 0.28354721e-1 * T
                 + 0.17838301e-4 * np.power(T, 2)
@@ -169,8 +169,8 @@ def _vp_liquid(meth, T, T_Celsius, P):  # noqa: C901
             10,
             -7.90298 * (Ts / T - 1)
             + 5.02808 * np.log10(Ts / T)
-            - 1.3816e-7 * (np.power(10, 11.344 * (1 - T / Ts)) - 1)
-            + 8.1328e-3 * (np.power(10, -3.49149 * (Ts / T - 1)) - 1)
+            - 1.3816e-7 * (np.power(10.0, 11.344 * (1 - T / Ts)) - 1)
+            + 8.1328e-3 * (np.power(10.0, -3.49149 * (Ts / T - 1)) - 1)
             + np.log10(ews),
         )
     elif meth == "MagnusTetens":
@@ -239,7 +239,7 @@ def _vp_liquid(meth, T, T_Celsius, P):  # noqa: C901
         Meteorol. Z., N. F., 3, 51-66, 1994.
         """
         Psat = np.exp(
-            -6096.9385 * np.power(T, -1)
+            -6096.9385 * np.power(T.astype(float), -1)
             + 16.635794
             - 2.711193e-2 * T
             + 1.673952e-5 * np.power(T, 2)

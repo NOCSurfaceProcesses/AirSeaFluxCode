@@ -55,7 +55,7 @@ def test_toy_asfc(meth, qmeth, ssfl, cskin, L, wl, gust) -> None:
         meth=meth,
         lat=LAT,
         hin=H_IN,
-        hum=["rh", RH],
+        hum=("rh", RH),
         P=P,
         cskin=cskin,
         qmeth=qmeth,
@@ -115,7 +115,7 @@ def test_temp_conv():
         SST_fl="skin",
         meth="C35",
         lat=np.array([0]),
-        hum=["rh", np.array([80.4])],
+        hum=("rh", np.array([80.4])),
         out_var=["sensible", "latent", "SST", "T"],
         hin=np.array([4, 3, 3]),
         convert=True,
@@ -135,7 +135,7 @@ def test_vs_coare():
     in_df = pd.read_csv(in_file, delimiter="\t")
     res_df = pd.read_csv(res_file, delimiter="\t")
 
-    q = ["rh", np.asarray(in_df["rh"])]
+    q = ("rh", np.asarray(in_df["rh"]))
     hgts = np.asarray(in_df[["zu", "zt", "zq"]]).T
 
     test_result = asfc.AirSeaFluxCode(

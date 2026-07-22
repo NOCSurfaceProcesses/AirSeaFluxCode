@@ -16,7 +16,20 @@
 
 from .vapor_pressure import VaporPressure
 from .qsat import qsat_air, qsat_sea
-from .humidity import gamma, get_hum
+from .humidity import (
+    gamma,
+    get_hum,
+    dew_point_to_specific_humidity,
+    specific_humidity_to_dew_point,
+)
 
 
-__all__ = ["VaporPressure", "gamma", "get_hum", "qsat_air", "qsat_sea"]
+__all__ = [
+    "VaporPressure",
+    "dew_point_to_specific_humidity",
+    "gamma",
+    "get_hum",
+    "qsat_air",
+    "qsat_sea",
+    "specific_humidity_to_dew_point",
+]

@@ -15,8 +15,8 @@
 """AirSeaFluxCode"""
 
 import os
-from .AirSeaFluxCode import AirSeaFluxCode
 
+from .AirSeaFluxCode import AirSeaFluxCode
 from .cs_wl_subs import (
     cs,
     cs_Beljaars,
@@ -27,43 +27,51 @@ from .cs_wl_subs import (
     wl_ecmwf,
 )
 from .flux_subs import (
+    apply_GF,
     cd_calc,
     cdn_calc,
     cdn_from_roughness,
     ctq_calc,
     ctqn_calc,
+    get_gust,
     get_LRb,
     get_Ltsrv,
     get_Rb,
-    apply_GF,
-    get_gust,
+    get_stabco,
     get_strs,
     get_tsrv,
-    get_stabco,
-    psim_calc,
-    psit_calc,
     psi_Bel,
-    psi_ecmwf,
-    psit_26,
     psi_conv,
+    psi_ecmwf,
     psi_stab,
-    psim_ecmwf,
-    psiu_26,
+    psim_calc,
     psim_conv,
+    psim_ecmwf,
     psim_stab,
-)
-from .hum_subs import gamma, get_hum, qsat_air, qsat_sea, VaporPressure
-from .util_subs import (
-    CtoK,
-    kappa,
-    get_heights,
-    gc,
-    visc_air,
-    set_flag,
-    get_outvars,
-    rho_air,
+    psit_26,
+    psit_calc,
+    psiu_26,
 )
 from .height_subs import adjust_humidity, adjust_temperature, adjust_wind_speed
+from .hum_subs import (
+    VaporPressure,
+    dew_point_to_specific_humidity,
+    gamma,
+    get_hum,
+    qsat_air,
+    qsat_sea,
+    specific_humidity_to_dew_point,
+)
+from .util_subs import (
+    CtoK,
+    gc,
+    get_heights,
+    get_outvars,
+    kappa,
+    rho_air,
+    set_flag,
+    visc_air,
+)
 
 __all__ = [
     "AirSeaFluxCode",
@@ -83,6 +91,7 @@ __all__ = [
     "ctq_calc",
     "ctqn_calc",
     "delta",
+    "dew_point_to_specific_humidity",
     "gamma",
     "gc",
     "get_LRb",
@@ -112,6 +121,7 @@ __all__ = [
     "qsat_sea",
     "rho_air",
     "set_flag",
+    "specific_humidity_to_dew_point",
     "visc_air",
     "wl_ecmwf",
 ]

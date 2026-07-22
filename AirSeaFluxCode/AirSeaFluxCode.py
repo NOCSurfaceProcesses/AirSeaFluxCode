@@ -784,7 +784,7 @@ class S88:
         self.spd = spd
         self.T = T
         self.SST = SST
-        self.hum = ["no", np.full(SST.shape, 80)] if hum is None else hum
+        self.hum = ("no", np.full(SST.shape, 80)) if hum is None else hum
 
         self._convert_temperatures(convert)
 
@@ -810,11 +810,14 @@ class S88:
             use_max=True,
         )
         if self.hum[0] == "Td":
-            self.hum[1] = validate_kelvin(
-                self.hum[1],
-                "Dew Point Temperature",
-                convert=convert,
-                use_max=True,
+            self.hum = (
+                self.hum[0],
+                validate_kelvin(
+                    self.hum[1],
+                    "Dew Point Temperature",
+                    convert=convert,
+                    use_max=True,
+                ),
             )
 
         return None
@@ -1028,7 +1031,7 @@ def AirSeaFluxCode(
         "S80", "S88", "LP82", "YT96", "UA", "NCAR", "C30", "C35", "ecmwf", "Beljaars"
     lat : float
         latitude [deg], default 45deg
-    hum : float
+    hum : tuple[str, float]
         humidity input switch 2x1 [x, values] default is relative humidity
 
         - x='rh' : relative humidity [%]
